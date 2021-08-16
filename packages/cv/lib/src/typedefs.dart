@@ -13,3 +13,9 @@ Model asModel(Map map) => map is Model ? map : map.cast<String, Object?>();
 /// Cast the list if needed.
 ModelList asModelList(Iterable list) =>
     list is ModelList ? list : list.cast<Model>().toList();
+
+/// Create a new model
+Model NewModel() => <String, Object?>{};
+
+/// Create a new model list
+ModelList NewModelList() => <Model>[];

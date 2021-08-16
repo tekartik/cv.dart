@@ -24,4 +24,4 @@ export 'src/cv_model.dart'
 export 'src/cv_model_list.dart' show CvModelListExt;
 export 'src/map_ext.dart' show ModelExt;
 export 'src/typedefs.dart'
-    show Model, ModelList, ModelEntry, asModel, asModelList;
+    show Model, ModelList, ModelEntry, asModel, asModelList, NewModel;

@@ -109,5 +109,13 @@ void main() {
       expect(field1.v, 'test');
       expect(field2.v, 1);
     });
+    test('toString()', () {
+      var field = CvField('name');
+      expect(field.toString(), 'name: null');
+      field = CvField<int>('name', 1);
+      expect(field.toString(), 'name: 1');
+      field = CvField<int>.withNull('name');
+      expect(field.toString(), 'name: null (set)');
+    });
   });
 }

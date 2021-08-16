@@ -2,12 +2,16 @@
 
 Content Values map helpers.
 
-These helpers are about helping mapping map fields to named fields. Key features:
+These helpers are about mapping map fields to named fields and vice versa. Key features:
 - Object to Map conversion
 - Map to Object conversion
 - No code generation
 - All objects are mutable
 - Deals with null and undefined values
+- Field type if final and strongly enforced
+- All fields have final key and mutable values
+
+TODO: adapters?
 
 ## Usage
 
@@ -61,4 +65,28 @@ cvAddBuilder<Note>((_) => Note());
 // Any map can be converted to a note object
 var note = {'title': 'My note'}.cv<Note>();
 expect(note.title.v, 'My note');
+```
+
+## Why
+
+- Relying on code generator always adds a level of build complexity.
+- No setup other than adding the package
+- Having mutable values can lead to more mistakes though. But well, you know what your are doing and it is convenient
+- In Java, I used to like ContentValues in Android, having a little more control than a regular HashMap.
+- In Java, I also used to like Gson for its simplicity: just define a class.
+
+## Git setup
+
+## Usage
+
+In your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  tekartik_cv:
+    git:
+      url: git://github.com/tekartik/cv.dart
+      ref: null_safety
+      path: packages/cv
+    version: '>=0.1.0'
 ```

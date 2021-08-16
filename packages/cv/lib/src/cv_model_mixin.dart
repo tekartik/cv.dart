@@ -28,6 +28,8 @@ mixin CvModelMixin implements CvModel {
       var success = _debugCvFieldsCheckDone[runtimeType];
 
       if (success == null) {
+        // Mark pending
+        _debugCvFieldsCheckDone[runtimeType] = false;
         var _fieldNames = <String>{};
         for (var field in fields) {
           if (_fieldNames.contains(field.name)) {
@@ -39,8 +41,11 @@ mixin CvModelMixin implements CvModel {
         }
         _debugCvFieldsCheckDone[runtimeType] = success = true;
       } else if (!success) {
+        /*
         throw UnsupportedError(
             'Duplicated CvFields in $runtimeType${fields.map((f) => f.name)} - $this');
+
+         */
       }
     }
   }
@@ -220,3 +225,6 @@ mixin CvModelMixin implements CvModel {
 }
 
 final _debugCvFieldsCheckDone = <Type, bool>{};
+
+@deprecated
+void debugResetCvModelFieldChecks() => _debugCvFieldsCheckDone.clear();

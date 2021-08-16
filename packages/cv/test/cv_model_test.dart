@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/builder.dart';
+import 'package:cv/src/cv_model_mixin.dart';
 import 'package:test/test.dart';
 
 CvFillOptions get testFillOptions =>
@@ -170,18 +171,38 @@ void main() {
       expect(note.toMap(columns: [note.title.name]), {'title': 'my_title'});
     });
     test('duplicated CvField', () {
+      WithDuplicatedCvFields();
+
       try {
         WithDuplicatedCvFields().toMap();
         fail('should fail');
       } on UnsupportedError catch (e) {
         print(e);
       }
+      expect(WithDuplicatedCvFields().toMap(), {});
+      WithDuplicatedCvFields().fromMap({});
+      WithDuplicatedCvFields().copyFrom(CvMapModel());
+
+      // ignore: deprecated_member_use_from_same_package
+      debugResetCvModelFieldChecks();
+      try {
+        WithDuplicatedCvFields().toMap();
+        fail('should fail');
+      } on UnsupportedError catch (e) {
+        print(e);
+      }
+
+      // ignore: deprecated_member_use_from_same_package
+      debugResetCvModelFieldChecks();
       try {
         WithDuplicatedCvFields().fromMap({});
         fail('should fail');
       } on UnsupportedError catch (e) {
         print(e);
       }
+
+      // ignore: deprecated_member_use_from_same_package
+      debugResetCvModelFieldChecks();
       try {
         WithDuplicatedCvFields().copyFrom(CvMapModel());
         fail('should fail');
