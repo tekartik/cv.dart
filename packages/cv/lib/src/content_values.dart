@@ -199,7 +199,9 @@ mixin ContentValuesMapMixin implements ContentValues {
 
   @override
   void clear() {
-    fields.forEach((field) => field.clear());
+    for (var field in fields) {
+      field.clear();
+    }
   }
 
   @override

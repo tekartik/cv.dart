@@ -18,11 +18,14 @@ extension ModelExt on Model {
 
   /// Set a value, remove the key if [value] is null and [presentIfNull]
   /// is false.
-  void setValue<T>(String key, Object? value, {bool presentIfNull = false}) {
+  void setValue<T>(K key, T value, {bool presentIfNull = false}) {
     if (value == null && (!presentIfNull)) {
       remove(key);
     } else {
       this[key] = value;
     }
   }
+
+  /// Get a value expecting a given type
+  T? getValue<T>(String key) => this[key] as T?;
 }

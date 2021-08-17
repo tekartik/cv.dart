@@ -186,7 +186,7 @@ mixin CvModelMixin implements CvModel {
         // Check sub model
         if (field.hasValue || includeMissingValue) {
           var subModel = model[field.parent] as Model?;
-          if (!(subModel is Model)) {
+          if (subModel is! Model) {
             subModel = <String, Object?>{};
             model.setValue(field.parent, subModel);
           }
@@ -226,5 +226,5 @@ mixin CvModelMixin implements CvModel {
 
 final _debugCvFieldsCheckDone = <Type, bool>{};
 
-@deprecated
+@Deprecated('Debug only')
 void debugResetCvModelFieldChecks() => _debugCvFieldsCheckDone.clear();

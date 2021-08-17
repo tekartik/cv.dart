@@ -34,7 +34,7 @@ abstract class CvFieldCore<T> implements CvColumn<T> {
   void clear();
 
   // to be deprecated use clear instead
-  @deprecated
+  @Deprecated('Use clear instead')
   void removeValue();
 
   /// [presentIfNull] true if null is marked as a value
@@ -225,7 +225,7 @@ mixin CvFieldMixin<T> implements CvField<T> {
 
   // to be deprecated use clear instead
   @override
-  @deprecated
+  @Deprecated('Use clear instead')
   void removeValue() {
     _value = null;
     _hasValue = false;

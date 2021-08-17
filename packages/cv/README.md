@@ -83,7 +83,7 @@ In your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  tekartik_cv:
+  cv:
     git:
       url: git://github.com/tekartik/cv.dart
       ref: null_safety
