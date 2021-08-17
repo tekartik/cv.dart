@@ -71,3 +71,6 @@ linter:
     - unsafe_html
     - use_full_hex_values_for_flutter_colors
     - valid_regexps
+
+    # === doc rules ===
+    - public_member_api_docs

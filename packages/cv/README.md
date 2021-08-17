@@ -11,7 +11,8 @@ These helpers are about mapping map fields to named fields and vice versa. Key f
 - Field type if final and strongly enforced
 - All fields have final key and mutable values
 
-TODO: adapters?
+Drawbacks:
+- A field value must be access through a getter (`value` or `v`)
 
 ## Usage
 
@@ -69,8 +70,8 @@ expect(note.title.v, 'My note');
 
 ## Why
 
-- Relying on code generator always adds a level of build complexity.
-- No setup other than adding the package
+- Relying on code generator always adds a level of build complexity (and build failure risk).
+- No setup needed other than adding the package
 - Having mutable values can lead to more mistakes though. But well, you know what your are doing and it is convenient
 - In Java, I used to like ContentValues in Android, having a little more control than a regular HashMap.
 - In Java, I also used to like Gson for its simplicity: just define a class.

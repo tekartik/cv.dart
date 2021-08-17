@@ -6,6 +6,7 @@ import 'env_utils.dart';
 import 'field.dart';
 import 'utils.dart';
 
+/// For dev only
 var debugContent = false; // devWarning(true);
 
 /// Content mixin
@@ -154,7 +155,7 @@ mixin CvModelMixin implements CvModel {
               field.v = entry.value;
             } catch (_) {
               // Special string handling
-              if (field.isTypeString) {
+              if (field.type == String) {
                 field.v = entry.value?.toString();
               } else {
                 rethrow;
@@ -227,4 +228,6 @@ mixin CvModelMixin implements CvModel {
 final _debugCvFieldsCheckDone = <Type, bool>{};
 
 @Deprecated('Debug only')
+
+/// Result field check in debug mode (A field is only tested once).
 void debugResetCvModelFieldChecks() => _debugCvFieldsCheckDone.clear();

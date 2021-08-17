@@ -6,6 +6,9 @@ import 'package:cv/src/column.dart';
 import 'cv_model_mixin.dart';
 import 'field.dart';
 
+/// Content value base implementation
+///
+/// Protected implementation
 abstract class CvBase
     with
         // Order is important, first one wins
@@ -14,10 +17,12 @@ abstract class CvBase
         CvModelMixin,
         MapMixin<String, dynamic> {}
 
-abstract class ContentValues implements Map<String, dynamic>, CvMapModel {
+/// Raw content value
+abstract class ContentValues implements Map<K, V>, CvMapModel {
   /// Map based content values
   factory ContentValues() => ContentValuesMap();
 
+  /// Content value with defined fields
   factory ContentValues.withCvFields(List<CvField> fields) {
     return _ContentValuesWithCvFields(fields);
   }
@@ -69,11 +74,6 @@ class _CvMapField<T>
 
   @override
   String get k => name;
-
-  @override
-  void removeValue() {
-    cv.remove(name);
-  }
 
   @override
   void setNull() {
@@ -128,6 +128,7 @@ class ContentValuesMap
         MapMixin<String, dynamic> //ContentValuesMapMixin
     implements
         ContentValues {
+  /// Content value map.
   ContentValuesMap([Map<String, dynamic>? map]) {
     _map = map ?? <String, dynamic>{};
   }
@@ -182,6 +183,7 @@ mixin ConventValuesKeysFromCvFieldsMixin implements ContentValues {
   Iterable<String> get keys => fields.map((field) => field.name);
 }
 
+/// Content value implementation mixin
 mixin ContentValuesMapMixin implements ContentValues {
   @override
   dynamic operator [](Object? key) {

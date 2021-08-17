@@ -31,7 +31,7 @@ abstract class CvModelCore {
 }
 
 /// Modifiable map.
-abstract class CvMapModel implements CvModel, Map<String, dynamic> {
+abstract class CvMapModel implements CvModel, Model {
   /// Basic content values factory
   factory CvMapModel() => ContentValuesMap();
 
@@ -54,6 +54,7 @@ class _CvModelMock extends CvModelBase {
   List<CvField> get fields => throw UnimplementedError();
 }
 
+/// Test fill model utilities.
 extension CvModelUtilsExt on CvModel {
   /// Fill all null in model including leaves
   ///

@@ -2,11 +2,14 @@ import 'package:cv/cv.dart';
 
 /// Class that has parent map
 abstract class CvFieldWithParent<T> implements CvField<T> {
+  /// The actual field.
   CvField<T> get field;
 
+  /// Parent name.
   String get parent;
 }
 
+/// Field with parent implementation.
 class CvFieldWithParentImpl<
         T> //with CvColumnMixin<T>, ColumnNameMixin, CvFieldMixin<T>
     implements
@@ -16,6 +19,7 @@ class CvFieldWithParentImpl<
   @override
   final String parent;
 
+  /// Field with parent.
   CvFieldWithParentImpl(this.field, this.parent);
 
   @override
@@ -44,12 +48,6 @@ class CvFieldWithParentImpl<
   bool get isNull => field.isNull;
 
   @override
-  bool get isTypeInt => field.isTypeInt;
-
-  @override
-  bool get isTypeString => field.isTypeString;
-
-  @override
   String get k => key;
 
   @override
@@ -57,12 +55,6 @@ class CvFieldWithParentImpl<
 
   @override
   String get name => key;
-
-  @override
-  void removeValue() {
-    // ignore: deprecated_member_use_from_same_package
-    field.removeValue();
-  }
 
   @override
   void setNull() {

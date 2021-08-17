@@ -87,24 +87,33 @@ Object? cvFillOptionsGenerateBasicType(Type type, CvFillOptions options) {
   return v;
 }
 
+/// Test fill generator function definition.
 typedef CvFillOptionsGenerateFunction = Object? Function(
     Type type, CvFillOptions options);
 
 /// Fill options for unit tests
 class CvFillOptions {
+  /// Default collection size. If nul no collections
   final int? collectionSize;
+
+  /// fill value start. If null fill with null.
   int? valueStart;
+
+  /// Generator function.
   final CvFillOptionsGenerateFunction? generate;
 
+  /// Generate a value.
   Object? generateValue(Type type) => (generate == null)
       ? cvFillOptionsGenerateBasicType(type, this)
       : (generate!(type, this) ?? cvFillOptionsGenerateBasicType(type, this));
 
+  /// Fill options.
   CvFillOptions({this.collectionSize, this.valueStart, this.generate});
 }
 
 /// Fill helpers
 extension CvListFieldUtilsExt<T> on CvListField<T> {
+  /// Fill a list.
   void fillList([CvFillOptions? options]) {
     options ??= CvFillOptions();
     var collectionSize = options.collectionSize;
@@ -147,6 +156,7 @@ extension CvListFieldUtilsExt<T> on CvListField<T> {
   }
 }
 
+/// Field extension utilities
 extension CvModelFieldUtilsExt<T extends CvModel> on CvModelField<T> {
   /// Fill all null in model including leaves
   ///

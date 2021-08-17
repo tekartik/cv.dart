@@ -33,13 +33,10 @@ abstract class CvFieldCore<T> implements CvColumn<T> {
   /// Clear value and flag
   void clear();
 
-  // to be deprecated use clear instead
-  @Deprecated('Use clear instead')
-  void removeValue();
-
   /// [presentIfNull] true if null is marked as a value
   void setValue(T? value, {bool presentIfNull = false});
 
+  /// True if a value is set (even if the value is null)
   bool get hasValue;
 
   /// Allow dynamic CvFields, copy if the value if set, otherwise delete it
@@ -74,6 +71,7 @@ abstract class CvFieldContent<T extends CvModel>
 /// Nested list
 abstract class CvFieldContentList<T extends CvModel>
     implements CvField<List<T>>, CvModelFieldCreator<T> {
+  /// Create a nested list.
   List<T> createList();
 
   /// Only set value if not null
@@ -113,6 +111,7 @@ class ListCvFieldImpl<T> extends CvFieldImpl<List<T>>
   @override
   List<T> createList() => _List<T>();
 
+  /// Nested list.
   ListCvFieldImpl(String name) : super(name);
 
   @override
@@ -136,6 +135,7 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
   @override
   List<T> createList() => _List<T>();
 
+  /// Nexted field content creator.
   CvFieldContentListImpl(
       String name, T Function(Map contentValue)? createObjectFn)
       : super(name) {
@@ -146,15 +146,18 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
   Type get itemType => T;
 }
 
+/// Field content.
 class CvFieldContentImpl<T extends CvModel> extends CvFieldImpl<T>
     with CvFieldContentCreatorMixin<T>
     implements CvFieldContent<T>, CvModelField<T> {
+  /// Field content.
   CvFieldContentImpl(String name, T Function(Map contentValue)? createObjectFn)
       : super(name) {
     _create = createObjectFn;
   }
 }
 
+/// Field implementation.
 class CvFieldImpl<T>
     with // order is important, 2020/11/08 last one wins!
         CvColumnMixin<T>,
@@ -187,6 +190,7 @@ class _TestCvField
     with ColumnNameMixin, CvColumnMixin, CvFieldMixin
     implements CvField {}
 
+/// Field implementation mixin.
 mixin CvFieldMixin<T> implements CvField<T> {
   T? _value;
 
@@ -223,14 +227,6 @@ mixin CvFieldMixin<T> implements CvField<T> {
     _hasValue = false;
   }
 
-  // to be deprecated use clear instead
-  @override
-  @Deprecated('Use clear instead')
-  void removeValue() {
-    _value = null;
-    _hasValue = false;
-  }
-
   /// [presentIfNull] true if null is marked as a value
   @override
   void setValue(T? value, {bool presentIfNull = false}) {
@@ -255,7 +251,7 @@ mixin CvFieldMixin<T> implements CvField<T> {
   void fromCvField(CvField cvField) {
     if (cvField.v is T?) {
       setValue(cvField.v as T?, presentIfNull: cvField.hasValue);
-    } else if (isTypeString && cvField.hasValue) {
+    } else if (type == String && cvField.hasValue) {
       /// To string conversion
       setValue(cvField.v?.toString() as T?, presentIfNull: true);
     }
@@ -305,5 +301,6 @@ mixin CvFieldMixin<T> implements CvField<T> {
 
 /// List<Column> helpers
 extension CvColumnExtension on List<CvColumn> {
+  /// Column names.
   List<String> get names => map((c) => c.name).toList();
 }
