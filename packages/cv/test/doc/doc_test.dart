@@ -27,10 +27,10 @@ void main() {
       expect(note.title.v, 'My note');
     });
     test('cv', () {
-// Add the builder once
+      // Add the builder once
       cvAddBuilder<Note>((_) => Note());
 
-// Any map can be converted to a note object
+      // Any map can be converted to a note object
       var note = {'title': 'My note'}.cv<Note>();
       expect(note.title.v, 'My note');
     });
