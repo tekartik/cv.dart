@@ -8,7 +8,7 @@ These helpers are about mapping map fields to named fields and vice versa. Key f
 - No code generation
 - All objects are mutable
 - Deals with null and undefined values
-- Field type if final and strongly enforced
+- Field type is final and strongly enforced
 - All fields have final key and mutable values
 
 Drawbacks:
@@ -58,7 +58,7 @@ note.fromMap({
 expect(note.title.v, 'My note');
 ```
 
-For convenience, extension on Map are created to simple call `.cv<Type>()` on map to convert them to object:
+For convenience, extension on Map are created to simply call `.cv<Type>()` on map to convert them to object:
 ```dart
 // Add the builder once
 cvAddBuilder<Note>((_) => Note());
