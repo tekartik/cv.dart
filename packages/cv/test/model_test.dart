@@ -111,5 +111,21 @@ void main() {
       expect(asModel({'test': 1}), {'test': 1});
       expect(asModel({}), const TypeMatcher<Model>());
     });
+
+    test('cvOverride', () {
+      expect(asModel({})..cvOverride(CvField('test')), {});
+      expect(asModel({})..cvOverride(CvField.withNull('test')), {'test': null});
+      expect(asModel({})..cvOverride(CvField('test', 1)), {'test': 1});
+      expect(asModel({})..cvOverride(CvField('test', 1), 2), {'test': 2});
+    });
+    test('cvRemove', () {
+      expect(asModel({'test': 2, 'other': 3})..cvRemove(CvField('test', 1)),
+          {'other': 3});
+      expect(asModel({'test': 2})..cvRemove(CvField('test')), {});
+    });
+    test('cvSetNull', () {
+      expect(asModel({})..cvSetNull(CvField('test', 1)), {'test': null});
+      expect(asModel({})..cvSetNull(CvField('test')), {'test': null});
+    });
   });
 }

@@ -28,4 +28,21 @@ extension ModelExt on Model {
 
   /// Get a value expecting a given type
   T? getValue<T>(String key) => this[key] as T?;
+
+  /// Override the map with a value from a field or from a value.
+  ///
+  /// Not set if value is null and field value not set.
+  void cvOverride(CvField field, [Object? value]) {
+    if (value != null || field.hasValue) {
+      this[field.k] = value ?? field.v;
+    }
+  }
+
+  /// Nullify a field.
+  void cvSetNull(CvField field) {
+    this[field.k] = null;
+  }
+
+  /// Remove a field.
+  void cvRemove(CvField field) => remove(field.k);
 }
