@@ -2,6 +2,7 @@ import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/cv_model.dart';
 
+import 'builder.dart';
 import 'env_utils.dart';
 import 'field.dart';
 import 'utils.dart';
@@ -35,7 +36,7 @@ mixin CvModelMixin implements CvModel {
         for (var field in fields) {
           if (_fieldNames.contains(field.name)) {
             _debugCvFieldsCheckDone[runtimeType] = false;
-            throw UnsupportedError(
+            throw CvBuilderExceptionImpl(
                 'Duplicated CvField ${field.name} in $runtimeType${fields.map((f) => f.name)} - $this');
           }
           _fieldNames.add(field.name);
@@ -166,6 +167,9 @@ mixin CvModelMixin implements CvModel {
       } catch (e) {
         if (debugContent) {
           print('ERROR fromMap($map, $columns) at $column');
+        }
+        if (e is CvBuilderException) {
+          rethrow;
         }
       }
     }

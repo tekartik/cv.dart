@@ -15,7 +15,7 @@ void main() {
     });
 
     test('value', () {
-      var model = NewModel();
+      var model = newModel();
       model.setValue('test', 'text');
       expect(model.getValue<String>('test'), 'text');
       expect(model.getMapEntry('test')!.value, 'text');

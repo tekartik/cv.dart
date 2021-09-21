@@ -6,7 +6,8 @@ export 'src/builder.dart'
         cvModelField,
         cvModelListField,
         CvMapExt,
-        CvMapListExt;
+        CvMapListExt,
+        CvBuilderException;
 export 'src/cv_field.dart'
     show
         CvField,
@@ -24,4 +25,15 @@ export 'src/cv_model.dart'
 export 'src/cv_model_list.dart' show CvModelListExt;
 export 'src/map_ext.dart' show ModelExt;
 export 'src/typedefs.dart'
-    show Model, ModelList, ModelEntry, asModel, asModelList, NewModel, K, V;
+    show
+        Model,
+        ModelList,
+        ModelEntry,
+        asModel,
+        asModelList,
+        // ignore: deprecated_member_use_from_same_package
+        NewModel,
+        newModel,
+        newModelList,
+        K,
+        V;
