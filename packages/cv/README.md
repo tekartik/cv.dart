@@ -68,6 +68,98 @@ var note = {'title': 'My note'}.cv<Note>();
 expect(note.title.v, 'My note');
 ```
 
+## Complex object examples
+
+### Inner object
+
+Here is a small example of an object containing other object
+
+```dart
+class Rect extends CvModelBase {
+  final point = CvModelField<Point>('point');
+  final size = CvModelField<Size>('size');
+
+  @override
+  List<CvField> get fields => [point, size];
+}
+
+class Point extends CvModelBase {
+  final x = CvField<int>('x');
+  final y = CvField<int>('y');
+
+  @override
+  List<CvField> get fields => [x, y];
+}
+
+class Size extends CvModelBase {
+  final width = CvField<int>('width');
+  final height = CvField<int>('height');
+
+  @override
+  List<CvField> get fields => [width, height];
+}
+```
+
+```dart
+// Add the builders once
+cvAddBuilder<Rect>((_) => Rect());
+cvAddBuilder<Point>((_) => Point());
+cvAddBuilder<Size>((_) => Size());
+```
+
+```dart
+// Any map can be converted to a rect object
+var rect = {
+  'point': {'x': 100, 'y': 50},
+  'size': {'width': 300, 'height': 200}
+}.cv<Rect>();
+var size = rect.size.v!;
+expect(size.width.v, 300);
+
+// and you can convert your object to a map
+print(rect.toMap());
+// {point: {x: 100, y: 50}, size: {width: 300, height: 200}}
+```
+
+### Inner object list
+
+```dart
+class ShoppingCart extends CvModelBase {
+  final items = CvModelListField<Item>('items');
+
+  @override
+  List<CvField> get fields => [items];
+}
+
+class Item extends CvModelBase {
+  final name = CvField<String>('name');
+  final price = CvField<int>('price');
+
+  @override
+  List<CvField> get fields => [name, price];
+}
+```
+
+```dart
+// Add the builders once
+cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
+cvAddBuilder<Item>((_) => Item());
+```
+
+```dart
+// Any map can be converted to a cart object
+var cart = {
+  'items': [
+    {'name': 'Chair', 'price': 50},
+    {'name': 'Lamp', 'price': 12}
+  ]
+}.cv<ShoppingCart>();
+var items = cart.items.v!;
+expect(items[0].name.v, 'Chair');
+
+print(cart.toMap());
+// {items: [{name: Chair, price: 50}, {name: Lamp, price: 12}]}
+```
 ## Why
 
 - Relying on code generator always adds a level of build complexity (and build failure risk).
