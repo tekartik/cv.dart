@@ -60,11 +60,19 @@ extension CvMapExt on Map {
   }
 }
 
+/*
 /// Easy extension
 extension CvMapListExt on List<Map> {
   /// Create a list of DbRecords from a snapshot
   List<T> cv<T extends CvModel>({T Function(Map contextData)? builder}) =>
       map((map) => map.cv<T>(builder: builder)).toList();
+}
+*/
+/// Easy extension on list, assuming a list of map
+extension CvListExt on List {
+  /// Create a list of DbRecords from a snapshot
+  List<T> cv<T extends CvModel>({T Function(Map contextData)? builder}) =>
+      map((map) => (map as Map).cv<T>(builder: builder)).toList();
 }
 
 /// CvBuilder exception.
