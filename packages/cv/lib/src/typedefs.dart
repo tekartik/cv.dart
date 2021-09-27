@@ -24,8 +24,16 @@ Model asModel(Map map) => map is Model ? map : map.cast<K, V>();
 ModelList asModelList(Iterable list) =>
     list is ModelList ? list : ModelListImpl(list);
 
+/// Create a new model - prefer newModel()
+@Deprecated('Use newModel()')
+Model NewModel() => newModel(); // ignore: non_constant_identifier_names
+
 /// Create a new model
-Model NewModel() => <K, V>{}; // ignore: non_constant_identifier_names
+Model newModel() => <K, V>{};
+
+/// Create a new model list - prefer newModelList()
+ModelList NewModelList() => <Model>[]; // ignore: non_constant_identifier_names
 
 /// Create a new model list
-ModelList NewModelList() => <Model>[]; // ignore: non_constant_identifier_names
+ModelList newModelList() =>
+    newModelList(); // ignore: non_constant_identifier_names

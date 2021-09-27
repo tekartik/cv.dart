@@ -17,7 +17,7 @@ abstract class CvModelWrite implements CvModelCore {
   /// Clear content
   void clear();
 
-  /// Copy from another model
+  /// Copy from another model, undefined data is not copied.
   void copyFrom(CvModel model);
 }
 

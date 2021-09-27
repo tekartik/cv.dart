@@ -21,7 +21,7 @@ T cvBuildModel<T extends CvModel>(Map contextData,
   if (builder == null) {
     var foundBuilder = _builders[T];
     if (foundBuilder == null) {
-      throw UnsupportedError('Missing builder for $T, call addBuilder');
+      throw CvBuilderExceptionImpl('Missing builder for $T, call addBuilder');
     }
     return foundBuilder(contextData) as T;
   } else {
@@ -35,7 +35,8 @@ T cvTypeBuildModel<T extends CvModel>(Type type, Map contextData,
   if (builder == null) {
     var foundBuilder = _builders[type];
     if (foundBuilder == null) {
-      throw UnsupportedError('Missing builder for $type, call addBuilder');
+      throw CvBuilderExceptionImpl(
+          'Missing builder for $type, call addBuilder');
     }
     return foundBuilder(contextData) as T;
   } else {
@@ -64,4 +65,19 @@ extension CvMapListExt on List<Map> {
   /// Create a list of DbRecords from a snapshot
   List<T> cv<T extends CvModel>({T Function(Map contextData)? builder}) =>
       map((map) => map.cv<T>(builder: builder)).toList();
+}
+
+/// CvBuilder exception.
+abstract class CvBuilderException implements Exception {}
+
+/// Internal exception
+class CvBuilderExceptionImpl implements CvBuilderException {
+  /// Internal message
+  final String message;
+
+  /// Internal exception.
+  CvBuilderExceptionImpl(this.message);
+
+  @override
+  String toString() => message;
 }

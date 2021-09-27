@@ -176,7 +176,7 @@ void main() {
       try {
         WithDuplicatedCvFields().toMap();
         fail('should fail');
-      } on UnsupportedError catch (e) {
+      } on CvBuilderException catch (e) {
         print(e);
       }
       expect(WithDuplicatedCvFields().toMap(), {});
@@ -188,7 +188,7 @@ void main() {
       try {
         WithDuplicatedCvFields().toMap();
         fail('should fail');
-      } on UnsupportedError catch (e) {
+      } on CvBuilderException catch (e) {
         print(e);
       }
 
@@ -197,7 +197,7 @@ void main() {
       try {
         WithDuplicatedCvFields().fromMap({});
         fail('should fail');
-      } on UnsupportedError catch (e) {
+      } on CvBuilderException catch (e) {
         print(e);
       }
 
@@ -206,7 +206,7 @@ void main() {
       try {
         WithDuplicatedCvFields().copyFrom(CvMapModel());
         fail('should fail');
-      } on UnsupportedError catch (e) {
+      } on CvBuilderException catch (e) {
         print(e);
       }
     });

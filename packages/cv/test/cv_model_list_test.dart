@@ -51,7 +51,7 @@ void main() {
         [
           {'value': 1}
         ].cv<NoBuilderIntContent>();
-      } on UnsupportedError catch (_) {}
+      } on CvBuilderException catch (_) {}
 
       try {
         addNoBuilderIntContentBuilder();
