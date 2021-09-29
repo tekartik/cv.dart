@@ -1,6 +1,6 @@
-## 0.2.1
+## 0.2.1+1
 
-- Add cv() as extension on list.
+- Add cv() as extension on List<Map>.
 
 ## 0.2.0
 

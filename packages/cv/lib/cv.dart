@@ -6,7 +6,7 @@ export 'src/builder.dart'
         cvModelField,
         cvModelListField,
         CvMapExt,
-        CvListExt,
+        CvMapListExt,
         CvBuilderException;
 export 'src/cv_field.dart'
     show
