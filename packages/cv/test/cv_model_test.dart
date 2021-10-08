@@ -17,8 +17,15 @@ class Note extends CvModelBase {
   List<CvField> get fields => [title, content, date];
 }
 
-class IntContent extends CvModelBase {
+class NnIntContent extends CvModelBase {
   final value = CvField<int>('value');
+
+  @override
+  List<CvField> get fields => [value];
+}
+
+class IntContent extends CvModelBase {
+  final value = CvField<int?>('value');
 
   @override
   List<CvField> get fields => [value];
@@ -100,7 +107,7 @@ void main() {
       expect(IntContent().toMap(), {});
       expect(IntContent().toMap(includeMissingValue: true), {'value': null});
       expect((IntContent()..value.v = 1).toMap(), {'value': 1});
-      expect((IntContent()..value.v = null).toMap(), {'value': null});
+      expect((IntContent()..value.vOrNull = null).toMap(), {'value': null});
       expect((IntContent()..value.setValue(null)).toMap(), {});
 
       expect((IntContent()..value.setValue(null, presentIfNull: true)).toMap(),
@@ -108,6 +115,23 @@ void main() {
       expect((IntContent()..value.v = 1).toMap(columns: <String>[]), {});
       expect((IntContent()..value.v = 1).toMap(columns: <String>['other']), {});
       expect((IntContent()..value.v = 1).toMap(columns: [IntContent().value.k]),
+          {'value': 1});
+    });
+    test('NonNullable.toMap', () async {
+      expect(NnIntContent().toMap(), {});
+      expect(NnIntContent().toMap(includeMissingValue: true), {});
+      expect((NnIntContent()..value.v = 1).toMap(), {'value': 1});
+      expect((NnIntContent()..value.vOrNull = null).toMap(), {});
+      expect((NnIntContent()..value.setValue(null)).toMap(), {});
+
+      expect(
+          (NnIntContent()..value.setValue(null, presentIfNull: true)).toMap(),
+          {});
+      expect((NnIntContent()..value.v = 1).toMap(columns: <String>[]), {});
+      expect(
+          (NnIntContent()..value.v = 1).toMap(columns: <String>['other']), {});
+      expect(
+          (NnIntContent()..value.v = 1).toMap(columns: [IntContent().value.k]),
           {'value': 1});
     });
     test('fromMap1', () async {
@@ -144,7 +168,7 @@ void main() {
     test('copyFrom', () {
       var cv = IntContent()..copyFrom(IntContent());
       expect(cv.toMap(), {});
-      cv = IntContent()..copyFrom(IntContent()..value.v = null);
+      cv = IntContent()..copyFrom(IntContent()..value.vOrNull = null);
       expect(cv.toMap(), {'value': null});
       cv = IntContent()..copyFrom(IntContent()..value.v = 1);
       expect(cv.toMap(), {'value': 1});
@@ -241,7 +265,7 @@ void main() {
           {'sub': 'sub_value'}
         ]
       };
-      expect(parent.children.v!.first.sub.v, 'sub_value');
+      expect(parent.children.v.first.sub.v, 'sub_value');
       expect(parent.toMap(), map);
       parent = WithChildListCvField()..fromMap(map);
       expect(parent.toMap(), map);
@@ -385,7 +409,7 @@ void main() {
           {
             'sub': {'value': 1, 'value2': 2}
           });
-      expect((WithCvFieldWithParent()..value.v = null).toMap(), {
+      expect((WithCvFieldWithParent()..value.vOrNull = null).toMap(), {
         'sub': {'value': null}
       });
       expect(WithCvFieldWithParent().toMap(), {});

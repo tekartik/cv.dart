@@ -48,14 +48,14 @@ extension CvFieldUtilsExt<T> on CvField<T> {
       (this as CvListField).fillList(options);
     } else if (this is CvModelField) {
       var modelValue = (this as CvModelField).create({})..fillModel(options);
-      v = modelValue as T;
+      setValue(modelValue as T?);
     } else if (this is CvFieldWithParent) {
       (this as CvFieldWithParent).field.fillField(options);
     } else if (options.valueStart != null) {
-      v = options.generateValue(type) as T;
+      setValue(options.generateValue(type) as T?);
     } else {
       // Default to null
-      v = null;
+      setNull();
     }
   }
 
@@ -118,7 +118,7 @@ extension CvListFieldUtilsExt<T> on CvListField<T> {
     options ??= CvFillOptions();
     var collectionSize = options.collectionSize;
     if (collectionSize == null) {
-      value = null;
+      setNull();
     } else {
       var list = createList();
       for (var i = 0; i < collectionSize; i++) {
@@ -165,7 +165,7 @@ extension CvModelFieldUtilsExt<T extends CvModel> on CvModelField<T> {
   void fillModel([CvFillOptions? options]) {
     options ??= CvFillOptions();
     value = create({});
-    value!.fillModel(options);
+    value.fillModel(options);
   }
 }
 

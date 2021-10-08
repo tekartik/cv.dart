@@ -1,3 +1,5 @@
+import 'package:cv/src/utils.dart';
+
 /// Raw column implementation.
 abstract class RawColumn {
   /// Column name.
@@ -11,6 +13,9 @@ abstract class CvColumn<T> implements RawColumn {
 
   /// Column type.
   Type get type;
+
+  /// Nullable?
+  bool get isNullable;
 }
 
 /// Column implementation.
@@ -47,4 +52,7 @@ mixin CvColumnMixin<T> implements CvColumn<T> {
 
   @override
   String toString() => 'Column($name)';
+
+  @override
+  bool get isNullable => typeIsNullable<T>();
 }

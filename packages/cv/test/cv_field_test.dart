@@ -46,9 +46,41 @@ void main() {
           CvField('name', '12'));
     });
 
+    test('nullable/non nullable', () {
+      var field1 = CvField<int>('int');
+      var field2 = CvField<int?>('int');
+      expect(field1, field2);
+      field1.setNull();
+      field2.setNull();
+      expect(field1.vOrNull, isNull);
+      expect(field2.vOrNull, isNull);
+      expect(field1, isNot(field2));
+      expect(field1.hasValue, isFalse);
+      expect(field2.hasValue, isTrue);
+      try {
+        // ignore: unused_local_variable, omit_local_variable_types
+        int value = field1.v;
+        fail('should fail');
+      } on TypeError catch (e) {
+        print(e.runtimeType);
+      }
+      field1.setValue(null, presentIfNull: true);
+      field2.setValue(null, presentIfNull: true);
+      expect(field1.hasValue, isFalse);
+      expect(field2.hasValue, isTrue);
+      expect(field1.vOrNull, isNull);
+      expect(field2.vOrNull, isNull);
+      field1.vOrNull = null;
+      field2.vOrNull = null;
+      expect(field1.hasValue, isFalse);
+      expect(field2.hasValue, isTrue);
+      expect(field1.vOrNull, isNull);
+      expect(field2.vOrNull, isNull);
+    });
     test('fillField', () {
-      expect((CvField<int>('int')..fillField()).v, null);
-      expect((CvField<int>('int')..fillField()).hasValue, true);
+      expect((CvField<int>('int')..fillField()).vOrNull, null);
+      expect((CvField<int?>('int')..fillField()).hasValue, true);
+      expect((CvField<int>('int')..fillField()).hasValue, false);
       expect(
           (CvField<int>('int')..fillField(CvFillOptions(valueStart: 0))).v, 1);
       expect(

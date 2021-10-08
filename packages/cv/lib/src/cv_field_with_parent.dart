@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/field.dart';
 
 /// Class that has parent map
 abstract class CvFieldWithParent<T> implements CvField<T> {
@@ -10,10 +11,9 @@ abstract class CvFieldWithParent<T> implements CvField<T> {
 }
 
 /// Field with parent implementation.
-class CvFieldWithParentImpl<
-        T> //with CvColumnMixin<T>, ColumnNameMixin, CvFieldMixin<T>
-    implements
-        CvFieldWithParent<T> {
+class CvFieldWithParentImpl<T>
+    with CvFieldAbbrMixin<T>
+    implements CvFieldWithParent<T> {
   @override
   final CvField<T> field;
   @override
@@ -23,10 +23,10 @@ class CvFieldWithParentImpl<
   CvFieldWithParentImpl(this.field, this.parent);
 
   @override
-  T? get v => value;
+  T get value => field.value;
 
   @override
-  T? get value => field.value;
+  T? get valueOrNull => field.valueOrNull;
 
   @override
   CvField<RT> cast<RT>() => field.cast<RT>().withParent(parent);
@@ -46,9 +46,6 @@ class CvFieldWithParentImpl<
 
   @override
   bool get isNull => field.isNull;
-
-  @override
-  String get k => key;
 
   @override
   String get key => '$parent.${field.name}';
@@ -76,12 +73,12 @@ class CvFieldWithParentImpl<
   }
 
   @override
-  set v(T? value) {
-    this.value = value;
+  set valueOrNull(T? value) {
+    field.valueOrNull = value;
   }
 
   @override
-  set value(T? value) {
+  set value(T value) {
     field.value = value;
   }
 
@@ -109,4 +106,7 @@ class CvFieldWithParentImpl<
     }
     return false;
   }
+
+  @override
+  bool get isNullable => field.isNullable;
 }

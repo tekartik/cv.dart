@@ -22,3 +22,6 @@ bool cvModelAreEquals(CvModelRead model1, CvModelRead model2) {
   }
   return true;
 }
+
+/// True if the type is nullable
+bool typeIsNullable<T>() => null is T;

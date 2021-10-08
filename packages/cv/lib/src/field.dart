@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
+import 'package:cv/src/utils.dart';
 
 import 'column.dart';
 
@@ -10,10 +11,16 @@ import 'column.dart';
 /// Use [v] for value access.
 abstract class CvFieldCore<T> implements CvColumn<T> {
   /// The value (abbr.)
-  T? get v;
+  T get v;
+
+  /// The value or null (abbr.).
+  T? get vOrNull;
+
+  /// The value or null
+  T? get valueOrNull;
 
   /// The value
-  T? get value;
+  T get value;
 
   /// The key (abbr.)
   String get k;
@@ -25,15 +32,23 @@ abstract class CvFieldCore<T> implements CvColumn<T> {
   bool get isNull;
 
   /// Set the value, even if null
-  set v(T? value);
+  set v(T value);
 
   /// Set the value, even if null.
-  set value(T? value);
+  set value(T value);
+
+  /// Set the value, even if null
+  set vOrNull(T? value);
+
+  /// Set the value, even if null.
+  set valueOrNull(T? value);
 
   /// Clear value and flag
   void clear();
 
-  /// [presentIfNull] true if null is marked as a value
+  /// [presentIfNull] true if null is marked as a value.
+  ///
+  /// for non-nullable type, the value is removed if null.
   void setValue(T? value, {bool presentIfNull = false});
 
   /// True if a value is set (even if the value is null)
@@ -45,7 +60,7 @@ abstract class CvFieldCore<T> implements CvColumn<T> {
   /// Cast if needed
   CvField<RT> cast<RT>();
 
-  /// Force the null value.
+  /// Force the null value, for non-nullable type, the value is removed.
   void setNull();
 
   /// Make the field an inner field, the parent being a map
@@ -107,6 +122,7 @@ class _List<T> extends ListBase<T> {
 
 /// Nested list implementation.
 class ListCvFieldImpl<T> extends CvFieldImpl<List<T>>
+    with CvFieldAbbrMixin<List<T>>
     implements CvField<List<T>>, CvListField<T> {
   @override
   List<T> createList() => _List<T>();
@@ -130,7 +146,7 @@ mixin CvFieldContentCreatorMixin<T extends CvModel>
 
 /// Nested list of object implementation.
 class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
-    with CvFieldContentCreatorMixin<T>
+    with CvFieldContentCreatorMixin<T>, CvFieldAbbrMixin<List<T>>
     implements CvFieldContentList<T>, CvModelListField<T> {
   @override
   List<T> createList() => _List<T>();
@@ -148,7 +164,7 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
 
 /// Field content.
 class CvFieldContentImpl<T extends CvModel> extends CvFieldImpl<T>
-    with CvFieldContentCreatorMixin<T>
+    with CvFieldContentCreatorMixin<T>, CvFieldAbbrMixin<T>
     implements CvFieldContent<T>, CvModelField<T> {
   /// Field content.
   CvFieldContentImpl(String name, T Function(Map contentValue)? createObjectFn)
@@ -162,7 +178,8 @@ class CvFieldImpl<T>
     with // order is important, 2020/11/08 last one wins!
         CvColumnMixin<T>,
         ColumnNameMixin,
-        CvFieldMixin<T> {
+        CvFieldMixin<T>,
+        CvFieldAbbrMixin<T> {
   /// Only set value if not null
   CvFieldImpl(String name, [T? value]) {
     this.name = name;
@@ -187,38 +204,58 @@ class CvFieldImpl<T>
 // ensure mixin compiles
 // ignore: unused_element
 class _TestCvField
-    with ColumnNameMixin, CvColumnMixin, CvFieldMixin
+    with ColumnNameMixin, CvColumnMixin, CvFieldMixin, CvFieldAbbrMixin
     implements CvField {}
+
+/// Field implementation mixin.
+mixin CvFieldAbbrMixin<T> implements CvField<T> {
+  /// The value
+  @override
+  T get v => value;
+
+  @override
+  T? get vOrNull => valueOrNull;
+
+  @override
+  set v(T value) => this.value = value;
+
+  @override
+  set vOrNull(T? value) => valueOrNull = value;
+
+  /// The key
+  @override
+  String get k => name;
+}
 
 /// Field implementation mixin.
 mixin CvFieldMixin<T> implements CvField<T> {
   T? _value;
 
-  /// The value
-  @override
-  T? get v => _value;
-
   @override
   String get key => name;
 
   @override
-  T? get value => _value;
+  T get value => _value as T;
 
-  /// The key
   @override
-  String get k => name;
+  T? get valueOrNull => _value;
 
   @override
   bool get isNull => _value == null;
 
   @override
-  set v(T? value) {
-    _hasValue = true;
-    _value = value;
-  }
+  set value(T value) => valueOrNull = value;
 
   @override
-  set value(T? value) => v = value;
+  set valueOrNull(T? value) {
+    if (value != null || isNullable) {
+      _hasValue = true;
+      _value = value;
+    } else {
+      _hasValue = false;
+      _value = null;
+    }
+  }
 
   /// Clear value and flag
   @override
@@ -231,8 +268,8 @@ mixin CvFieldMixin<T> implements CvField<T> {
   @override
   void setValue(T? value, {bool presentIfNull = false}) {
     if (value == null) {
-      if (presentIfNull) {
-        v = value;
+      if (presentIfNull && typeIsNullable<T>()) {
+        vOrNull = value;
       } else {
         clear();
       }
@@ -258,7 +295,8 @@ mixin CvFieldMixin<T> implements CvField<T> {
   }
 
   @override
-  String toString() => '$name: $v${(v == null && hasValue) ? ' (set)' : ''}';
+  String toString() =>
+      '$name: $vOrNull${(vOrNull == null && hasValue) ? ' (set)' : ''}';
 
   /// Cast if needed
   @override
@@ -266,11 +304,11 @@ mixin CvFieldMixin<T> implements CvField<T> {
     if (this is CvField<RT>) {
       return this as CvField<RT>;
     }
-    return CvField<RT>(name)..v = v as RT?;
+    return CvField<RT>(name)..setValue(v as RT?, presentIfNull: hasValue);
   }
 
   @override
-  int get hashCode => key.hashCode + (v?.hashCode ?? 0);
+  int get hashCode => key.hashCode + (vOrNull?.hashCode ?? 0);
 
   @override
   bool operator ==(other) {
@@ -281,7 +319,7 @@ mixin CvFieldMixin<T> implements CvField<T> {
       if (other.hasValue != hasValue) {
         return false;
       }
-      if (!cvValuesAreEqual(other.v, v)) {
+      if (!cvValuesAreEqual(other.vOrNull, vOrNull)) {
         return false;
       }
       return true;

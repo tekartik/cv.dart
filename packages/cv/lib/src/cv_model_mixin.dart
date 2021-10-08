@@ -179,7 +179,7 @@ mixin CvModelMixin implements CvModel {
     _debugCheckCvFields();
 
     void _toMap(Model model, CvField field) {
-      dynamic value = field.v;
+      dynamic value = field.vOrNull;
       if (value is List<CvModelCore>) {
         value = value.map((e) => (e as CvModelRead).toMap()).toList();
       } else if (value is CvModelRead) {
@@ -187,7 +187,7 @@ mixin CvModelMixin implements CvModel {
       }
       if (field is CvFieldWithParent) {
         // Check sub model
-        if (field.hasValue || includeMissingValue) {
+        if (field.hasValue || (includeMissingValue && field.isNullable)) {
           var subModel = model[field.parent] as Model?;
           if (subModel is! Model) {
             subModel = <String, Object?>{};
@@ -198,7 +198,8 @@ mixin CvModelMixin implements CvModel {
         }
       } else {
         model.setValue(field.name, value,
-            presentIfNull: field.hasValue || includeMissingValue);
+            presentIfNull:
+                field.hasValue || (includeMissingValue && field.isNullable));
       }
     }
 

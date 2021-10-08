@@ -5,6 +5,14 @@ import 'cv_model_test.dart';
 
 void main() {
   group('CvMapModel', () {
+    test('field', () {
+      var cv = CvMapModel();
+      expect(cv.field('test'), isNull);
+      cv['test'] = 1;
+      expect(cv['test'], 1);
+      expect(cv.field('test'), isNotNull);
+      expect(cv.fields.first.v, 1);
+    });
     test('fromMap', () {
       var cv = CvMapModel();
       cv['test'] = 1;
@@ -22,7 +30,7 @@ void main() {
       expect(cv.toMap(), {'test': 1});
       cv = CvMapModel()..copyFrom(IntContent());
       expect(cv.toMap(), {});
-      cv = CvMapModel()..copyFrom(IntContent()..value.v = null);
+      cv = CvMapModel()..copyFrom(IntContent()..value.vOrNull = null);
       expect(cv.toMap(), {'value': null});
       cv = CvMapModel()..copyFrom(IntContent()..value.v = 1);
       expect(cv.toMap(), {'value': 1});

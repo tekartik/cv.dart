@@ -30,8 +30,12 @@ abstract class ContentValues implements Map<K, V>, CvMapModel {
 
 /// CvField in the map base implementation
 class _CvMapField<T>
-    with CvColumnMixin<T>, ColumnNameMixin, CvFieldMixin<T>
-    implements CvField<T> {
+    with
+        CvColumnMixin<T>,
+        ColumnNameMixin, // CvFieldMixin<T>,
+        CvFieldAbbrMixin<T>
+    implements
+        CvField<T> {
   final ContentValues cv;
 
   /// Only set value if not null
@@ -47,7 +51,7 @@ class _CvMapField<T>
   }
 
   @override
-  T? get v => cv[name] as T?;
+  T get value => cv[name] as T;
 
   @override
   CvField<RT> cast<RT>() =>
@@ -73,9 +77,6 @@ class _CvMapField<T>
   bool get isNull => cv[name] == null;
 
   @override
-  String get k => name;
-
-  @override
   void setNull() {
     cv[name] = null;
   }
@@ -92,8 +93,25 @@ class _CvMapField<T>
   }
 
   @override
-  set v(T? value) {
+  set value(T value) {
     cv[name] = value;
+  }
+
+  @override
+  set valueOrNull(T? value) {
+    cv[name] = value;
+  }
+
+  @override
+  T? get valueOrNull => cv[name] as T?;
+
+  @override
+  String get key => name;
+
+  @override
+  CvField<T> withParent(String parent) {
+    // TODO: implement withParent
+    throw UnimplementedError();
   }
 }
 

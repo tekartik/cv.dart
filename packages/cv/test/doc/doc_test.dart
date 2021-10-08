@@ -46,7 +46,7 @@ void main() {
         'point': {'x': 100, 'y': 50},
         'size': {'width': 300, 'height': 200}
       }.cv<Rect>();
-      var size = rect.size.v!;
+      var size = rect.size.v;
       expect(size.width.v, 300);
 
       // print(rect.toMap());
@@ -65,7 +65,7 @@ void main() {
           {'name': 'Lamp', 'price': 12}
         ]
       }.cv<ShoppingCart>();
-      var items = cart.items.v!;
+      var items = cart.items.v;
       expect(items[0].name.v, 'Chair');
 
       print(cart.toMap());
