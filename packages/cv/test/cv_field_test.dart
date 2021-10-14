@@ -76,12 +76,20 @@ void main() {
           [1]);
     });
     test('hasValue', () {
-      var field = CvField('name');
+      var field = CvField<int>('name');
       expect(field.hasValue, isFalse);
       expect(field.v, isNull);
+      expect(field.valueOrNull, isNull);
+      try {
+        field.valueOrThrow;
+        fail('should fail');
+      } on TypeError catch (e) {
+        print(e.runtimeType);
+      }
       field.setNull();
       expect(field.hasValue, isTrue);
       expect(field.v, isNull);
+
       field.clear();
       expect(field.hasValue, isFalse);
       expect(field.v, isNull);
@@ -89,6 +97,15 @@ void main() {
       expect(field.v, 1);
       field.value = 2;
       expect(field.v, 2);
+      field.valueOrThrow = 3;
+      expect(field.v, 3);
+      expect(field.isNull, isFalse);
+      expect(field.isNotNull, isTrue);
+      field.valueOrNull = null;
+      expect(field.hasValue, isTrue);
+      expect(field.v, isNull);
+      expect(field.isNull, isTrue);
+      expect(field.isNotNull, isFalse);
     });
     test('CvModelField', () {
       var modelField = CvModelField<IntContent>('test');
