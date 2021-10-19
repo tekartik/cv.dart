@@ -20,6 +20,12 @@ void main() {
       expect((CvField('name').v = 'test').hashCode,
           (CvField('name').v = 'test').hashCode);
     });
+    test('withValue', () {
+      expect(CvField<String>.withValue('name', null).v, isNull);
+      expect(CvField<String>.withValue('name', null).name, 'name');
+      expect(CvField<String>.withValue('name', 'test').v, 'test');
+      expect(CvField<String>.withValue('name', null).hasValue, true);
+    });
     test('equals', () {
       expect(CvField('name'), CvField('name'));
       expect(CvField('name'), CvField('name', null));

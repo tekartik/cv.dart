@@ -22,8 +22,8 @@ abstract class CvField<T> implements CvFieldCore<T> {
   /// Force a null value
   factory CvField.withNull(String name) => CvFieldImpl.withNull(name);
 
-  /// Force a value event if null
-  factory CvField.withValue(String name, T value) =>
+  /// Force a value even if null
+  factory CvField.withValue(String name, T? value) =>
       CvFieldImpl.withValue(name, value);
 }
 

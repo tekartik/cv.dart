@@ -184,7 +184,7 @@ class CvFieldImpl<T>
   CvFieldImpl(String name, [T? value]) {
     this.name = name;
     if (value != null) {
-      v = value;
+      valueOrNull = value;
     }
   }
 
@@ -195,9 +195,9 @@ class CvFieldImpl<T>
   }
 
   /// Set value even if null
-  CvFieldImpl.withValue(String name, T value) {
+  CvFieldImpl.withValue(String name, T? value) {
     this.name = name;
-    v = value;
+    valueOrNull = value;
   }
 }
 

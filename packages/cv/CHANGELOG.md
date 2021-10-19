@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Allow nullable for `CvField.withValue`, value being always set, even for null.
+
 ## 0.2.2
 
 - Add `CvField.isNotNull`, `CvField.valueOrNull` (getter and setter) and `CvField.valueOrThrow` (getter and setter)
