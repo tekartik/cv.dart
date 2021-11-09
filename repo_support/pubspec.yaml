@@ -9,8 +9,8 @@ environment:
 dependencies:
   chrome_travis:
     git:
-      url: git://github.com/tekartik/chrome_travis.dart
-      ref: null_safety
+      url: https://github.com/tekartik/chrome_travis.dart
+      ref: dart2_3
   process_run: '>=0.10.0'
 
 dev_dependencies:
