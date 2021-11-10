@@ -305,7 +305,9 @@ void main() {
         'children': null,
         'intList': null,
         'map': null,
-        'mapList': null
+        'mapList': null,
+        'stringList': null,
+        'list': null
       });
     });
     test('fillModel', () {
@@ -340,10 +342,12 @@ void main() {
               }
             ],
             'intList': [6],
-            'map': null,
+            'map': {'field_1': 7},
             'mapList': [
-              {'field_0': 7}
-            ]
+              {'field_1': 8}
+            ],
+            'stringList': ['text_9'],
+            'list': [10]
           });
       expect(
           (CustomContent()
@@ -495,7 +499,9 @@ class AllTypes extends CvModelBase {
   final numCvField = CvField<num>('num');
   final stringCvField = CvField<String>('string');
   final intListCvField = CvListField<int>('intList');
+  final stringListCvField = CvListField<String>('stringList');
   final mapCvField = CvField<Map>('map');
+  final listCvField = CvField<List>('list');
   final mapListCvField = CvListField<Map>('mapList');
   final children =
       CvModelListField<WithChildCvField>('children', (_) => WithChildCvField());
@@ -509,7 +515,9 @@ class AllTypes extends CvModelBase {
         children,
         intListCvField,
         mapCvField,
-        mapListCvField
+        mapListCvField,
+        stringListCvField,
+        listCvField,
       ];
 }
 

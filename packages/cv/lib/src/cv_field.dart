@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 
-import 'cv_model.dart';
 import 'field.dart';
 
 /// If 2 values are equals, entering nested list/map if any.
@@ -22,8 +21,8 @@ abstract class CvField<T> implements CvFieldCore<T> {
   /// Force a null value
   factory CvField.withNull(String name) => CvFieldImpl.withNull(name);
 
-  /// Force a value event if null
-  factory CvField.withValue(String name, T value) =>
+  /// Force a value even if null
+  factory CvField.withValue(String name, T? value) =>
       CvFieldImpl.withValue(name, value);
 }
 
@@ -65,9 +64,11 @@ extension CvFieldUtilsExt<T> on CvField<T> {
 
 /// Generate for bool, int, num, text
 Object? cvFillOptionsGenerateBasicType(Type type, CvFillOptions options) {
+  late int valueStart;
+
   Object? v;
   if (options.valueStart != null) {
-    var valueStart = options.valueStart! + 1;
+    valueStart = options.valueStart! + 1;
     if (type == int) {
       v = valueStart;
     } else if (type == num) {
@@ -78,6 +79,14 @@ Object? cvFillOptionsGenerateBasicType(Type type, CvFillOptions options) {
       v = 'text_$valueStart';
     } else if (type == bool) {
       v = valueStart.isEven;
+    } else if (type == List) {
+      options.valueStart = valueStart - 1;
+      v = options.generateList();
+      valueStart = options.valueStart!;
+    } else if (type == Map) {
+      options.valueStart = valueStart - 1;
+      v = options.generateMap();
+      valueStart = options.valueStart!;
     }
     if (v != null) {
       options.valueStart = valueStart;
@@ -111,6 +120,28 @@ class CvFillOptions {
   CvFillOptions({this.collectionSize, this.valueStart, this.generate});
 }
 
+extension _CvFillOptionsMap on CvFillOptions {
+  /// Generate a basic map
+  Model generateMap() {
+    var map = newModel();
+    var size = collectionSize ?? 0;
+    for (var i = 0; i < size; i++) {
+      map['field_${i + 1}'] = generateValue(int);
+    }
+    return map;
+  }
+
+  /// Generate a basic list
+  List generateList() {
+    var list = <Object?>[];
+    var size = collectionSize ?? 0;
+    for (var i = 0; i < size; i++) {
+      list.add(generateValue(int));
+    }
+    return list;
+  }
+}
+
 /// Fill helpers
 extension CvListFieldUtilsExt<T> on CvListField<T> {
   /// Fill a list.
@@ -128,25 +159,16 @@ extension CvListFieldUtilsExt<T> on CvListField<T> {
           list.add(item);
         } else if (this is CvListField<Map>) {
           if (options.valueStart != null) {
-            print('map $this');
-            var map = <String, Object?>{};
-            for (var i = 0; i < collectionSize; i++) {
-              map['field_$i'] = options.generateValue(int);
-            }
-            list.add(map as T);
+            list.add(options.generateMap() as T);
           }
         } else if (this is CvListField<List>) {
           if (options.valueStart != null) {
-            print('list $this');
-            var subList = <Object?>[];
-            for (var i = 0; i < collectionSize; i++) {
-              subList.add(options.generateValue(int));
-            }
-            list.add(subList as T);
+            // print('list $this');
+            list.add(options.generateList() as T);
           }
         } else {
           if (options.valueStart != null) {
-            print('item $this');
+            // print('item $this');
             list.add(options.generateValue(itemType) as T);
           }
         }

@@ -30,7 +30,11 @@ abstract class ContentValues implements Map<K, V>, CvMapModel {
 
 /// CvField in the map base implementation
 class _CvMapField<T>
-    with CvColumnMixin<T>, ColumnNameMixin, CvFieldMixin<T>
+    with
+        CvColumnMixin<T>,
+        ColumnNameMixin,
+        CvFieldHelperMixin<T>,
+        CvFieldMixin<T>
     implements CvField<T> {
   final ContentValues cv;
 
@@ -47,7 +51,7 @@ class _CvMapField<T>
   }
 
   @override
-  T? get v => cv[name] as T?;
+  T? get valueOrNull => cv[name] as T?;
 
   @override
   CvField<RT> cast<RT>() =>
@@ -73,9 +77,6 @@ class _CvMapField<T>
   bool get isNull => cv[name] == null;
 
   @override
-  String get k => name;
-
-  @override
   void setNull() {
     cv[name] = null;
   }
@@ -92,7 +93,7 @@ class _CvMapField<T>
   }
 
   @override
-  set v(T? value) {
+  set valueOrNull(T? value) {
     cv[name] = value;
   }
 }

@@ -178,8 +178,8 @@ In your `pubspec.yaml`:
 dependencies:
   cv:
     git:
-      url: git://github.com/tekartik/cv.dart
-      ref: null_safety
+      url: https://github.com/tekartik/cv.dart
+      ref: dart2_3
       path: packages/cv
     version: '>=0.1.0'
 ```

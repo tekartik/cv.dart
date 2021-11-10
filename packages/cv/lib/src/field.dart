@@ -9,6 +9,12 @@ import 'column.dart';
 ///
 /// Use [v] for value access.
 abstract class CvFieldCore<T> implements CvColumn<T> {
+  /// The value or null if null or not set
+  T? get valueOrNull;
+
+  /// The value if available (nor null, nor not set).
+  T get valueOrThrow;
+
   /// The value (abbr.)
   T? get v;
 
@@ -24,11 +30,20 @@ abstract class CvFieldCore<T> implements CvColumn<T> {
   /// Return true is null or unset
   bool get isNull;
 
+  /// Return true if set and not null
+  bool get isNotNull;
+
   /// Set the value, even if null
   set v(T? value);
 
   /// Set the value, even if null.
   set value(T? value);
+
+  /// Set the value, even if null.
+  set valueOrNull(T? value);
+
+  /// Set a non null value.
+  set valueOrThrow(T value);
 
   /// Clear value and flag
   void clear();
@@ -107,6 +122,7 @@ class _List<T> extends ListBase<T> {
 
 /// Nested list implementation.
 class ListCvFieldImpl<T> extends CvFieldImpl<List<T>>
+    with CvFieldHelperMixin<List<T>>
     implements CvField<List<T>>, CvListField<T> {
   @override
   List<T> createList() => _List<T>();
@@ -162,12 +178,13 @@ class CvFieldImpl<T>
     with // order is important, 2020/11/08 last one wins!
         CvColumnMixin<T>,
         ColumnNameMixin,
+        CvFieldHelperMixin<T>,
         CvFieldMixin<T> {
   /// Only set value if not null
   CvFieldImpl(String name, [T? value]) {
     this.name = name;
     if (value != null) {
-      v = value;
+      valueOrNull = value;
     }
   }
 
@@ -178,47 +195,65 @@ class CvFieldImpl<T>
   }
 
   /// Set value even if null
-  CvFieldImpl.withValue(String name, T value) {
+  CvFieldImpl.withValue(String name, T? value) {
     this.name = name;
-    v = value;
+    valueOrNull = value;
   }
 }
 
 // ensure mixin compiles
 // ignore: unused_element
 class _TestCvField
-    with ColumnNameMixin, CvColumnMixin, CvFieldMixin
+    with ColumnNameMixin, CvColumnMixin, CvFieldHelperMixin, CvFieldMixin
     implements CvField {}
+
+/// Field helper (abbr and common shortcuts).
+mixin CvFieldHelperMixin<T> implements CvField<T> {
+  @override
+  T? get v => valueOrNull;
+
+  @override
+  T? get value => valueOrNull;
+
+  @override
+  set v(T? value) => valueOrNull = value;
+
+  @override
+  set value(T? value) => valueOrNull = value;
+
+  @override
+  T get valueOrThrow => valueOrNull!;
+
+  @override
+  set valueOrThrow(T value) => valueOrNull = value;
+
+  @override
+  bool get isNotNull => !isNull;
+
+  /// The key
+  @override
+  String get k => name;
+}
 
 /// Field implementation mixin.
 mixin CvFieldMixin<T> implements CvField<T> {
   T? _value;
 
-  /// The value
+  /// The value or null
   @override
-  T? get v => _value;
+  T? get valueOrNull => _value;
 
   @override
   String get key => name;
 
   @override
-  T? get value => _value;
-
-  /// The key
-  @override
-  String get k => name;
-
-  @override
   bool get isNull => _value == null;
 
   @override
-  set v(T? value) {
+  set valueOrNull(T? value) {
     _hasValue = true;
     _value = value;
   }
-
-  @override
-  set value(T? value) => v = value;
 
   /// Clear value and flag
   @override

@@ -20,6 +20,12 @@ void main() {
       expect((CvField('name').v = 'test').hashCode,
           (CvField('name').v = 'test').hashCode);
     });
+    test('withValue', () {
+      expect(CvField<String>.withValue('name', null).v, isNull);
+      expect(CvField<String>.withValue('name', null).name, 'name');
+      expect(CvField<String>.withValue('name', 'test').v, 'test');
+      expect(CvField<String>.withValue('name', null).hasValue, true);
+    });
     test('equals', () {
       expect(CvField('name'), CvField('name'));
       expect(CvField('name'), CvField('name', null));
@@ -59,6 +65,35 @@ void main() {
       expect(
           (CvField<num>('double')..fillField(CvFillOptions(valueStart: 0))).v,
           1.5);
+
+      // List
+      expect((CvField<List>('list')..fillField()).v, null);
+      expect((CvField<List>('list')..fillField(CvFillOptions(valueStart: 0))).v,
+          []);
+      expect(
+          (CvField<List>('list')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
+              .v,
+          [1]);
+      expect(
+          (CvField<List>('list')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
+              .v,
+          [1, 2]);
+      // Map
+      expect((CvField<Map>('map')..fillField()).v, null);
+      expect(
+          (CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v, {});
+      expect(
+          (CvField<Map>('map')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
+              .v,
+          {'field_1': 1});
+      expect(
+          (CvField<Map>('map')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
+              .v,
+          {'field_1': 1, 'field_2': 2});
     });
 
     test('withName', () {
@@ -76,12 +111,20 @@ void main() {
           [1]);
     });
     test('hasValue', () {
-      var field = CvField('name');
+      var field = CvField<int>('name');
       expect(field.hasValue, isFalse);
       expect(field.v, isNull);
+      expect(field.valueOrNull, isNull);
+      try {
+        field.valueOrThrow;
+        fail('should fail');
+      } on TypeError catch (e) {
+        print(e.runtimeType);
+      }
       field.setNull();
       expect(field.hasValue, isTrue);
       expect(field.v, isNull);
+
       field.clear();
       expect(field.hasValue, isFalse);
       expect(field.v, isNull);
@@ -89,6 +132,15 @@ void main() {
       expect(field.v, 1);
       field.value = 2;
       expect(field.v, 2);
+      field.valueOrThrow = 3;
+      expect(field.v, 3);
+      expect(field.isNull, isFalse);
+      expect(field.isNotNull, isTrue);
+      field.valueOrNull = null;
+      expect(field.hasValue, isTrue);
+      expect(field.v, isNull);
+      expect(field.isNull, isTrue);
+      expect(field.isNotNull, isFalse);
     });
     test('CvModelField', () {
       var modelField = CvModelField<IntContent>('test');
