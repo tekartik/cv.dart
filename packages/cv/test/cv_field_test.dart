@@ -65,6 +65,35 @@ void main() {
       expect(
           (CvField<num>('double')..fillField(CvFillOptions(valueStart: 0))).v,
           1.5);
+
+      // List
+      expect((CvField<List>('list')..fillField()).v, null);
+      expect((CvField<List>('list')..fillField(CvFillOptions(valueStart: 0))).v,
+          []);
+      expect(
+          (CvField<List>('list')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
+              .v,
+          [1]);
+      expect(
+          (CvField<List>('list')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
+              .v,
+          [1, 2]);
+      // Map
+      expect((CvField<Map>('map')..fillField()).v, null);
+      expect(
+          (CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v, {});
+      expect(
+          (CvField<Map>('map')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
+              .v,
+          {'field_1': 1});
+      expect(
+          (CvField<Map>('map')
+                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
+              .v,
+          {'field_1': 1, 'field_2': 2});
     });
 
     test('withName', () {
