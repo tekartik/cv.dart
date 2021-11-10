@@ -1,6 +1,7 @@
-## 0.2.3
+## 0.2.3+1
 
 - Allow nullable for `CvField.withValue`, value being always set, even for null.
+- Fix `fillField` for generic `List` and `Map`
 
 ## 0.2.2
 
