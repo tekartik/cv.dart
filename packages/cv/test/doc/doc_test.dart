@@ -1,4 +1,6 @@
-import 'package:cv/cv.dart';
+// ignore_for_file: omit_local_variable_types
+
+import 'package:cv/cv_json.dart';
 import 'package:test/test.dart';
 
 import 'note_model.dart';
@@ -70,6 +72,42 @@ void main() {
 
       print(cart.toMap());
       // {items: [{name: Chair, price: 50}, {name: Lamp, price: 12}]}
+    });
+
+    test('json', () {
+      // Add the builders once
+      cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
+      cvAddBuilder<Item>((_) => Item());
+
+      /// Any json
+      var cartJson =
+          '{"items":[{"name":"Chair","price":50},{"name":"Lamp","price":12}]}';
+
+      /// Create a cart object
+      var cart = cartJson.cv<ShoppingCart>();
+
+      print(cart.toJson());
+      // {items: [{name: Chair, price: 50}, {name: Lamp, price: 12}]}
+
+      var items = cart.items.v!;
+      expect(items[0].name.v, 'Chair');
+    });
+
+    test('jsonList', () {
+      // Add the builders once
+      cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
+      cvAddBuilder<Item>((_) => Item());
+
+      var itemsJson =
+          '[{"name":"Chair","price":50},{"name":"Lamp","price":12}]';
+
+      /// Create a list of objects
+      var items = itemsJson.cvList<Item>();
+
+      print(items.toJson());
+      // [{"name":"Chair","price":50},{"name":"Lamp","price":12}]
+
+      expect(items[0].name.v, 'Chair');
     });
   });
 }

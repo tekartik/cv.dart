@@ -160,6 +160,43 @@ expect(items[0].name.v, 'Chair');
 print(cart.toMap());
 // {items: [{name: Chair, price: 50}, {name: Lamp, price: 12}]}
 ```
+
+## Json
+
+Additional json helpers extension on string are available if you include:
+
+```dart
+import 'package:cv/cv_json.dart';
+```
+
+Using `.cv()` you can decode a single object:
+```dart
+var cartJson =
+    '{"items":[{"name":"Chair","price":50},{"name":"Lamp","price":12}]}';
+
+// Create a cart object
+var cart = cartJson.cv<ShoppingCart>();
+```
+
+Using `.cvList()`, a list of object:
+```dart
+var itemsJson =
+    '[{"name":"Chair","price":50},{"name":"Lamp","price":12}]';
+
+/// Create a list of objects
+var items = itemsJson.cvList<Item>();
+```
+
+and you can encode to json both lists and objects using `toJson()`:
+
+```dart
+print(cart.toJson());
+// {items: [{name: Chair, price: 50}, {name: Lamp, price: 12}]}
+
+print(items.toJson());
+// [{"name":"Chair","price":50},{"name":"Lamp","price":12}]
+```
+
 ## Why
 
 - Relying on code generator always adds a level of build complexity (and build failure risk).
