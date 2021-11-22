@@ -1,3 +1,7 @@
+## 0.2.4
+
+- feat add json helpers
+
 ## 0.2.3+1
 
 - Allow nullable for `CvField.withValue`, value being always set, even for null.
