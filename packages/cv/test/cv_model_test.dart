@@ -535,3 +535,5 @@ class WithUpdateFields extends CvModelBase {
   @override
   List<CvField> get fields => [test1, if (test2 != null) test2!];
 }
+
+var lateExample = IntContent()..value.v = 1;
