@@ -1,3 +1,7 @@
+## 0.2.5
+
+- Requires dart 2.15
+
 ## 0.2.4+1
 
 - feat add json helpers
