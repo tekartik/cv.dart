@@ -60,8 +60,8 @@ expect(note.title.v, 'My note');
 
 For convenience, extension on Map are created to simply call `.cv<Type>()` on map to convert them to object:
 ```dart
-// Add the builder once
-cvAddBuilder<Note>((_) => Note());
+// Add the builder once (requires dart 2.15 - use cvAddBuilder otherwise)
+cvAddConstructor(Note.new);
 
 // Any map can be converted to a note object
 var note = {'title': 'My note'}.cv<Note>();
@@ -102,9 +102,9 @@ class Size extends CvModelBase {
 
 ```dart
 // Add the builders once
-cvAddBuilder<Rect>((_) => Rect());
-cvAddBuilder<Point>((_) => Point());
-cvAddBuilder<Size>((_) => Size());
+cvAddConstructor(Rect.new);
+cvAddConstructor(Point.new);
+cvAddConstructor(Size.new);
 ```
 
 ```dart
@@ -142,8 +142,8 @@ class Item extends CvModelBase {
 
 ```dart
 // Add the builders once
-cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
-cvAddBuilder<Item>((_) => Item());
+cvAddConstructor(Cart.new);
+cvAddConstructor(Item.new);
 ```
 
 ```dart

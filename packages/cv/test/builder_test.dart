@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/builder.dart' show cvRemoveBuilder;
 import 'package:test/test.dart';
 
 class Simple extends CvModelBase {
@@ -28,6 +29,28 @@ class ParentWithList extends CvModelBase {
   @override
   List<CvField> get fields => [children];
 }
+
+abstract class BaseClass extends CvModelBase {
+  // 1 for SubClass1, 2 for SubClass 2
+  final type = CvField<int>('type');
+  @override
+  List<CvField> get fields => [type];
+
+  BaseClass();
+
+  /// Constructor tear off for builder
+  factory BaseClass.builder(Map contextData) {
+    if (contextData['type'] == 2) {
+      return SubClass2();
+    } else {
+      return SubClass1();
+    }
+  }
+}
+
+class SubClass1 extends BaseClass {}
+
+class SubClass2 extends BaseClass {}
 
 void initModelBuilders() {
   cvAddBuilder<Parent>((_) => Parent());
@@ -112,5 +135,35 @@ void main() {
         expect(e.toString(), contains('Missing builder for MissingBuilder'));
       }
     });
+    test('Sub class', () {
+      cvAddBuilder(BaseClass.builder);
+      var base = {'type': 1}.cv<BaseClass>();
+      expect(base, const TypeMatcher<SubClass1>());
+      base = {'type': 2}.cv<BaseClass>();
+      expect(base, const TypeMatcher<SubClass2>());
+    });
+
+    test('Constructor tear-off class', () {
+      cvRemoveBuilder(SubClass1);
+      cvRemoveBuilder(SubClass2);
+      cvAddConstructor(SubClass1.new);
+      cvAddConstructor(SubClass2.new);
+      BaseClass base = {}.cv<SubClass1>();
+      expect(base, const TypeMatcher<SubClass1>());
+      base = {}.cv<SubClass2>();
+      expect(base, const TypeMatcher<SubClass2>());
+    });
+    test('Constructor tear-off class', () {
+      cvRemoveBuilder(SubClass1);
+      cvRemoveBuilder(SubClass2);
+
+      for (var tearOff in [SubClass1.new, SubClass2.new]) {
+        cvAddConstructor(tearOff);
+      }
+      BaseClass base = {}.cv<SubClass1>();
+      expect(base, const TypeMatcher<SubClass1>());
+      base = {}.cv<SubClass2>();
+      expect(base, const TypeMatcher<SubClass2>());
+    }, skip: 'This does not work (yet)');
   });
 }
