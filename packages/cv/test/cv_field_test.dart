@@ -163,11 +163,11 @@ void main() {
     });
     test('toString()', () {
       var field = CvField('name');
-      expect(field.toString(), 'name: null');
+      expect(field.toString(), 'name: <unset>');
       field = CvField<int>('name', 1);
       expect(field.toString(), 'name: 1');
       field = CvField<int>.withNull('name');
-      expect(field.toString(), 'name: null (set)');
+      expect(field.toString(), 'name: null');
     });
   });
 }

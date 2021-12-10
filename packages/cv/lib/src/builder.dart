@@ -1,12 +1,29 @@
 import 'package:cv/cv.dart';
 import 'package:meta/meta.dart';
 
+/// A model builder function should only build the model but should not
+/// fill it with the data.
+///
+/// data is for context to eventually decide to instantiate a different sub
+/// class.
+typedef CvModelBuilderFunction<T> = T Function(Map contextData);
+
+/// A model default builder takes no arguments and only create the object
+/// without context.
+typedef CvModelDefaultBuilderFunction<T> = T Function();
+
 /// Global builder map
 var _builders = <Type, Function(Map data)>{};
 
-/// Add builder
-void cvAddBuilder<T extends CvModel>(T Function(Map contextData) builder) {
+/// Add builder that uses builder function
+void cvAddBuilder<T extends CvModel>(CvModelBuilderFunction<T> builder) {
   _builders[T] = builder;
+}
+
+/// Add convenient constructor tear-off
+void cvAddConstructor<T extends CvModel>(
+    CvModelDefaultBuilderFunction<T> builder) {
+  cvAddBuilder<T>((_) => builder());
 }
 
 /// Remove builder
@@ -46,11 +63,11 @@ T cvTypeBuildModel<T extends CvModel>(Type type, Map contextData,
 
 /// Auto field
 CvModelField<T> cvModelField<T extends CvModel>(String name) =>
-    CvModelField<T>(name, (data) => cvBuildModel<T>(data as Map));
+    CvModelField<T>(name);
 
 /// Auto field
 CvModelListField<T> cvModelListField<T extends CvModel>(String name) =>
-    CvModelListField<T>(name, (data) => cvBuildModel<T>(data as Map));
+    CvModelListField<T>(name);
 
 /// Easy extension
 extension CvMapExt on Map {

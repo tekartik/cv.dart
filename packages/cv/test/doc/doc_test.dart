@@ -39,9 +39,9 @@ void main() {
 
     test('cv child', () {
       // Add the builders once
-      cvAddBuilder<Rect>((_) => Rect());
-      cvAddBuilder<Point>((_) => Point());
-      cvAddBuilder<Size>((_) => Size());
+      cvAddConstructor(Rect.new);
+      cvAddConstructor(Point.new);
+      cvAddConstructor(Size.new);
 
       // Any map can be converted to a rect object
       var rect = {
@@ -57,8 +57,8 @@ void main() {
 
     test('cv children', () {
       // Add the builders once
-      cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
-      cvAddBuilder<Item>((_) => Item());
+      cvAddConstructor(ShoppingCart.new);
+      cvAddConstructor(Item.new);
 
       // Any map can be converted to a cart object
       var cart = {

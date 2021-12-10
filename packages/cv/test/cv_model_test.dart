@@ -275,7 +275,7 @@ void main() {
       _check();
     });
 
-    test('fillModel', () {
+    test('builderCompat', () {
       expect(
           (CvModelField<IntContent>('int', (_) => IntContent())
                 ..fillModel(CvFillOptions(valueStart: 0)))
@@ -283,9 +283,25 @@ void main() {
           IntContent()..value.v = 1);
     });
 
-    test('fillModelList', () {
+    test('fillModel', () {
+      expect(
+          (CvModelField<IntContent>.builder('int', builder: (_) => IntContent())
+                ..fillModel(CvFillOptions(valueStart: 0)))
+              .v,
+          IntContent()..value.v = 1);
+    });
+
+    test('builderCompat', () {
       expect(
           (CvModelListField<IntContent>('int', (_) => IntContent())
+                ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0)))
+              .v,
+          [IntContent()..value.v = 1]);
+    });
+    test('fillModelList', () {
+      expect(
+          (CvModelListField<IntContent>.builder('int',
+                  builder: (_) => IntContent())
                 ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0)))
               .v,
           [IntContent()..value.v = 1]);
@@ -456,15 +472,16 @@ class WithDuplicatedCvFields extends CvModelBase {
 }
 
 class WithChildCvField extends CvModelBase {
-  final child = CvModelField<ChildContent>('child', (_) => ChildContent());
+  final child = CvModelField<ChildContent>.builder('child',
+      builder: (_) => ChildContent());
 
   @override
   List<CvField> get fields => [child];
 }
 
 class WithChildListCvField extends CvModelBase {
-  final children =
-      CvModelListField<ChildContent>('children', (_) => ChildContent());
+  final children = CvModelListField<ChildContent>.builder('children',
+      builder: (_) => ChildContent());
 
   @override
   List<CvField> get fields => [children];
@@ -480,7 +497,8 @@ class WithCvFieldWithParent extends CvModelBase {
 
 class WithCvModelFieldWithParent extends CvModelBase {
   final value =
-      CvModelField<IntContent>('value', (_) => IntContent()).withParent('sub');
+      CvModelField<IntContent>.builder('value', builder: (_) => IntContent())
+          .withParent('sub');
 
   @override
   List<CvField> get fields => [value];
@@ -503,8 +521,8 @@ class AllTypes extends CvModelBase {
   final mapCvField = CvField<Map>('map');
   final listCvField = CvField<List>('list');
   final mapListCvField = CvListField<Map>('mapList');
-  final children =
-      CvModelListField<WithChildCvField>('children', (_) => WithChildCvField());
+  final children = CvModelListField<WithChildCvField>.builder('children',
+      builder: (_) => WithChildCvField());
 
   @override
   List<CvField> get fields => [
@@ -535,3 +553,5 @@ class WithUpdateFields extends CvModelBase {
   @override
   List<CvField> get fields => [test1, if (test2 != null) test2!];
 }
+
+var lateExample = IntContent()..value.v = 1;

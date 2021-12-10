@@ -198,8 +198,16 @@ abstract class CvModelField<T extends CvModel> implements CvField<T> {
 
   /// Only set value if not null
   factory CvModelField(String name,
-          [T Function(dynamic contentValue)? create]) =>
+          [
+          // Arg... I want to deprecate this... please use builder instead
+          // @Deprecated('Use CvModelField.builder() instead')
+          T Function(dynamic contentValue)? create]) =>
       CvFieldContentImpl<T>(name, create);
+
+  /// Only set value if not null, optional builder method
+  factory CvModelField.builder(String name,
+          {CvModelBuilderFunction<T>? builder}) =>
+      CvFieldContentImpl<T>(name, builder);
 }
 
 /// Utilities
@@ -224,6 +232,14 @@ abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
 
   /// Only set value if not null
   factory CvModelListField(String name,
-          [T Function(dynamic contentValue)? create]) =>
+          [
+          // Soon to be deprecated
+          // @Deprecated('User CvModelListField.builder() instead')
+          T Function(dynamic contentValue)? create]) =>
       CvFieldContentListImpl<T>(name, create);
+
+  /// Only set value if not null, optional builder method
+  factory CvModelListField.builder(String name,
+          {CvModelBuilderFunction<T>? builder}) =>
+      CvFieldContentListImpl<T>(name, builder);
 }

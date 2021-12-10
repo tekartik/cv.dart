@@ -10,7 +10,10 @@ export 'src/builder.dart'
         cvModelListField,
         CvMapExt,
         CvMapListExt,
-        CvBuilderException;
+        CvBuilderException,
+        CvModelBuilderFunction,
+        cvAddConstructor,
+        CvModelDefaultBuilderFunction;
 export 'src/cv_field.dart'
     show
         CvField,

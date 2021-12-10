@@ -293,7 +293,7 @@ mixin CvFieldMixin<T> implements CvField<T> {
   }
 
   @override
-  String toString() => '$name: $v${(v == null && hasValue) ? ' (set)' : ''}';
+  String toString() => '$name: ${hasValue ? v?.toString() : '<unset>'}';
 
   /// Cast if needed
   @override
