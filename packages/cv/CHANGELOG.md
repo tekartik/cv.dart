@@ -1,3 +1,7 @@
+## 0.2.6
+
+- add jsonToMap and jsonToMapList json String helpers
+
 ## 0.2.5
 
 - Requires dart 2.15
