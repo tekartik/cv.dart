@@ -6,14 +6,22 @@ import 'package:cv/cv.dart';
 extension CvJsonStringExt on String {
   /// Create an object from a json string.
   T cv<T extends CvModel>({T Function(Map contextData)? builder}) {
-    var map = asModel(jsonDecode(this) as Map);
-    return map.cv<T>(builder: builder);
+    return jsonToMap().cv<T>(builder: builder);
   }
 
   /// Create a list from a json string
   List<T> cvList<T extends CvModel>({T Function(Map contextData)? builder}) {
-    var list = asModelList(jsonDecode(this) as List);
-    return list.cv<T>(builder: builder);
+    return jsonToMapList().cv<T>(builder: builder);
+  }
+
+  /// Decode string as a map.
+  Model jsonToMap() {
+    return asModel(jsonDecode(this) as Map);
+  }
+
+  /// Decode string as a list.
+  ModelList jsonToMapList() {
+    return asModelList(jsonDecode(this) as List);
   }
 }
 
