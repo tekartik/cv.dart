@@ -32,6 +32,7 @@ Model NewModel() => newModel(); // ignore: non_constant_identifier_names
 Model newModel() => <K, V>{};
 
 /// Create a new model list - prefer newModelList()
+@Deprecated('Use newModelList()')
 ModelList NewModelList() => <Model>[]; // ignore: non_constant_identifier_names
 
 /// Create a new model list

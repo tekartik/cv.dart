@@ -42,5 +42,32 @@ void main() {
         expect(text.cvList(builder: (_) => IntContent()).toJson(), text);
       }
     });
+    test('jsonToMap', () {
+      expect('{}'.jsonToMap(), {});
+      expect('{"test": 1}'.jsonToMap(), {'test': 1});
+      try {
+        expect('[]'.jsonToMap(), {});
+        fail('should fail');
+      } catch (_) {}
+      try {
+        expect(''.jsonToMap(), {});
+        fail('should fail');
+      } catch (_) {}
+    });
+
+    test('jsonToMapList', () {
+      expect('[]'.jsonToMapList(), []);
+      expect('[{"test": 1}]'.jsonToMapList(), [
+        {'test': 1}
+      ]);
+      try {
+        expect('{}'.jsonToMapList(), []);
+        fail('should fail');
+      } catch (_) {}
+      try {
+        expect(''.jsonToMapList(), {});
+        fail('should fail');
+      } catch (_) {}
+    });
   });
 }
