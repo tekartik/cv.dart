@@ -4,7 +4,7 @@ version: 0.2.6
 homepage: https://github.com/tekartik/cv.dart/tree/main/packages/cv
 
 environment:
-  sdk: '>=2.15.0 <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
   collection: '>=1.0.0 <3.0.0'
