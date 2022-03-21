@@ -19,10 +19,12 @@ export 'src/cv_field.dart'
         CvField,
         cvValuesAreEqual,
         CvModelListField,
+        CvModelMapField,
         CvListField,
         CvFieldListExt,
         CvModelField,
         CvModelFieldUtilsExt,
+        CvModelMapFieldUtilsExt,
         CvFieldUtilsExt,
         CvListFieldUtilsExt,
         CvFillOptions;

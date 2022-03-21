@@ -139,8 +139,8 @@ mixin CvModelMixin implements CvModel {
             }
             field.v = list;
           } else if (field is CvFieldContent) {
-            var entryValue = entry.value;
-            var cvModel = field.create(entryValue as Map);
+            var entryValue = entry.value as Map;
+            var cvModel = field.create(entryValue);
             field.v = cvModel;
             cvModel.fromMap(entryValue);
           } else if (field is CvListField) {
@@ -148,7 +148,13 @@ mixin CvModelMixin implements CvModel {
             for (var rawItem in entry.value as List) {
               list.add(rawItem);
             }
-            field.v = list;
+          } else if (field is CvModelMapField) {
+            var map = field.v = field.createMap();
+            var entryValue = entry.value as Map;
+            entryValue.forEach((key, value) {
+              var item = field.create(value as Map)..fromMap(value);
+              map[key as String] = item;
+            });
           } else {
             try {
               field.v = entry.value;
@@ -196,6 +202,17 @@ mixin CvModelMixin implements CvModel {
           // Try existing if any
           _toMap(subModel, field.field);
         }
+      } else if (field is CvModelMapField && field.isNotNull) {
+        // The submodel will be a mode too, replace existing if any
+        var subModel = model[field.key] as Model?;
+        if (subModel is! Model) {
+          subModel = newModel();
+          model.setValue(field.key, subModel);
+        }
+        field.valueOrNull?.forEach((key, value) {
+          subModel![key] =
+              value.toMap(includeMissingValue: includeMissingValue);
+        });
       } else {
         model.setValue(field.name, value,
             presentIfNull: field.hasValue || includeMissingValue);
