@@ -110,6 +110,15 @@ void main() {
               .v,
           [1]);
     });
+
+    test('fillModelMap', () {
+      cvAddConstructor(IntContent.new);
+      expect(
+          (CvModelMapField<IntContent>('modelMap')
+                ..fillMap(CvFillOptions(collectionSize: 1, valueStart: 0)))
+              .v,
+          {'field_1': IntContent()..value.v = 1});
+    });
     test('hasValue', () {
       var field = CvField<int>('name');
       expect(field.hasValue, isFalse);
@@ -144,6 +153,11 @@ void main() {
     });
     test('CvModelField', () {
       var modelField = CvModelField<IntContent>('test');
+      cvAddBuilder<IntContent>((_) => IntContent());
+      expect(modelField.create({}), const TypeMatcher<IntContent>());
+    });
+    test('CvModelMapField', () {
+      var modelField = CvModelMapField<IntContent>('test');
       cvAddBuilder<IntContent>((_) => IntContent());
       expect(modelField.create({}), const TypeMatcher<IntContent>());
     });

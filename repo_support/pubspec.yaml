@@ -10,6 +10,7 @@ dependencies:
   process_run: '>=0.10.0'
 
 dev_dependencies:
+  path:
   test: '>=1.0.0'
   dev_test: '>=0.15.5-1'
   lints:

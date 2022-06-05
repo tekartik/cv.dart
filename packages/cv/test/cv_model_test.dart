@@ -161,7 +161,7 @@ void main() {
       cv = IntContent()..copyFrom(src);
       expect(cv.toMap(), {});
     });
-    test('alltoMap', () async {
+    test('toMap', () async {
       var note = Note()
         ..title.v = 'my_title'
         ..content.v = 'my_content'
@@ -246,9 +246,28 @@ void main() {
       parent = WithChildListCvField()..fromMap(map);
       expect(parent.toMap(), map);
     });
+    test('content child map', () {
+      expect(WithChildMapCvField().toMap(), {});
+      expect(WithChildMapCvField().toMap(includeMissingValue: true),
+          {'children': null});
+
+      var parent = WithChildMapCvField()
+        ..children.v = <String, ChildContent>{
+          'key': ChildContent()..sub.v = 'sub_value'
+        };
+      var map = {
+        'children': {
+          'key': {'sub': 'sub_value'}
+        }
+      };
+      expect(parent.children.v!.values.first.sub.v, 'sub_value');
+      expect(parent.toMap(), map);
+      parent = WithChildMapCvField()..fromMap(map);
+      expect(parent.toMap(), map);
+    });
     test('all types', () {
       AllTypes? allTypes;
-      void _check() {
+      void doCheck() {
         var export = allTypes!.toMap();
         var import = AllTypes()..fromMap(export);
         expect(import, allTypes);
@@ -259,7 +278,7 @@ void main() {
       }
 
       allTypes = AllTypes();
-      _check();
+      doCheck();
       allTypes
         ..intCvField.v = 1
         ..numCvField.v = 2.5
@@ -272,7 +291,7 @@ void main() {
         ..children.v = [
           WithChildCvField()..child.v = (ChildContent()..sub.v = 'sub_value')
         ];
-      _check();
+      doCheck();
     });
 
     test('builderCompat', () {
@@ -323,7 +342,8 @@ void main() {
         'map': null,
         'mapList': null,
         'stringList': null,
-        'list': null
+        'list': null,
+        'modelMap': null
       });
     });
     test('fillModel', () {
@@ -363,7 +383,12 @@ void main() {
               {'field_1': 8}
             ],
             'stringList': ['text_9'],
-            'list': [10]
+            'list': [10],
+            'modelMap': {
+              'field_1': {
+                'child': {'sub': 'text_11'}
+              }
+            }
           });
       expect(
           (CustomContent()
@@ -487,6 +512,14 @@ class WithChildListCvField extends CvModelBase {
   List<CvField> get fields => [children];
 }
 
+class WithChildMapCvField extends CvModelBase {
+  final children = CvModelMapField<ChildContent>.builder('children',
+      builder: (_) => ChildContent());
+
+  @override
+  List<CvField> get fields => [children];
+}
+
 class WithCvFieldWithParent extends CvModelBase {
   final value = CvField<int>('value').withParent('sub');
   final value2 = CvField<int>('value2').withParent('sub');
@@ -523,6 +556,8 @@ class AllTypes extends CvModelBase {
   final mapListCvField = CvListField<Map>('mapList');
   final children = CvModelListField<WithChildCvField>.builder('children',
       builder: (_) => WithChildCvField());
+  final modelMap = CvModelMapField<WithChildCvField>.builder('modelMap',
+      builder: (_) => WithChildCvField());
 
   @override
   List<CvField> get fields => [
@@ -536,6 +571,7 @@ class AllTypes extends CvModelBase {
         mapListCvField,
         stringListCvField,
         listCvField,
+        modelMap,
       ];
 }
 
@@ -550,6 +586,7 @@ class WithAutoChildren extends CvModelBase {
 class WithUpdateFields extends CvModelBase {
   final test1 = CvField<int>('test1');
   CvField<int>? test2;
+
   @override
   List<CvField> get fields => [test1, if (test2 != null) test2!];
 }

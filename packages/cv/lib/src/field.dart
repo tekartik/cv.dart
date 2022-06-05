@@ -162,6 +162,24 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
   Type get itemType => T;
 }
 
+/// Nested map of object implementation.
+class CvFieldContentMapImpl<T extends CvModel>
+    extends CvFieldImpl<Map<String, T>>
+    with CvFieldContentCreatorMixin<T>
+    implements CvModelMapField<T> {
+  /// Nexted field content creator.
+  CvFieldContentMapImpl(
+      String name, T Function(Map contentValue)? createObjectFn)
+      : super(name) {
+    _create = createObjectFn;
+  }
+
+  @override
+  Map<K, T> createMap() {
+    return <K, T>{};
+  }
+}
+
 /// Field content.
 class CvFieldContentImpl<T extends CvModel> extends CvFieldImpl<T>
     with CvFieldContentCreatorMixin<T>

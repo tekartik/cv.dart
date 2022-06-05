@@ -45,6 +45,8 @@ extension CvFieldUtilsExt<T> on CvField<T> {
     options ??= CvFillOptions();
     if (this is CvListField) {
       (this as CvListField).fillList(options);
+    } else if (this is CvModelMapField) {
+      (this as CvModelMapField).fillMap(options);
     } else if (this is CvModelField) {
       var modelValue = (this as CvModelField).create({})..fillModel(options);
       v = modelValue as T;
@@ -122,11 +124,12 @@ class CvFillOptions {
 
 extension _CvFillOptionsMap on CvFillOptions {
   /// Generate a basic map
-  Model generateMap() {
+  Model generateMap({Object Function()? generateMapValue}) {
     var map = newModel();
     var size = collectionSize ?? 0;
     for (var i = 0; i < size; i++) {
-      map['field_${i + 1}'] = generateValue(int);
+      map['field_${i + 1}'] =
+          generateMapValue != null ? generateMapValue() : generateValue(int);
     }
     return map;
   }
@@ -174,6 +177,30 @@ extension CvListFieldUtilsExt<T> on CvListField<T> {
         }
       }
       value = list;
+    }
+  }
+}
+
+/// Fill helpers
+extension CvModelMapFieldUtilsExt<T extends CvModel> on CvModelMapField<T> {
+  /// Fill a list.
+  void fillMap([CvFillOptions? options]) {
+    options ??= CvFillOptions();
+    var collectionSize = options.collectionSize;
+    if (collectionSize == null) {
+      value = null;
+    } else {
+      var rawMap = options.generateMap(generateMapValue: () {
+        var item = create({});
+        item.fillModel(options);
+        return item;
+      });
+      var map = createMap();
+      rawMap.forEach((key, value) {
+        map[key] = value as T;
+      });
+
+      value = map;
     }
   }
 }
@@ -242,4 +269,23 @@ abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
   factory CvModelListField.builder(String name,
           {CvModelBuilderFunction<T>? builder}) =>
       CvFieldContentListImpl<T>(name, builder);
+}
+
+/// Nested list
+abstract class CvModelMapField<T extends CvModel>
+    extends CvField<Map<String, T>> {
+  /// contentValue should be ignored or could be used to create the proper object
+  /// but its content should not be populated.
+  T create(Map contentValue);
+
+  /// Create the proper map
+  Map<String, T> createMap();
+
+  /// Only set value if not null
+  factory CvModelMapField(String name) => CvFieldContentMapImpl<T>(name, null);
+
+  /// Only set value if not null, optional builder method
+  factory CvModelMapField.builder(String name,
+          {CvModelBuilderFunction<T>? builder}) =>
+      CvFieldContentMapImpl<T>(name, builder);
 }
