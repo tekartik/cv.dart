@@ -184,7 +184,7 @@ mixin CvModelMixin implements CvModel {
       {List<String>? columns, bool includeMissingValue = false}) {
     _debugCheckCvFields();
 
-    void _toMap(Model model, CvField field) {
+    void modelToMap(Model model, CvField field) {
       dynamic value = field.v;
       if (value is List<CvModelCore>) {
         value = value.map((e) => (e as CvModelRead).toMap()).toList();
@@ -200,7 +200,7 @@ mixin CvModelMixin implements CvModel {
             model.setValue(field.parent, subModel);
           }
           // Try existing if any
-          _toMap(subModel, field.field);
+          modelToMap(subModel, field.field);
         }
       } else if (field is CvModelMapField && field.isNotNull) {
         // The submodel will be a mode too, replace existing if any
@@ -223,13 +223,13 @@ mixin CvModelMixin implements CvModel {
 
     if (columns == null) {
       for (var field in fields) {
-        _toMap(model, field);
+        modelToMap(model, field);
       }
     } else {
       for (var column in columns) {
         var field = this.field(column);
         if (field != null) {
-          _toMap(model, field);
+          modelToMap(model, field);
         }
       }
     }

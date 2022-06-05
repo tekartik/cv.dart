@@ -1,7 +1,5 @@
 import 'package:cv/src/model.dart';
 
-import 'model.dart';
-
 /// Key type
 typedef K = String;
 

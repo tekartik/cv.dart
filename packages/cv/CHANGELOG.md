@@ -1,3 +1,7 @@
+## 0.2.7-1
+
+- add support for map of CvModel (CvModelMapField)
+
 ## 0.2.6
 
 - add jsonToMap and jsonToMapList json String helpers

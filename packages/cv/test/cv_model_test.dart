@@ -267,7 +267,7 @@ void main() {
     });
     test('all types', () {
       AllTypes? allTypes;
-      void _check() {
+      void doCheck() {
         var export = allTypes!.toMap();
         var import = AllTypes()..fromMap(export);
         expect(import, allTypes);
@@ -278,7 +278,7 @@ void main() {
       }
 
       allTypes = AllTypes();
-      _check();
+      doCheck();
       allTypes
         ..intCvField.v = 1
         ..numCvField.v = 2.5
@@ -291,7 +291,7 @@ void main() {
         ..children.v = [
           WithChildCvField()..child.v = (ChildContent()..sub.v = 'sub_value')
         ];
-      _check();
+      doCheck();
     });
 
     test('builderCompat', () {
