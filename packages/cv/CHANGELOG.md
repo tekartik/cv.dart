@@ -1,4 +1,4 @@
-## 0.2.7-1
+## 0.2.7
 
 - add support for map of CvModel (CvModelMapField)
 

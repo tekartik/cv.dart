@@ -248,7 +248,7 @@ extension CvFieldListExt on List<CvField> {
   }
 }
 
-/// Nested list
+/// Nested list, where each value is of type T
 abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
   /// contentValue should be ignored or could be used to create the proper object
   /// but its content should not be populated.
@@ -271,7 +271,7 @@ abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
       CvFieldContentListImpl<T>(name, builder);
 }
 
-/// Nested list
+/// Nested map where each value is of type T, (key is a string)
 abstract class CvModelMapField<T extends CvModel>
     extends CvField<Map<String, T>> {
   /// contentValue should be ignored or could be used to create the proper object
