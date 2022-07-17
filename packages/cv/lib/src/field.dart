@@ -175,8 +175,8 @@ class CvFieldContentMapImpl<T extends CvModel>
   }
 
   @override
-  Map<K, T> createMap() {
-    return <K, T>{};
+  Map<String, T> createMap() {
+    return <String, T>{};
   }
 }
 

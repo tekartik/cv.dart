@@ -345,6 +345,33 @@ void main() {
         'list': null,
         'modelMap': null
       });
+      expect(
+          (AllTypes()
+                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
+              .toMap(),
+          {
+            'bool': false,
+            'int': 2,
+            'num': 3.5,
+            'string': 'text_4',
+            'children': [
+              {
+                'child': {'sub': 'text_5'}
+              }
+            ],
+            'intList': [6],
+            'map': {'field_1': 7},
+            'mapList': [
+              {'field_1': 8}
+            ],
+            'stringList': ['text_9'],
+            'list': [10],
+            'modelMap': {
+              'field_1': {
+                'child': {'sub': 'text_11'}
+              }
+            }
+          });
     });
     test('fillModel', () {
       expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(),

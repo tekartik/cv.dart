@@ -36,3 +36,6 @@ ModelList NewModelList() => <Model>[]; // ignore: non_constant_identifier_names
 /// Create a new model list
 ModelList newModelList() =>
     newModelList(); // ignore: non_constant_identifier_names
+
+/// Builder function definition
+typedef CvBuilderFunction<T> = T Function(Map contextData);

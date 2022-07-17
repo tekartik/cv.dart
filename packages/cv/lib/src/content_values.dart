@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/column.dart';
+import 'package:cv/src/typedefs.dart';
 
 import 'cv_model_mixin.dart';
 import 'field.dart';
