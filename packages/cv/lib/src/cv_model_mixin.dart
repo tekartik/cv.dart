@@ -125,6 +125,9 @@ mixin CvModelMixin implements CvModel {
                 entry = parentModel.getMapEntry(subField.name);
                 break;
               }
+            } else {
+              // Not valid data
+              break;
             }
           }
         } else {
