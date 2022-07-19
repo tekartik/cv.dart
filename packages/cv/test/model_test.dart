@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/typedefs.dart';
 import 'package:test/test.dart';
 
 void main() {

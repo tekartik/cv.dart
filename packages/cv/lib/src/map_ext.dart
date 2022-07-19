@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/typedefs.dart';
 
 /// Convenient extension on Model
 extension ModelExt on Model {

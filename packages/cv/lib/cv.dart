@@ -44,5 +44,4 @@ export 'src/typedefs.dart'
         NewModel,
         newModel,
         newModelList,
-        K,
-        V;
+        CvBuilderFunction;

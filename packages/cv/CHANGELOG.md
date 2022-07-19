@@ -1,3 +1,7 @@
+## 0.2.8+1
+
+- lazy initialize model list object in cvList.
+
 ## 0.2.7
 
 - add support for map of CvModel (CvModelMapField)

@@ -345,6 +345,33 @@ void main() {
         'list': null,
         'modelMap': null
       });
+      expect(
+          (AllTypes()
+                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
+              .toMap(),
+          {
+            'bool': false,
+            'int': 2,
+            'num': 3.5,
+            'string': 'text_4',
+            'children': [
+              {
+                'child': {'sub': 'text_5'}
+              }
+            ],
+            'intList': [6],
+            'map': {'field_1': 7},
+            'mapList': [
+              {'field_1': 8}
+            ],
+            'stringList': ['text_9'],
+            'list': [10],
+            'modelMap': {
+              'field_1': {
+                'child': {'sub': 'text_11'}
+              }
+            }
+          });
     });
     test('fillModel', () {
       expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
@@ -435,12 +462,12 @@ void main() {
       });
       expect(WithCvFieldWithParent().toMap(), {});
 
-      var field = WithCvFieldWithParent()
+      object = WithCvFieldWithParent()
         ..fromMap({
           'sub': {'value': 1}
         });
-      expect(field.value.v, 1);
-      expect(field.toMap(), {
+      expect(object.value.v, 1);
+      expect(object.toMap(), {
         'sub': {'value': 1}
       });
 
@@ -456,6 +483,16 @@ void main() {
           WithCvFieldWithParent()..value.v = 1);
       expect((WithCvFieldWithParent()..value.v = 1).hashCode,
           (WithCvFieldWithParent()..value.v = 1).hashCode);
+
+      // Missing map
+      object = WithCvFieldWithParent()..fromMap({'dummy': 1});
+      expect(object.value.v, null);
+      expect(object.toMap(), {});
+
+      // Not a map
+      object = WithCvFieldWithParent()..fromMap({'sub': 1});
+      expect(object.value.v, null);
+      expect(object.toMap(), {});
     });
     test('CvModelFieldWithParent', () {
       var map = {
