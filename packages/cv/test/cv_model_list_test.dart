@@ -2,6 +2,7 @@ import 'package:cv/cv.dart';
 import 'package:test/test.dart';
 
 import 'cv_model_test.dart';
+import 'model_test.dart';
 
 void main() {
   group('cv', () {
@@ -11,7 +12,7 @@ void main() {
     });
 
     test('toMapList', () async {
-      expect([IntContent()].toMapList(), [{}]);
+      expect([IntContent()].toMapList(), listWithOneEmptyModel);
 
       expect([(IntContent()..value.v = 1)].toMapList(), [
         {'value': 1}
@@ -19,21 +20,19 @@ void main() {
       expect([(IntContent()..value.v = 1)].toMapList(columns: ['value']), [
         {'value': 1}
       ]);
-      expect([(IntContent()..value.v = 1)].toMapList(columns: ['other']), [{}]);
+      expect([(IntContent()..value.v = 1)].toMapList(columns: ['other']),
+          listWithOneEmptyModel);
     });
     test('toMapList', () async {
-      expect([IntContent()].toMapList(), [{}]);
+      expect([IntContent()].toMapList(), listWithOneEmptyModel);
 
       expect([(IntContent()..value.v = 1)].toMapList(), [
         {'value': 1}
       ]);
-
-      expect([{}].cv<IntContent>(builder: intContentBuilder), [IntContent()]);
-
-      expect([{}].cv<IntContent>(builder: intContentBuilder), [IntContent()]);
     });
     test('CvModelList.cv', () async {
-      expect([{}].cv<IntContent>(builder: intContentBuilder), [IntContent()]);
+      expect(listWithOneEmptyModel.cv<IntContent>(builder: intContentBuilder),
+          [IntContent()]);
 
       expect(
           [

@@ -43,29 +43,29 @@ void main() {
       }
     });
     test('jsonToMap', () {
-      expect('{}'.jsonToMap(), {});
+      expect('{}'.jsonToMap(), isEmpty);
       expect('{"test": 1}'.jsonToMap(), {'test': 1});
       try {
-        expect('[]'.jsonToMap(), {});
+        expect('[]'.jsonToMap(), isEmpty);
         fail('should fail');
       } catch (_) {}
       try {
-        expect(''.jsonToMap(), {});
+        expect(''.jsonToMap(), isEmpty);
         fail('should fail');
       } catch (_) {}
     });
 
     test('jsonToMapList', () {
-      expect('[]'.jsonToMapList(), []);
+      expect('[]'.jsonToMapList(), isEmpty);
       expect('[{"test": 1}]'.jsonToMapList(), [
         {'test': 1}
       ]);
       try {
-        expect('{}'.jsonToMapList(), []);
+        expect('{}'.jsonToMapList(), isEmpty);
         fail('should fail');
       } catch (_) {}
       try {
-        expect(''.jsonToMapList(), {});
+        expect(''.jsonToMapList(), isEmpty);
         fail('should fail');
       } catch (_) {}
     });

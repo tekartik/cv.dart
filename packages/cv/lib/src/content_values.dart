@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/column.dart';
+import 'package:cv/src/cv_model.dart';
 import 'package:cv/src/typedefs.dart';
 
 import 'cv_model_mixin.dart';
@@ -190,7 +191,7 @@ mixin ContentValuesMapMixin implements ContentValues {
   @override
   dynamic operator [](Object? key) {
     if (key != null) {
-      return field(key.toString())?.v;
+      return dynamicField(key)?.v;
     } else {
       return null;
     }
@@ -198,7 +199,7 @@ mixin ContentValuesMapMixin implements ContentValues {
 
   @override
   void operator []=(key, value) {
-    field(key.toString())?.v = value;
+    dynamicField(key)?.v = value;
   }
 
   @override
@@ -211,7 +212,7 @@ mixin ContentValuesMapMixin implements ContentValues {
   @override
   dynamic remove(Object? key) {
     if (key != null) {
-      field(key.toString())?.clear();
+      dynamicField(key)?.clear();
     }
   }
 }

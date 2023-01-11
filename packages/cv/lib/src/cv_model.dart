@@ -67,3 +67,9 @@ extension CvModelUtilsExt on CvModel {
     }
   }
 }
+
+/// Internal ext
+extension CvModelInternalExt on CvModelCore {
+  /// dynamic field of any type.
+  CvField<Object?>? dynamicField(Object key) => field<Object?>(key.toString());
+}

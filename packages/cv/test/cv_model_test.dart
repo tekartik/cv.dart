@@ -97,16 +97,17 @@ void main() {
       expect(IntContent()..value.v = 2, isNot(IntContent()..value.v = 1));
     });
     test('toMap', () async {
-      expect(IntContent().toMap(), {});
+      expect(IntContent().toMap(), isEmpty);
       expect(IntContent().toMap(includeMissingValue: true), {'value': null});
       expect((IntContent()..value.v = 1).toMap(), {'value': 1});
       expect((IntContent()..value.v = null).toMap(), {'value': null});
-      expect((IntContent()..value.setValue(null)).toMap(), {});
+      expect((IntContent()..value.setValue(null)).toMap(), isEmpty);
 
       expect((IntContent()..value.setValue(null, presentIfNull: true)).toMap(),
           {'value': null});
-      expect((IntContent()..value.v = 1).toMap(columns: <String>[]), {});
-      expect((IntContent()..value.v = 1).toMap(columns: <String>['other']), {});
+      expect((IntContent()..value.v = 1).toMap(columns: <String>[]), isEmpty);
+      expect((IntContent()..value.v = 1).toMap(columns: <String>['other']),
+          isEmpty);
       expect((IntContent()..value.v = 1).toMap(columns: [IntContent().value.k]),
           {'value': 1});
     });
@@ -143,7 +144,7 @@ void main() {
     });
     test('copyFrom', () {
       var cv = IntContent()..copyFrom(IntContent());
-      expect(cv.toMap(), {});
+      expect(cv.toMap(), isEmpty);
       cv = IntContent()..copyFrom(IntContent()..value.v = null);
       expect(cv.toMap(), {'value': null});
       cv = IntContent()..copyFrom(IntContent()..value.v = 1);
@@ -159,7 +160,7 @@ void main() {
       src['test'] = 1;
       expect(src.toMap(), {'test': 1});
       cv = IntContent()..copyFrom(src);
-      expect(cv.toMap(), {});
+      expect(cv.toMap(), isEmpty);
     });
     test('toMap', () async {
       var note = Note()
@@ -179,7 +180,7 @@ void main() {
       } on CvBuilderException catch (e) {
         print(e);
       }
-      expect(WithDuplicatedCvFields().toMap(), {});
+      expect(WithDuplicatedCvFields().toMap(), isEmpty);
       WithDuplicatedCvFields().fromMap({});
       WithDuplicatedCvFields().copyFrom(CvMapModel());
 
@@ -211,7 +212,7 @@ void main() {
       }
     });
     test('content child', () {
-      expect(WithChildCvField().toMap(), {});
+      expect(WithChildCvField().toMap(), isEmpty);
       expect(
           WithChildCvField().toMap(includeMissingValue: true), {'child': null});
       expect(
@@ -230,7 +231,7 @@ void main() {
       expect(parent.toMap(), map);
     });
     test('content child list', () {
-      expect(WithChildListCvField().toMap(), {});
+      expect(WithChildListCvField().toMap(), isEmpty);
       expect(WithChildListCvField().toMap(includeMissingValue: true),
           {'children': null});
 
@@ -247,7 +248,7 @@ void main() {
       expect(parent.toMap(), map);
     });
     test('content child map', () {
-      expect(WithChildMapCvField().toMap(), {});
+      expect(WithChildMapCvField().toMap(), isEmpty);
       expect(WithChildMapCvField().toMap(includeMissingValue: true),
           {'children': null});
 
@@ -460,7 +461,7 @@ void main() {
       expect((WithCvFieldWithParent()..value.v = null).toMap(), {
         'sub': {'value': null}
       });
-      expect(WithCvFieldWithParent().toMap(), {});
+      expect(WithCvFieldWithParent().toMap(), isEmpty);
 
       object = WithCvFieldWithParent()
         ..fromMap({
@@ -487,12 +488,12 @@ void main() {
       // Missing map
       object = WithCvFieldWithParent()..fromMap({'dummy': 1});
       expect(object.value.v, null);
-      expect(object.toMap(), {});
+      expect(object.toMap(), isEmpty);
 
       // Not a map
       object = WithCvFieldWithParent()..fromMap({'sub': 1});
       expect(object.value.v, null);
-      expect(object.toMap(), {});
+      expect(object.toMap(), isEmpty);
     });
     test('CvModelFieldWithParent', () {
       var map = {

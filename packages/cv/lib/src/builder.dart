@@ -13,7 +13,7 @@ typedef CvModelBuilderFunction<T> = T Function(Map contextData);
 typedef CvModelDefaultBuilderFunction<T> = T Function();
 
 /// Global builder map
-var _builders = <Type, Function(Map data)>{};
+var _builders = <Type, Object Function(Map data)>{};
 
 /// Add builder that uses builder function
 void cvAddBuilder<T extends CvModel>(CvModelBuilderFunction<T> builder) {

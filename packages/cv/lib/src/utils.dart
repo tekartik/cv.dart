@@ -16,7 +16,7 @@ bool cvModelAreEquals(CvModelRead model1, CvModelRead model2) {
     return false;
   }
   for (var cvField in model2.fields) {
-    if (model1.field(cvField.name) != cvField) {
+    if (model1.dynamicField(cvField.name) != cvField) {
       return false;
     }
   }

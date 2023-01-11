@@ -2,6 +2,7 @@ import 'package:cv/cv.dart';
 import 'package:cv/src/typedefs.dart';
 import 'package:test/test.dart';
 
+List<Map> get listWithOneEmptyModel => [{}];
 void main() {
   group('model', () {
     test('value', () {
@@ -78,7 +79,7 @@ void main() {
     });
 
     test('model_base', () {
-      var map = {};
+      var map = <Object?, Object?>{};
       var model1 = <K, V>{};
       var model2 = asModel({});
 
@@ -96,8 +97,8 @@ void main() {
 
       doTest(null);
       doTest('a');
-      doTest([]);
-      doTest({});
+      doTest(<Object?>[]);
+      doTest(<Object?>{});
       for (var map in maps) {
         map.remove('test');
         expect(map['test'], isNull);
@@ -108,13 +109,13 @@ void main() {
     });
 
     test('asModel', () {
-      expect(asModel({}), {});
+      expect(asModel({}), isEmpty);
       expect(asModel({'test': 1}), {'test': 1});
       expect(asModel({}), const TypeMatcher<Model>());
     });
 
     test('cvOverride', () {
-      expect(asModel({})..cvOverride(CvField('test')), {});
+      expect(asModel({})..cvOverride(CvField('test')), isEmpty);
       expect(asModel({})..cvOverride(CvField.withNull('test')), {'test': null});
       expect(asModel({})..cvOverride(CvField('test', 1)), {'test': 1});
       expect(asModel({})..cvOverride(CvField('test', 1), 2), {'test': 2});
@@ -122,7 +123,7 @@ void main() {
     test('cvRemove', () {
       expect(asModel({'test': 2, 'other': 3})..cvRemove(CvField('test', 1)),
           {'other': 3});
-      expect(asModel({'test': 2})..cvRemove(CvField('test')), {});
+      expect(asModel({'test': 2})..cvRemove(CvField('test')), isEmpty);
     });
     test('cvSetNull', () {
       expect(asModel({})..cvSetNull(CvField('test', 1)), {'test': null});
