@@ -21,7 +21,7 @@ void main() {
       var cv = CvMapModel()..copyFrom(src);
       expect(cv.toMap(), {'test': 1});
       cv = CvMapModel()..copyFrom(IntContent());
-      expect(cv.toMap(), {});
+      expect(cv.toMap(), isEmpty);
       cv = CvMapModel()..copyFrom(IntContent()..value.v = null);
       expect(cv.toMap(), {'value': null});
       cv = CvMapModel()..copyFrom(IntContent()..value.v = 1);
@@ -31,7 +31,7 @@ void main() {
       var cv = CvMapModel();
       cv['test'] = 1;
       expect(cv.toMap(columns: ['test']), {'test': 1});
-      expect(cv.toMap(columns: []), {});
+      expect(cv.toMap(columns: []), isEmpty);
     });
     test('child content toMap', () {
       var cv = CvMapModel();
@@ -39,7 +39,7 @@ void main() {
       expect(cv.toMap(columns: ['test']), {
         'test': {'sub': 'sub_v'}
       });
-      expect(cv.toMap(columns: []), {});
+      expect(cv.toMap(columns: []), isEmpty);
     });
     test('child content list toMap', () {
       var cv = CvMapModel();
@@ -49,7 +49,7 @@ void main() {
           {'sub': 'sub_v'}
         ]
       });
-      expect(cv.toMap(columns: []), {});
+      expect(cv.toMap(columns: []), isEmpty);
     });
     test('withFields', () {
       var cv = CvMapModel.withFields([CvField('test', 1)]);
@@ -62,24 +62,24 @@ void main() {
     });
     test('map', () {
       var cv = CvMapModel();
-      expect(cv.fields, []);
+      expect(cv.fields, isEmpty);
       cv['test'] = 1;
       expect(cv.fields, [CvField('test', 1)]);
       cv['test'] = null;
-      expect(cv.fields, [CvField.withNull('test')]);
+      expect(cv.fields, [CvField<Object?>.withNull('test')]);
       expect(cv.toMap(), {'test': null});
-      cv.field('test')!.v = 2;
+      cv.field<Object?>('test')!.v = 2;
       expect(cv.fields, [CvField('test', 2)]);
       expect(cv.toMap(), {'test': 2});
-      cv.field('test')!.clear();
-      expect(cv.fields, []);
-      expect(cv.toMap(), {});
+      cv.field<Object?>('test')!.clear();
+      expect(cv.fields, isEmpty);
+      expect(cv.toMap(), isEmpty);
 
       cv = CvMapModel();
       cv['test'] = 1;
       expect(cv.fields, [CvField('test', 1)]);
       cv.clear();
-      expect(cv.fields, []);
+      expect(cv.fields, isEmpty);
     });
   });
 }

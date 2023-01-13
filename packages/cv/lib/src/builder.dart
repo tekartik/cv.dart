@@ -6,14 +6,14 @@ import 'package:meta/meta.dart';
 ///
 /// data is for context to eventually decide to instantiate a different sub
 /// class.
-typedef CvModelBuilderFunction<T> = T Function(Map contextData);
+typedef CvModelBuilderFunction<T extends Object> = T Function(Map contextData);
 
 /// A model default builder takes no arguments and only create the object
 /// without context.
-typedef CvModelDefaultBuilderFunction<T> = T Function();
+typedef CvModelDefaultBuilderFunction<T extends Object> = T Function();
 
 /// Global builder map
-var _builders = <Type, Function(Map data)>{};
+var _builders = <Type, Object Function(Map data)>{};
 
 /// Add builder that uses builder function
 void cvAddBuilder<T extends CvModel>(CvModelBuilderFunction<T> builder) {

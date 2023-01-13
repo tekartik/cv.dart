@@ -2,6 +2,8 @@ import 'package:cv/cv.dart';
 import 'package:cv/src/builder.dart' show cvRemoveBuilder;
 import 'package:test/test.dart';
 
+import 'model_test.dart';
+
 class Simple extends CvModelBase {
   final value = CvField<String>('value');
 
@@ -128,7 +130,7 @@ void main() {
       cvAddBuilder<ParentWithMissingBuilderChildren>(
           (_) => ParentWithMissingBuilderChildren());
       try {
-        (newModel()..['children'] = [{}])
+        (newModel()..['children'] = listWithOneEmptyModel)
             .cv<ParentWithMissingBuilderChildren>();
         fail('should fail');
       } on CvBuilderException catch (e) {
@@ -148,9 +150,9 @@ void main() {
       cvRemoveBuilder(SubClass2);
       cvAddConstructor(SubClass1.new);
       cvAddConstructor(SubClass2.new);
-      BaseClass base = {}.cv<SubClass1>();
+      BaseClass base = newModel().cv<SubClass1>();
       expect(base, const TypeMatcher<SubClass1>());
-      base = {}.cv<SubClass2>();
+      base = newModel().cv<SubClass2>();
       expect(base, const TypeMatcher<SubClass2>());
     });
     test('Constructor tear-off class', () {
@@ -160,9 +162,9 @@ void main() {
       for (var tearOff in [SubClass1.new, SubClass2.new]) {
         cvAddConstructor(tearOff);
       }
-      BaseClass base = {}.cv<SubClass1>();
+      BaseClass base = newModel().cv<SubClass1>();
       expect(base, const TypeMatcher<SubClass1>());
-      base = {}.cv<SubClass2>();
+      base = newModel().cv<SubClass2>();
       expect(base, const TypeMatcher<SubClass2>());
     }, skip: 'This does not work (yet)');
   });

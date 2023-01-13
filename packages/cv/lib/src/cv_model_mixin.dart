@@ -17,7 +17,7 @@ mixin CvModelMixin implements CvModel {
   void copyFrom(CvModel model) {
     _debugCheckCvFields();
     for (var field in fields) {
-      var recordCvField = model.field(field.name);
+      var recordCvField = model.dynamicField(field.name);
       if (recordCvField?.hasValue == true) {
         // ignore: invalid_use_of_visible_for_testing_member
         field.fromCvField(recordCvField!);
@@ -96,7 +96,7 @@ mixin CvModelMixin implements CvModel {
     var model = asModel(map);
     for (var column in columns) {
       try {
-        var field = this.field(column)!;
+        var field = dynamicField(column)!;
         ModelEntry? entry;
 
         if (field is CvFieldWithParent) {
@@ -230,7 +230,7 @@ mixin CvModelMixin implements CvModel {
       }
     } else {
       for (var column in columns) {
-        var field = this.field(column);
+        var field = dynamicField(column);
         if (field != null) {
           modelToMap(model, field);
         }

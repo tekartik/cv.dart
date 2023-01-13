@@ -31,11 +31,11 @@ Model newModel() => <K, V>{};
 
 /// Create a new model list - prefer newModelList()
 @Deprecated('Use newModelList()')
-ModelList NewModelList() => <Model>[]; // ignore: non_constant_identifier_names
+// ignore: non_constant_identifier_names
+ModelList NewModelList() => newModelList();
 
 /// Create a new model list
-ModelList newModelList() =>
-    newModelList(); // ignore: non_constant_identifier_names
+ModelList newModelList() => <Model>[];
 
 /// Builder function definition
 typedef CvBuilderFunction<T> = T Function(Map contextData);

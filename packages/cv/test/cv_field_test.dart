@@ -16,9 +16,9 @@ void main() {
       expect(cvValuesAreEqual({'a': 'b'}, {'a': 'b'}), isTrue);
     });
     test('hashCode', () {
-      expect(CvField('name').hashCode, CvField('name').hashCode);
-      expect((CvField('name').v = 'test').hashCode,
-          (CvField('name').v = 'test').hashCode);
+      expect(CvField<int>('name').hashCode, CvField<String>('name').hashCode);
+      expect((CvField<Object?>('name').v = 'test').hashCode,
+          (CvField<Object?>('name').v = 'test').hashCode);
     });
     test('withValue', () {
       expect(CvField<String>.withValue('name', null).v, isNull);
@@ -27,16 +27,17 @@ void main() {
       expect(CvField<String>.withValue('name', null).hasValue, true);
     });
     test('equals', () {
-      expect(CvField('name'), CvField('name'));
-      expect(CvField('name'), CvField('name', null));
-      expect(CvField('name'), isNot(CvField.withValue('name', null)));
-      expect(CvField('name'), isNot(CvField.withNull('name')));
+      expect(CvField<Object?>('name'), CvField<Object?>('name'));
+      expect(CvField<Object?>('name'), CvField('name', null));
+      expect(CvField<Object?>('name'), isNot(CvField.withValue('name', null)));
+      expect(
+          CvField<Object?>('name'), isNot(CvField<Object?>.withNull('name')));
       expect(CvField('name', 1), CvField('name', 1));
       expect(CvField('name', [1]), CvField('name', [1]));
       expect(CvField('name', {'a': 'b'}), CvField('name', {'a': 'b'}));
       expect(CvField('name', 1), isNot(CvField('name', 2)));
-      expect(CvField('name'), isNot(CvField('name2')));
-      expect(CvField('name'), isNot(CvField('name', 1)));
+      expect(CvField<Object?>('name'), isNot(CvField<Object?>('name2')));
+      expect(CvField<Object?>('name'), isNot(CvField('name', 1)));
     });
 
     test('fromCvField', () {
@@ -44,7 +45,7 @@ void main() {
           CvField('name', 'value'));
       // bad type
       expect(CvField<int>('name')..fromCvField(CvField('name', 'value')),
-          CvField('name'));
+          CvField<Object?>('name'));
     });
 
     test('fromCvFieldToString', () {
@@ -69,7 +70,7 @@ void main() {
       // List
       expect((CvField<List>('list')..fillField()).v, null);
       expect((CvField<List>('list')..fillField(CvFillOptions(valueStart: 0))).v,
-          []);
+          isEmpty);
       expect(
           (CvField<List>('list')
                 ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
@@ -82,8 +83,8 @@ void main() {
           [1, 2]);
       // Map
       expect((CvField<Map>('map')..fillField()).v, null);
-      expect(
-          (CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v, {});
+      expect((CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v,
+          isEmpty);
       expect(
           (CvField<Map>('map')
                 ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
@@ -162,9 +163,9 @@ void main() {
       expect(modelField.create({}), const TypeMatcher<IntContent>());
     });
     test('withParent', () {
-      var field = CvField('name').withParent('parent');
+      var field = CvField<Object?>('name').withParent('parent');
       expect(field.name, 'parent.name');
-      var field2 = CvField('name').withParent('parent');
+      var field2 = CvField<Object?>('name').withParent('parent');
       expect(field, field2);
     });
     test('List<CvField>', () {
@@ -176,12 +177,16 @@ void main() {
       expect(field2.v, 1);
     });
     test('toString()', () {
-      var field = CvField('name');
+      var field = CvField<Object?>('name');
       expect(field.toString(), 'name: <unset>');
       field = CvField<int>('name', 1);
       expect(field.toString(), 'name: 1');
       field = CvField<int>.withNull('name');
       expect(field.toString(), 'name: null');
+    });
+    test('strict-inference ok', () {
+      var field = CvField('test');
+      expect(field.type.toString(), 'Object?');
     });
   });
 }

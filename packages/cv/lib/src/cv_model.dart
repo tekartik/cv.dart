@@ -27,7 +27,7 @@ abstract class CvModelCore {
   List<CvField> get fields;
 
   /// CvField access
-  CvField<T>? field<T>(String name);
+  CvField<T>? field<T extends Object?>(String name);
 }
 
 /// Modifiable map.
@@ -66,4 +66,10 @@ extension CvModelUtilsExt on CvModel {
       field.fillField(options);
     }
   }
+}
+
+/// Internal ext
+extension CvModelInternalExt on CvModelCore {
+  /// dynamic field of any type.
+  CvField<Object?>? dynamicField(Object key) => field<Object?>(key.toString());
 }

@@ -5,7 +5,7 @@ abstract class RawColumn {
 }
 
 /// Content value column.
-abstract class CvColumn<T> implements RawColumn {
+abstract class CvColumn<T extends Object?> implements RawColumn {
   /// Column creation.
   factory CvColumn(String name) => ColumnImpl(name);
 
@@ -14,7 +14,7 @@ abstract class CvColumn<T> implements RawColumn {
 }
 
 /// Column implementation.
-class ColumnImpl<T>
+class ColumnImpl<T extends Object?>
     with CvColumnMixin<T>, ColumnNameMixin
     implements CvColumn<T> {
   /// Column creation.
