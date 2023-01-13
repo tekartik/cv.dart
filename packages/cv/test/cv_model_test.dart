@@ -523,6 +523,11 @@ void main() {
       model.test2 = CvField<int>('test2', 2);
       expect(model.toMap(), {'test1': 1, 'test2': 2});
     });
+    test('strict-inference ok', () {
+      var model = CvMapModel();
+      // No warning
+      model.field('test');
+    });
   });
 }
 

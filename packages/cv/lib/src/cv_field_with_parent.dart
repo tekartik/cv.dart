@@ -2,7 +2,7 @@ import 'package:cv/cv.dart';
 import 'package:cv/src/field.dart';
 
 /// Class that has parent map
-abstract class CvFieldWithParent<T> implements CvField<T> {
+abstract class CvFieldWithParent<T extends Object?> implements CvField<T> {
   /// The actual field.
   CvField<T> get field;
 
@@ -11,7 +11,7 @@ abstract class CvFieldWithParent<T> implements CvField<T> {
 }
 
 /// Field with parent implementation.
-class CvFieldWithParentImpl<T>
+class CvFieldWithParentImpl<T extends Object?>
     with CvFieldHelperMixin<T>
     implements CvFieldWithParent<T> {
   @override

@@ -27,7 +27,7 @@ abstract class CvModelCore {
   List<CvField> get fields;
 
   /// CvField access
-  CvField<T>? field<T>(String name);
+  CvField<T>? field<T extends Object?>(String name);
 }
 
 /// Modifiable map.

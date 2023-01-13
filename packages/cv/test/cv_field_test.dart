@@ -5,10 +5,6 @@ import 'cv_model_test.dart';
 
 void main() {
   group('CvField', () {
-    test('non inference ok', () {
-      var field = CvField('test');
-      expect(field.type.toString(), 'Object?');
-    });
     test('cvValuesAreEquals', () {
       expect(cvValuesAreEqual(null, false), isFalse);
       expect(cvValuesAreEqual(null, null), isTrue);
@@ -187,6 +183,10 @@ void main() {
       expect(field.toString(), 'name: 1');
       field = CvField<int>.withNull('name');
       expect(field.toString(), 'name: null');
+    });
+    test('strict-inference ok', () {
+      var field = CvField('test');
+      expect(field.type.toString(), 'Object?');
     });
   });
 }

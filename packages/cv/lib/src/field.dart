@@ -8,7 +8,7 @@ import 'column.dart';
 /// CvField access
 ///
 /// Use [v] for value access.
-abstract class CvFieldCore<T> implements CvColumn<T> {
+abstract class CvFieldCore<T extends Object?> implements CvColumn<T> {
   /// The value or null if null or not set
   T? get valueOrNull;
 
