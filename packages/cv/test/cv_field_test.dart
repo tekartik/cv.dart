@@ -5,6 +5,10 @@ import 'cv_model_test.dart';
 
 void main() {
   group('CvField', () {
+    test('non inference ok', () {
+      var field = CvField('test');
+      expect(field.type.toString(), 'Object?');
+    });
     test('cvValuesAreEquals', () {
       expect(cvValuesAreEqual(null, false), isFalse);
       expect(cvValuesAreEqual(null, null), isTrue);

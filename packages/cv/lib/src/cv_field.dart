@@ -14,7 +14,7 @@ bool cvValuesAreEqual(dynamic v1, dynamic v2) {
 }
 
 /// Basic CvField
-abstract class CvField<T> implements CvFieldCore<T> {
+abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Only set value if not null
   factory CvField(String name, [T? value]) => CvFieldImpl(name, value);
 
@@ -27,7 +27,7 @@ abstract class CvField<T> implements CvFieldCore<T> {
 }
 
 /// Nested list of raw values
-abstract class CvListField<T> implements CvField<List<T>> {
+abstract class CvListField<T extends Object?> implements CvField<List<T>> {
   /// List create helper
   List<T> createList();
 
