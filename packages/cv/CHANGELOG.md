@@ -1,4 +1,4 @@
-## 0.2.9
+## 0.2.9+1
 
 * Supports strict-casts
 * requires sdk 2.18
