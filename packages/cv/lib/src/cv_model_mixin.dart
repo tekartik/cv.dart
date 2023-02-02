@@ -65,7 +65,7 @@ mixin CvModelMixin implements CvModel {
   Map<String, CvField>? _cvFieldMap;
 
   @override
-  CvField<T>? field<T>(String name) {
+  CvField<T>? field<T extends Object?>(String name) {
     // Invalidate if needed
     if (_cvFieldMap != null) {
       if (_cvFieldMap!.length != fields.length) {

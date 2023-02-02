@@ -19,7 +19,8 @@ extension ModelExt on Model {
 
   /// Set a value, remove the key if [value] is null and [presentIfNull]
   /// is false.
-  void setValue<T>(K key, T value, {bool presentIfNull = false}) {
+  void setValue<T extends Object?>(K key, T value,
+      {bool presentIfNull = false}) {
     if (value == null && (!presentIfNull)) {
       remove(key);
     } else {
@@ -28,7 +29,7 @@ extension ModelExt on Model {
   }
 
   /// Get a value expecting a given type
-  T? getValue<T>(String key) => this[key] as T?;
+  T? getValue<T extends Object?>(String key) => this[key] as T?;
 
   /// Override the map with a value from a field or from a value.
   ///
