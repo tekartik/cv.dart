@@ -39,7 +39,7 @@ abstract class CvListField<T extends Object?> implements CvField<List<T>> {
 }
 
 /// Field utils.
-extension CvFieldUtilsExt<T> on CvField<T> {
+extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
   /// For test
   void fillField([CvFillOptions? options]) {
     options ??= CvFillOptions();
@@ -146,7 +146,7 @@ extension _CvFillOptionsMap on CvFillOptions {
 }
 
 /// Fill helpers
-extension CvListFieldUtilsExt<T> on CvListField<T> {
+extension CvListFieldUtilsExt<T extends Object?> on CvListField<T> {
   /// Fill a list.
   void fillList([CvFillOptions? options]) {
     options ??= CvFillOptions();

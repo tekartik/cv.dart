@@ -1,4 +1,8 @@
-## 0.2.9+2
+## 0.2.10
+
+* fix sdk 2.19 analyzer crash
+
+## 0.2.9+3
 
 * Supports strict-casts
 * requires sdk 2.18

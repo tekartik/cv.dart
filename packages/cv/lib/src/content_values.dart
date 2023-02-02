@@ -31,7 +31,7 @@ abstract class ContentValues implements Map<K, V>, CvMapModel {
 }
 
 /// CvField in the map base implementation
-class _CvMapField<T>
+class _CvMapField<T extends Object?>
     with
         CvColumnMixin<T>,
         ColumnNameMixin,
@@ -143,7 +143,7 @@ class ContentValuesMap
       .toList();
 
   @override
-  CvField<T>? field<T>(String name) {
+  CvField<T>? field<T extends Object?>(String name) {
     var value = this[name];
     if (value != null) {
       return _CvMapField(this, name, value as T);
