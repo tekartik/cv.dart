@@ -1,6 +1,6 @@
-## 0.2.10-1
+## 0.2.10
 
-* requires sdk 2.19
+* fix sdk 2.19 analyzer crash
 
 ## 0.2.9+3
 
