@@ -1,3 +1,7 @@
+## 0.2.11
+
+* Dart 3 support
+
 ## 0.2.10
 
 * fix sdk 2.19 analyzer crash
