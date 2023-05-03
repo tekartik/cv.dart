@@ -6,6 +6,7 @@ void main() {
   group('content_api_test', () {
     test('exports', () {
       [
+        CvColumn,
         CvField,
         CvModelBase,
         CvModel,
