@@ -14,6 +14,7 @@ export 'src/builder.dart'
         CvModelBuilderFunction,
         cvAddConstructor,
         CvModelDefaultBuilderFunction;
+export 'src/cv_column.dart' show CvColumn;
 export 'src/cv_field.dart'
     show
         CvField,

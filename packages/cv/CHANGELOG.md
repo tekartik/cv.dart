@@ -1,3 +1,7 @@
+## 0.2.12
+
+* export `CvColumn`
+
 ## 0.2.11
 
 * Dart 3 support
