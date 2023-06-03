@@ -1,6 +1,7 @@
-## 0.2.12
+## 0.2.12+1
 
 * export `CvColumn`
+* fix fill option for Model like for Map
 
 ## 0.2.11
 

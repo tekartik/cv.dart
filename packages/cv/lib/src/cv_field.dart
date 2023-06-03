@@ -85,7 +85,7 @@ Object? cvFillOptionsGenerateBasicType(Type type, CvFillOptions options) {
       options.valueStart = valueStart - 1;
       v = options.generateList();
       valueStart = options.valueStart!;
-    } else if (type == Map) {
+    } else if (type == Map || type == Model) {
       options.valueStart = valueStart - 1;
       v = options.generateMap();
       valueStart = options.valueStart!;
