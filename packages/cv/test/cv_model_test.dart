@@ -303,7 +303,7 @@ void main() {
           IntContent()..value.v = 1);
     });
 
-    test('fillModel', () {
+    test('basic fillModel', () {
       expect(
           (CvModelField<IntContent>.builder('int', builder: (_) => IntContent())
                 ..fillModel(CvFillOptions(valueStart: 0)))
@@ -327,53 +327,6 @@ void main() {
           [IntContent()..value.v = 1]);
     });
 
-    test('fillModel', () {
-      expect((IntContent()..fillModel()).toMap(), {'value': null});
-      expect((WithChildCvField()..fillModel()).toMap(), {
-        'child': {'sub': null}
-      });
-      expect((WithChildListCvField()..fillModel()).toMap(), {'children': null});
-      expect((AllTypes()..fillModel()).toMap(), {
-        'bool': null,
-        'int': null,
-        'num': null,
-        'string': null,
-        'children': null,
-        'intList': null,
-        'map': null,
-        'mapList': null,
-        'stringList': null,
-        'list': null,
-        'modelMap': null
-      });
-      expect(
-          (AllTypes()
-                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .toMap(),
-          {
-            'bool': false,
-            'int': 2,
-            'num': 3.5,
-            'string': 'text_4',
-            'children': [
-              {
-                'child': {'sub': 'text_5'}
-              }
-            ],
-            'intList': [6],
-            'map': {'field_1': 7},
-            'mapList': [
-              {'field_1': 8}
-            ],
-            'stringList': ['text_9'],
-            'list': [10],
-            'modelMap': {
-              'field_1': {
-                'child': {'sub': 'text_11'}
-              }
-            }
-          });
-    });
     test('fillModel', () {
       expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
           {'value': 1});
@@ -416,7 +369,11 @@ void main() {
               'field_1': {
                 'child': {'sub': 'text_11'}
               }
-            }
+            },
+            'model': {'field_1': 12},
+            'modelList': [
+              {'field_1': 13}
+            ]
           });
       expect(
           (CustomContent()
@@ -595,8 +552,10 @@ class AllTypes extends CvModelBase {
   final intListCvField = CvListField<int>('intList');
   final stringListCvField = CvListField<String>('stringList');
   final mapCvField = CvField<Map>('map');
+  final modelCvField = CvField<Model>('model');
   final listCvField = CvField<List>('list');
   final mapListCvField = CvListField<Map>('mapList');
+  final modelListCvField = CvListField<Model>('modelList');
   final children = CvModelListField<WithChildCvField>.builder('children',
       builder: (_) => WithChildCvField());
   final modelMap = CvModelMapField<WithChildCvField>.builder('modelMap',
@@ -615,6 +574,8 @@ class AllTypes extends CvModelBase {
         stringListCvField,
         listCvField,
         modelMap,
+        modelCvField,
+        modelListCvField,
       ];
 }
 
