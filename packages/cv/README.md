@@ -216,7 +216,7 @@ dependencies:
   cv:
     git:
       url: https://github.com/tekartik/cv.dart
-      ref: dart2_3
+      ref: dart3a
       path: packages/cv
     version: '>=0.1.0'
 ```
