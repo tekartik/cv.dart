@@ -1,3 +1,7 @@
+## 0.2.13-1
+
+* add `CvField.encoded` static function to encode a field content during toMap/fromMap
+
 ## 0.2.12+1
 
 * export `CvColumn`
