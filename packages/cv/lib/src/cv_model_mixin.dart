@@ -3,6 +3,7 @@ import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/cv_model.dart';
 
 import 'builder.dart';
+import 'cv_field.dart';
 import 'env_utils.dart';
 import 'field.dart';
 import 'utils.dart';
@@ -158,6 +159,16 @@ mixin CvModelMixin implements CvModel {
               var item = field.create(value as Map)..fromMap(value);
               map[key as String] = item;
             });
+          } else if (field is CvFieldEncodedImpl) {
+            // Decode
+            Object? decodedValue;
+            var encodedValue = entry.value;
+            if (field.codec != null) {
+              decodedValue = field.codec!.decode(encodedValue);
+            } else {
+              decodedValue = encodedValue;
+            }
+            field.v = decodedValue;
           } else {
             try {
               field.v = entry.value;
@@ -216,6 +227,15 @@ mixin CvModelMixin implements CvModel {
           subModel![key] =
               value.toMap(includeMissingValue: includeMissingValue);
         });
+      } else if (field is CvFieldEncodedImpl && field.isNotNull) {
+        Object? encodedValue;
+        if (field.codec != null) {
+          encodedValue = field.codec!.encode(value);
+        } else {
+          encodedValue = value;
+        }
+        model.setValue(field.name, encodedValue,
+            presentIfNull: field.hasValue || includeMissingValue);
       } else {
         model.setValue(field.name, value,
             presentIfNull: field.hasValue || includeMissingValue);

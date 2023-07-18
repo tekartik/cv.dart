@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cv/cv.dart';
 import 'package:test/test.dart';
 
@@ -104,6 +106,19 @@ void main() {
       expect(newField.value, 1);
     });
 
+    test('encoded', () {
+      var field = CvField.encoded<int, int>('test', codec: null);
+      expect(field.value, isNull);
+      expect(field.name, 'test');
+      field.value = 1;
+      expect(field.value, 1);
+      field = CvField.encoded<int, String>('test', codec: IntToStringCodec());
+      expect(field.value, isNull);
+      expect(field.name, 'test');
+      field.value = 1;
+      expect(field.value, 1);
+    });
+
     test('fillList', () {
       expect(
           (CvListField<int>('int')
@@ -189,4 +204,24 @@ void main() {
       expect(field.type.toString(), 'Object?');
     });
   });
+}
+
+class IntToStringConverter with Converter<int, String> {
+  const IntToStringConverter();
+  @override
+  String convert(int input) => input.toString();
+}
+
+class StringToIntConverter with Converter<String, int> {
+  const StringToIntConverter();
+  @override
+  int convert(String input) => int.parse(input);
+}
+
+class IntToStringCodec with Codec<int, String> {
+  @override
+  Converter<String, int> get decoder => const StringToIntConverter();
+
+  @override
+  Converter<int, String> get encoder => const IntToStringConverter();
 }

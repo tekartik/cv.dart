@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 
+import 'column.dart';
 import 'field.dart';
 
 /// If 2 values are equals, entering nested list/map if any.
@@ -24,6 +27,33 @@ abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Force a value even if null
   factory CvField.withValue(String name, T? value) =>
       CvFieldImpl.withValue(name, value);
+
+  /// Encode a [S] source exposed value to an encoded [T] saved value
+  static CvField<S> encoded<S extends Object?, T extends Object?>(String name,
+      {required Codec<S, T>? codec}) {
+    var encryptedField = CvField<T>(name);
+    return CvFieldEncodedImpl<S, T>(name, encryptedField, codec);
+  }
+}
+
+/// Transform helper.
+class CvFieldEncodedImpl<S extends Object?, T extends Object?>
+    with
+        CvColumnMixin<S>,
+        ColumnNameMixin,
+        CvFieldHelperMixin<S>,
+        CvFieldMixin<S>
+    implements CvField<S> {
+  /// Source field.
+  final CvField<T> encodedField;
+
+  /// Codec.
+  final Codec<S, T>? codec;
+
+  /// Transform helper.
+  CvFieldEncodedImpl(String name, this.encodedField, this.codec) {
+    this.name = name;
+  }
 }
 
 /// Nested list of raw values

@@ -5,6 +5,8 @@ import 'package:cv/src/builder.dart';
 import 'package:cv/src/cv_model_mixin.dart';
 import 'package:test/test.dart';
 
+import 'cv_field_test.dart';
+
 CvFillOptions get testFillOptions =>
     CvFillOptions(valueStart: 0, collectionSize: 1);
 
@@ -485,6 +487,29 @@ void main() {
       // No warning
       model.field('test');
     });
+    test('encoded', () {
+      var model = WithEncodedFields();
+      expect(model.toMap(), isEmpty);
+      model.test.v = 1;
+      expect(model.test.v, 1);
+      expect(model.toMap(), {'test': '1'});
+      model.fromMap({'test': '2'});
+      expect(model.toMap(), {'test': '2'});
+      expect(model.test.v, 2);
+    });
+    test('encoded with dependency', () {
+      var model = WithDependentEncodedFields();
+      expect(model.toMap(), isEmpty);
+      model.test.v = '1';
+      expect(model.test.v, '1');
+      expect(model.toMap(), {'test': ',1'});
+      model.fromMap({'test': ',2'}); // fail!
+      expect(model.toMap(), {'test': ',1'});
+      model.dep.v = 'pre';
+      model.fromMap({'test': 'pre,2'}); // fail!
+      expect(model.test.v, '2');
+      expect(model.toMap(), {'dep': 'pre', 'test': 'pre,2'});
+    });
   });
 }
 
@@ -593,6 +618,74 @@ class WithUpdateFields extends CvModelBase {
 
   @override
   List<CvField> get fields => [test1, if (test2 != null) test2!];
+}
+
+class WithEncodedFields extends CvModelBase {
+  final test = CvField.encoded<int, String>('test', codec: IntToStringCodec());
+
+  @override
+  List<CvField> get fields => [test];
+}
+
+class IntToStringCodec with Codec<int, String> {
+  @override
+  Converter<String, int> get decoder => const StringToIntConverter();
+
+  @override
+  Converter<int, String> get encoder => const IntToStringConverter();
+}
+
+abstract class _CommonConverter with Converter<String, String> {
+  final WithDependentEncodedFields model;
+
+  const _CommonConverter(this.model);
+}
+
+class _ToStringConverter extends _CommonConverter {
+  const _ToStringConverter(super.model);
+
+  @override
+  String convert(String input) => [model.dep.v ?? '', input].join(',');
+}
+
+class _FromStringConverter extends _CommonConverter {
+  const _FromStringConverter(super.mode);
+
+  @override
+  String convert(String input) {
+    var parts = input.split(',');
+    if (model.dep.v != parts[0]) {
+      throw ArgumentError('Invalid value');
+    }
+    return parts[1];
+  }
+}
+
+/// Encrypt codec.
+class _CheckDependendentCodec with Codec<String, String> {
+  final WithDependentEncodedFields model;
+
+  _CheckDependendentCodec(this.model) {
+    encoder = _ToStringConverter(model);
+    decoder = _FromStringConverter(model);
+  }
+
+  @override
+  late final Converter<String, String> decoder;
+
+  @override
+  late final Converter<String, String> encoder;
+}
+
+class WithDependentEncodedFields extends CvModelBase {
+  final dep = CvField<String>('dep');
+
+  // Must be after
+  late final test = CvField.encoded<String, String>('test',
+      codec: _CheckDependendentCodec(this));
+
+  @override
+  List<CvField> get fields => [dep, test];
 }
 
 var lateExample = IntContent()..value.v = 1;
