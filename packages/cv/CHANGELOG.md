@@ -1,6 +1,7 @@
-## 0.2.13-1
+## 0.2.13
 
-* add `CvField.encoded` static function to encode a field content during toMap/fromMap
+* add `CvField.encoded` static function to encode a field content during `toMap()`/`fromMap()`
+* add `cvModelsAreEquals` helpers with optional columns selection to compare 2 models
 
 ## 0.2.12+1
 
