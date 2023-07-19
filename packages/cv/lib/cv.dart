@@ -46,3 +46,4 @@ export 'src/typedefs.dart'
         newModel,
         newModelList,
         CvBuilderFunction;
+export 'src/utils.dart' show cvModelsAreEquals;

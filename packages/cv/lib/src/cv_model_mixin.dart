@@ -6,7 +6,6 @@ import 'builder.dart';
 import 'cv_field.dart';
 import 'env_utils.dart';
 import 'field.dart';
-import 'utils.dart';
 
 /// For dev only
 var debugContent = false; // devWarning(true);
@@ -84,7 +83,7 @@ mixin CvModelMixin implements CvModel {
   @override
   bool operator ==(other) {
     if (other is CvModelRead) {
-      return cvModelAreEquals(this, other);
+      return cvModelsAreEquals(this, other);
     }
     return false;
   }

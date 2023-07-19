@@ -26,6 +26,14 @@ class IntContent extends CvModelBase {
   List<CvField> get fields => [value];
 }
 
+class TwoFieldsContent extends CvModelBase {
+  final value1 = CvField<int>('value1');
+  final value2 = CvField<int>('value2');
+
+  @override
+  List<CvField> get fields => [value1, value2];
+}
+
 /// Builder
 IntContent intContentBuilder(Map map) => IntContent();
 
@@ -509,6 +517,27 @@ void main() {
       model.fromMap({'test': 'pre,2'}); // fail!
       expect(model.test.v, '2');
       expect(model.toMap(), {'dep': 'pre', 'test': 'pre,2'});
+    });
+    test('cvModelAreEquals', () {
+      var content1 = TwoFieldsContent()
+        ..value1.v = 1
+        ..value2.v = 2;
+      var content2 = TwoFieldsContent()
+        ..value1.v = 1
+        ..value2.v = 2;
+      expect(cvModelsAreEquals(content1, content2), true);
+      content1.value1.v = 3;
+      expect(cvModelsAreEquals(content1, content2), false);
+      expect(
+          cvModelsAreEquals(content1, content2, columns: [content1.value1.key]),
+          false);
+      expect(
+          cvModelsAreEquals(content1, content2, columns: [content1.value2.key]),
+          true);
+      expect(
+          cvModelsAreEquals(content1, content2,
+              columns: [content1.value1.key, content1.value2.key]),
+          false);
     });
   });
 }

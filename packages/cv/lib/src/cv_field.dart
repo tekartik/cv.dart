@@ -10,7 +10,7 @@ import 'field.dart';
 /// If 2 values are equals, entering nested list/map if any.
 bool cvValuesAreEqual(dynamic v1, dynamic v2) {
   try {
-    return DeepCollectionEquality().equals(v1, v2);
+    return const DeepCollectionEquality().equals(v1, v2);
   } catch (_) {
     return v1 == v2;
   }
