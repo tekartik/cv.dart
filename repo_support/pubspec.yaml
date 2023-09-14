@@ -13,7 +13,7 @@ dev_dependencies:
   path:
   test: '>=1.0.0'
   dev_test: '>=0.15.5-1'
-  lints:
+  lints: '>=2.1.1'
 dependency_overrides:
 #  tekartik_build_utils:
 #    path: ../../../tekartik/build_utils.dart
