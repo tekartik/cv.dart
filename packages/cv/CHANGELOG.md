@@ -1,3 +1,7 @@
+## 0.2.14
+
+* add `CvModelEmpty` to be used as empty model
+
 ## 0.2.13
 
 * add `CvField.encoded` static function to encode a field content during `toMap()`/`fromMap()`
