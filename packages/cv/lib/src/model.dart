@@ -34,7 +34,7 @@ class ModelListImpl extends ModelListBase {
   /// Create a model. If list is null, the model
   /// is an empty list
 
-  ModelListImpl(Iterable<dynamic> iterable) : super(iterable);
+  ModelListImpl(Iterable<dynamic> super.iterable);
 }
 
 /// Base model list.

@@ -45,6 +45,12 @@ abstract class CvMapModel implements CvModel, Model {
 /// Model to access the data
 abstract class CvModel implements CvModelRead, CvModelWrite, CvModelCore {}
 
+/// Empty model.
+class CvModelEmpty extends CvModelBase {
+  @override
+  List<CvField> get fields => [];
+}
+
 /// Base content class
 abstract class CvModelBase with CvModelMixin {}
 

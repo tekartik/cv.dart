@@ -539,6 +539,9 @@ void main() {
               columns: [content1.value1.key, content1.value2.key]),
           false);
     });
+    test('cvModelAreEquals', () {
+      expect(CvModelEmpty().toMap(), isEmpty);
+    });
   });
 }
 

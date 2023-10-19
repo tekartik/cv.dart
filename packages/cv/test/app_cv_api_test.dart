@@ -15,6 +15,7 @@ void main() {
         CvModelField,
         CvListField,
         cvValuesAreEqual,
+        CvModelEmpty,
       ];
     });
   });

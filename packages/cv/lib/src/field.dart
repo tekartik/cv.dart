@@ -128,7 +128,7 @@ class ListCvFieldImpl<T> extends CvFieldImpl<List<T>>
   List<T> createList() => _List<T>();
 
   /// Nested list.
-  ListCvFieldImpl(String name) : super(name);
+  ListCvFieldImpl(super.name);
 
   @override
   Type get itemType => T;
@@ -153,8 +153,7 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
 
   /// Nexted field content creator.
   CvFieldContentListImpl(
-      String name, T Function(Map contentValue)? createObjectFn)
-      : super(name) {
+      super.name, T Function(Map contentValue)? createObjectFn) {
     _create = createObjectFn;
   }
 
@@ -169,8 +168,7 @@ class CvFieldContentMapImpl<T extends CvModel>
     implements CvModelMapField<T> {
   /// Nexted field content creator.
   CvFieldContentMapImpl(
-      String name, T Function(Map contentValue)? createObjectFn)
-      : super(name) {
+      super.name, T Function(Map contentValue)? createObjectFn) {
     _create = createObjectFn;
   }
 
@@ -185,8 +183,7 @@ class CvFieldContentImpl<T extends CvModel> extends CvFieldImpl<T>
     with CvFieldContentCreatorMixin<T>
     implements CvFieldContent<T>, CvModelField<T> {
   /// Field content.
-  CvFieldContentImpl(String name, T Function(Map contentValue)? createObjectFn)
-      : super(name) {
+  CvFieldContentImpl(super.name, T Function(Map contentValue)? createObjectFn) {
     _create = createObjectFn;
   }
 }
