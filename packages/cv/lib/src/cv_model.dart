@@ -24,7 +24,7 @@ abstract class CvModelWrite implements CvModelCore {
 /// Core model
 abstract class CvModelCore {
   /// to override something like [name, description]
-  List<CvField> get fields;
+  List<CvField<Object?>> get fields;
 
   /// CvField access
   CvField<T>? field<T extends Object?>(String name);
