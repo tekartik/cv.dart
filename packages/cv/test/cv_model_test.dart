@@ -45,6 +45,12 @@ class NoBuilderIntContent extends CvModelBase {
   List<CvField> get fields => [value];
 }
 
+class TestInnerWithoutBuilder extends CvModelBase {
+  final inner = CvModelField<NoBuilderIntContent>('inner');
+  @override
+  List<CvField<Object?>> get fields => [inner];
+}
+
 void addNoBuilderIntContentBuilder() {
   cvAddBuilder(noBuilderIntContentBuilder);
 }
@@ -541,6 +547,23 @@ void main() {
     });
     test('cvModelAreEquals', () {
       expect(CvModelEmpty().toMap(), isEmpty);
+    });
+    test('fillModel missing builder', () {
+      cvAddConstructor(TestInnerWithoutBuilder.new);
+      try {
+        expect(
+            (newModel().cv<TestInnerWithoutBuilder>()
+                  ..fillModel(testFillOptions))
+                .toMap(),
+            isEmpty);
+        fail('should fail');
+      } on CvBuilderException catch (e) {
+        //print(e.runtimeType);
+        //print(e);
+        // Missing builder for NoBuilderIntContent, call addBuilder
+        expect(e.toString().toLowerCase(), contains('missing builder'));
+        expect(e.toString(), contains('NoBuilderIntContent'));
+      }
     });
   });
 }
