@@ -1,6 +1,6 @@
 ## 0.2.15
 
-* add `CvFields` type as `List<CvField<Object?>>`
+* add `CvFields` type as `List<CvField<Object?>>`.
 
 ## 0.2.14
 
