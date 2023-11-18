@@ -18,6 +18,7 @@ export 'src/cv_column.dart' show CvColumn;
 export 'src/cv_field.dart'
     show
         CvField,
+        CvFields,
         cvValuesAreEqual,
         CvModelListField,
         CvModelMapField,

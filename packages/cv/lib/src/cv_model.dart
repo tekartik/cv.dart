@@ -24,7 +24,7 @@ abstract class CvModelWrite implements CvModelCore {
 /// Core model
 abstract class CvModelCore {
   /// to override something like [name, description]
-  List<CvField<Object?>> get fields;
+  CvFields get fields;
 
   /// CvField access
   CvField<T>? field<T extends Object?>(String name);
@@ -37,7 +37,7 @@ abstract class CvMapModel implements CvModel, Model {
 
   /// Predefined fields, values can be changed but none can added.
   /// Usage discouraged unless you known the limitations.
-  factory CvMapModel.withFields(List<CvField> list) {
+  factory CvMapModel.withFields(CvFields list) {
     return ContentValues.withCvFields(list);
   }
 }
@@ -48,7 +48,7 @@ abstract class CvModel implements CvModelRead, CvModelWrite, CvModelCore {}
 /// Empty model.
 class CvModelEmpty extends CvModelBase {
   @override
-  List<CvField> get fields => [];
+  CvFields get fields => [];
 }
 
 /// Base content class
@@ -57,7 +57,7 @@ abstract class CvModelBase with CvModelMixin {}
 // ignore: unused_element
 class _CvModelMock extends CvModelBase {
   @override
-  List<CvField> get fields => throw UnimplementedError();
+  CvFields get fields => throw UnimplementedError();
 }
 
 /// Test fill model utilities.

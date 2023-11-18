@@ -25,7 +25,7 @@ abstract class ContentValues implements Map<K, V>, CvMapModel {
   factory ContentValues() => ContentValuesMap();
 
   /// Content value with defined fields
-  factory ContentValues.withCvFields(List<CvField> fields) {
+  factory ContentValues.withCvFields(CvFields fields) {
     return _ContentValuesWithCvFields(fields);
   }
 }
@@ -137,7 +137,7 @@ class ContentValuesMap
   }
 
   @override
-  List<CvField> get fields => keys
+  CvFields get fields => keys
       .map((name) => field<dynamic>(name)!)
       //.where((field) => field != null)
       .toList();
@@ -219,7 +219,7 @@ mixin ContentValuesMapMixin implements ContentValues {
 
 class _ContentValuesWithCvFields extends CvBase {
   @override
-  final List<CvField> fields;
+  final CvFields fields;
 
   _ContentValuesWithCvFields(this.fields);
 }

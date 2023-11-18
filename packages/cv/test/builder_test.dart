@@ -8,35 +8,35 @@ class Simple extends CvModelBase {
   final value = CvField<String>('value');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 class Parent extends CvModelBase {
   final child = cvModelField<Child>('child');
 
   @override
-  List<CvField> get fields => [child];
+  CvFields get fields => [child];
 }
 
 class Child extends CvModelBase {
   final value = CvField<String>('value');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 class ParentWithList extends CvModelBase {
   final children = cvModelListField<Child>('children');
 
   @override
-  List<CvField> get fields => [children];
+  CvFields get fields => [children];
 }
 
 abstract class BaseClass extends CvModelBase {
   // 1 for SubClass1, 2 for SubClass 2
   final type = CvField<int>('type');
   @override
-  List<CvField> get fields => [type];
+  CvFields get fields => [type];
 
   BaseClass();
 
@@ -65,21 +65,21 @@ class MissingBuilder extends CvModelBase {
   final value = CvField<String>('value');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 class ParentWithMissingBuilderChild extends CvModelBase {
   final child = CvModelField<MissingBuilder>('child');
 
   @override
-  List<CvField> get fields => [child];
+  CvFields get fields => [child];
 }
 
 class ParentWithMissingBuilderChildren extends CvModelBase {
   final children = CvModelListField<MissingBuilder>('children');
 
   @override
-  List<CvField> get fields => [children];
+  CvFields get fields => [children];
 }
 
 void main() {

@@ -16,14 +16,14 @@ class Note extends CvModelBase {
   final date = CvField<int>('date');
 
   @override
-  List<CvField> get fields => [title, content, date];
+  CvFields get fields => [title, content, date];
 }
 
 class IntContent extends CvModelBase {
   final value = CvField<int>('value');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 class TwoFieldsContent extends CvModelBase {
@@ -31,7 +31,7 @@ class TwoFieldsContent extends CvModelBase {
   final value2 = CvField<int>('value2');
 
   @override
-  List<CvField> get fields => [value1, value2];
+  CvFields get fields => [value1, value2];
 }
 
 /// Builder
@@ -42,13 +42,13 @@ class NoBuilderIntContent extends CvModelBase {
   final value = CvField<int>('value');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 class TestInnerWithoutBuilder extends CvModelBase {
   final inner = CvModelField<NoBuilderIntContent>('inner');
   @override
-  List<CvField<Object?>> get fields => [inner];
+  CvFields get fields => [inner];
 }
 
 void addNoBuilderIntContentBuilder() {
@@ -86,7 +86,7 @@ class CustomContent extends CvModelBase {
   final text = CvField<String>('text');
 
   @override
-  List<CvField> get fields => [
+  CvFields get fields => [
         custom1,
         custom2,
         text,
@@ -97,7 +97,7 @@ class StringContent extends CvModelBase {
   final value = CvField<String>('value');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 void main() {
@@ -573,7 +573,7 @@ class WithDuplicatedCvFields extends CvModelBase {
   final cvField2 = CvField<String>('CvField1');
 
   @override
-  List<CvField> get fields => [cvField1, cvField2];
+  CvFields get fields => [cvField1, cvField2];
 }
 
 class WithChildCvField extends CvModelBase {
@@ -581,7 +581,7 @@ class WithChildCvField extends CvModelBase {
       builder: (_) => ChildContent());
 
   @override
-  List<CvField> get fields => [child];
+  CvFields get fields => [child];
 }
 
 class WithChildListCvField extends CvModelBase {
@@ -589,7 +589,7 @@ class WithChildListCvField extends CvModelBase {
       builder: (_) => ChildContent());
 
   @override
-  List<CvField> get fields => [children];
+  CvFields get fields => [children];
 }
 
 class WithChildMapCvField extends CvModelBase {
@@ -597,7 +597,7 @@ class WithChildMapCvField extends CvModelBase {
       builder: (_) => ChildContent());
 
   @override
-  List<CvField> get fields => [children];
+  CvFields get fields => [children];
 }
 
 class WithCvFieldWithParent extends CvModelBase {
@@ -605,7 +605,7 @@ class WithCvFieldWithParent extends CvModelBase {
   final value2 = CvField<int>('value2').withParent('sub');
 
   @override
-  List<CvField> get fields => [value, value2];
+  CvFields get fields => [value, value2];
 }
 
 class WithCvModelFieldWithParent extends CvModelBase {
@@ -614,14 +614,14 @@ class WithCvModelFieldWithParent extends CvModelBase {
           .withParent('sub');
 
   @override
-  List<CvField> get fields => [value];
+  CvFields get fields => [value];
 }
 
 class ChildContent extends CvModelBase {
   final sub = CvField<String>('sub');
 
   @override
-  List<CvField> get fields => [sub];
+  CvFields get fields => [sub];
 }
 
 class AllTypes extends CvModelBase {
@@ -642,7 +642,7 @@ class AllTypes extends CvModelBase {
       builder: (_) => WithChildCvField());
 
   @override
-  List<CvField> get fields => [
+  CvFields get fields => [
         boolCvField,
         intCvField,
         numCvField,
@@ -664,7 +664,7 @@ class WithAutoChildren extends CvModelBase {
   final children = CvModelListField<ChildContent>('children');
 
   @override
-  List<CvField> get fields => [child, children];
+  CvFields get fields => [child, children];
 }
 
 class WithUpdateFields extends CvModelBase {
@@ -672,14 +672,14 @@ class WithUpdateFields extends CvModelBase {
   CvField<int>? test2;
 
   @override
-  List<CvField> get fields => [test1, if (test2 != null) test2!];
+  CvFields get fields => [test1, if (test2 != null) test2!];
 }
 
 class WithEncodedFields extends CvModelBase {
   final test = CvField.encoded<int, String>('test', codec: IntToStringCodec());
 
   @override
-  List<CvField> get fields => [test];
+  CvFields get fields => [test];
 }
 
 class IntToStringCodec with Codec<int, String> {
@@ -740,7 +740,7 @@ class WithDependentEncodedFields extends CvModelBase {
       codec: _CheckDependendentCodec(this));
 
   @override
-  List<CvField> get fields => [dep, test];
+  CvFields get fields => [dep, test];
 }
 
 var lateExample = IntContent()..value.v = 1;

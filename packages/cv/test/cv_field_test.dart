@@ -183,7 +183,7 @@ void main() {
       var field2 = CvField<Object?>('name').withParent('parent');
       expect(field, field2);
     });
-    test('List<CvField>', () {
+    test('CvFields', () {
       var field1 = CvField<String>('name');
       var field2 = CvField<int>('count');
       [field1, field2]

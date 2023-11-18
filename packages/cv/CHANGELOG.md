@@ -1,3 +1,7 @@
+## 0.2.15
+
+* add `CvFields` type as `List<CvField<Object?>>`
+
 ## 0.2.14
 
 * add `CvModelEmpty` to be used as empty model

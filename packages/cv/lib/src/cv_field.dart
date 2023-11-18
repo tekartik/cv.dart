@@ -268,9 +268,9 @@ abstract class CvModelField<T extends CvModel> implements CvField<T> {
 }
 
 /// Utilities
-extension CvFieldListExt on List<CvField> {
+extension CvFieldListExt on CvFields {
   /// Copy all fields
-  void fromCvFields(List<CvField> fields) {
+  void fromCvFields(CvFields fields) {
     assert(length == fields.length);
     for (var i = 0; i < length; i++) {
       this[i].fromCvField(fields[i]);
@@ -319,3 +319,6 @@ abstract class CvModelMapField<T extends CvModel>
           {CvModelBuilderFunction<T>? builder}) =>
       CvFieldContentMapImpl<T>(name, builder);
 }
+
+/// Generic fields type helper for model fields value.
+typedef CvFields = List<CvField<Object?>>;

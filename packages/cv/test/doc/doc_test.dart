@@ -117,7 +117,7 @@ class Rect extends CvModelBase {
   final size = CvModelField<Size>('size');
 
   @override
-  List<CvField> get fields => [point, size];
+  CvFields get fields => [point, size];
 }
 
 class Point extends CvModelBase {
@@ -125,7 +125,7 @@ class Point extends CvModelBase {
   final y = CvField<int>('y');
 
   @override
-  List<CvField> get fields => [x, y];
+  CvFields get fields => [x, y];
 }
 
 class Size extends CvModelBase {
@@ -133,14 +133,14 @@ class Size extends CvModelBase {
   final height = CvField<int>('height');
 
   @override
-  List<CvField> get fields => [width, height];
+  CvFields get fields => [width, height];
 }
 
 class ShoppingCart extends CvModelBase {
   final items = CvModelListField<Item>('items');
 
   @override
-  List<CvField> get fields => [items];
+  CvFields get fields => [items];
 }
 
 class Item extends CvModelBase {
@@ -148,5 +148,5 @@ class Item extends CvModelBase {
   final price = CvField<int>('price');
 
   @override
-  List<CvField> get fields => [name, price];
+  CvFields get fields => [name, price];
 }

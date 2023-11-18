@@ -6,7 +6,7 @@ class Note extends CvModelBase {
   final date = CvField<DateTime>('date');
 
   @override
-  List<CvField> get fields => [title, content, date];
+  CvFields get fields => [title, content, date];
 }
 
 void main() {
