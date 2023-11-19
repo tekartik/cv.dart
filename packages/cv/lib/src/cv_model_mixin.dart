@@ -14,13 +14,13 @@ var debugContent = false; // devWarning(true);
 mixin CvModelMixin implements CvModel {
   /// Copy content
   @override
-  void copyFrom(CvModel model) {
+  void copyFrom(CvModel model, {List<String>? columns}) {
     _debugCheckCvFields();
-    for (var field in fields) {
+    for (var field in fields.matchingColumns(columns)) {
       var recordCvField = model.dynamicField(field.name);
-      if (recordCvField?.hasValue == true) {
+      if (recordCvField != null) {
         // ignore: invalid_use_of_visible_for_testing_member
-        field.fromCvField(recordCvField!);
+        field.fromCvField(recordCvField);
       }
     }
   }

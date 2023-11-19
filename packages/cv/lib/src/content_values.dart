@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/column.dart';
+import 'package:cv/src/cv_field.dart';
 import 'package:cv/src/cv_model.dart';
 import 'package:cv/src/typedefs.dart';
 
@@ -171,8 +172,8 @@ class ContentValuesMap
   }
 
   @override
-  void copyFrom(CvModel model) {
-    for (var field in model.fields) {
+  void copyFrom(CvModel model, {List<String>? columns}) {
+    for (var field in model.fields.matchingColumns(columns)) {
       if (field.hasValue) {
         _map[field.k] = field.v;
       }

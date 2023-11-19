@@ -269,6 +269,14 @@ abstract class CvModelField<T extends CvModel> implements CvField<T> {
 
 /// Utilities
 extension CvFieldListExt on CvFields {
+  /// Return fields matching columns.
+  CvFields matchingColumns(List<String>? columns) {
+    if (columns == null) {
+      return this;
+    }
+    return where((element) => columns.contains(element.name)).toList();
+  }
+
   /// Copy all fields
   void fromCvFields(CvFields fields) {
     assert(length == fields.length);

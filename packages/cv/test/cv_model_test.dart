@@ -177,6 +177,21 @@ void main() {
       expect(src.toMap(), {'test': 1});
       cv = IntContent()..copyFrom(src);
       expect(cv.toMap(), isEmpty);
+
+      var twoFields = TwoFieldsContent()
+        ..value1.v = 1
+        ..value2.v = 2;
+      expect(TwoFieldsContent()..copyFrom(twoFields), twoFields);
+      expect(TwoFieldsContent()..copyFrom(twoFields, columns: ['value1']),
+          TwoFieldsContent()..value1.v = 1);
+      var twoFieldsMapModel = CvMapModel()..copyFrom(twoFields);
+      expect(twoFieldsMapModel, twoFields);
+      expect((CvMapModel()..copyFrom(twoFields, columns: ['value1'])).toMap(),
+          (TwoFieldsContent()..value1.v = 1).toMap());
+      expect(
+          (TwoFieldsContent()..copyFrom(twoFieldsMapModel, columns: ['value1']))
+              .toMap(),
+          (TwoFieldsContent()..value1.v = 1).toMap());
     });
     test('toMap', () async {
       var note = Note()
