@@ -1,7 +1,7 @@
-## 0.2.16+1
+## 0.2.16+2
 
 * add `columns` argument in `CvModel.copyFrom()`
-* add `matchingColumns()` helper on `CvFields`
+* add `matchingColumns()`, `columns` helper on `CvFields`
 
 ## 0.2.15
 
