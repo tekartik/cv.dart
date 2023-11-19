@@ -203,6 +203,25 @@ void main() {
       var field = CvField('test');
       expect(field.type.toString(), 'Object?');
     });
+    test('CvFields.fromCvFields', () {
+      var field1 = CvField<String>('name');
+      var field2 = CvField<int>('count');
+      [field1, field2]
+          .fromCvFields([CvField('other', 'test'), CvField('yet', 1)]);
+      expect(field1.v, 'test');
+      expect(field2.v, 1);
+    });
+    test('CvFields.matchingColumns', () {
+      var field1 = CvField<String>('name');
+      var field2 = CvField<int>('count');
+      expect([field1, field2].matchingColumns(['count']), [field2]);
+      expect([field1, field2].matchingColumns(null), [field1, field2]);
+    });
+    test('CvFields.columns', () {
+      var field1 = CvField<String>('name');
+      var field2 = CvField<int>('count');
+      expect([field1, field2].columns, ['name', 'count']);
+    });
   });
 }
 

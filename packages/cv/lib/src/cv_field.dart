@@ -284,6 +284,9 @@ extension CvFieldListExt on CvFields {
       this[i].fromCvField(fields[i]);
     }
   }
+
+  /// Return the column names.
+  List<String> get columns => map((field) => field.name).toList();
 }
 
 /// Nested list, where each value is of type T
