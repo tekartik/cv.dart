@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/column.dart';
-import 'package:cv/src/cv_field.dart';
 import 'package:cv/src/cv_model.dart';
 import 'package:cv/src/typedefs.dart';
 
