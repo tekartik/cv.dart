@@ -1,3 +1,8 @@
+## 0.2.16+1
+
+* add `columns` argument in `CvModel.copyFrom()`
+* add `matchingColumns()` helper on `CvFields`
+
 ## 0.2.15
 
 * add `CvFields` type as `List<CvField<Object?>>`.
