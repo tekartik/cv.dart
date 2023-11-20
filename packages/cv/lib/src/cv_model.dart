@@ -28,6 +28,9 @@ abstract class CvModelCore {
 
   /// CvField access
   CvField<T>? field<T extends Object?>(String name);
+
+  /// Deep CvField access
+  CvField<T>? fieldAtPath<T extends Object?>(List<Object> paths);
 }
 
 /// Modifiable map.

@@ -10,6 +10,27 @@ import 'field.dart';
 /// For dev only
 var debugContent = false; // devWarning(true);
 
+/// Get raw value helper for map and list.
+CvField<T>? rawGetFieldAtPath<T extends Object?>(
+    Object rawValue, List<Object> paths) {
+  if (paths.isEmpty) {
+    if (rawValue is CvField<T>) {
+      return rawValue;
+    }
+    return null;
+  }
+  if (rawValue is CvModelField) {
+    return rawValue.v?.fieldAtPath<T>(paths);
+  } else if (rawValue is CvModelListField) {
+    return rawValue.v?.fieldAtPath<T>(paths);
+  } else if (rawValue is CvModel) {
+    return rawValue.fieldAtPath<T>(paths);
+  } else if (rawValue is List) {
+    return rawValue.fieldAtPath<T>(paths);
+  }
+  return null;
+}
+
 /// Content mixin
 mixin CvModelMixin implements CvModel {
   /// Copy content
@@ -75,6 +96,19 @@ mixin CvModelMixin implements CvModel {
     _cvFieldMap ??=
         Map.fromEntries(fields.map((field) => MapEntry(field.name, field)));
     return _cvFieldMap![name]?.cast<T>();
+  }
+
+  @override
+  CvField<T>? fieldAtPath<T extends Object?>(List<Object> paths) {
+    var path = paths.first;
+    if (path is String) {
+      var rawField = field<Object>(path);
+      if (rawField?.isNotNull ?? false) {
+        return rawGetFieldAtPath<T>(rawField!, paths.sublist(1));
+      }
+    }
+
+    return null;
   }
 
   @override

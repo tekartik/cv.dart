@@ -33,7 +33,8 @@ export 'src/cv_field.dart'
 export 'src/cv_model.dart'
     show CvModel, CvMapModel, CvModelBase, CvModelUtilsExt, CvModelEmpty;
 export 'src/cv_model_list.dart' show CvModelListExt;
-export 'src/map_ext.dart' show ModelExt;
+export 'src/list_ext.dart' show ModelRawListExt;
+export 'src/map_ext.dart' show ModelRawMapExt;
 export 'src/map_list_ext.dart' show ModelListExt;
 export 'src/typedefs.dart'
     show

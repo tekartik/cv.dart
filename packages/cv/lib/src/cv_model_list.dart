@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:cv/cv.dart';
+import 'package:cv/src/cv_model_mixin.dart';
 
 /// List<CvModel> convenient extensions.
 extension CvModelListExt<T extends CvModel> on List<T> {
@@ -10,6 +11,17 @@ extension CvModelListExt<T extends CvModel> on List<T> {
     return map((e) =>
             e.toMap(columns: columns, includeMissingValue: includeMissingValue))
         .toList();
+  }
+
+  /// Deep CvField access
+  CvField<F>? fieldAtPath<F extends Object?>(List<Object> paths) {
+    var path = paths.first;
+    if (path is int && length > path) {
+      var rawField = this[path];
+
+      return rawGetFieldAtPath<F>(rawField, paths.sublist(1));
+    }
+    return null;
   }
 }
 

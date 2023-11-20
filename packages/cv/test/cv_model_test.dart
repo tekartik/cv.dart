@@ -358,7 +358,7 @@ void main() {
           [IntContent()..value.v = 1]);
     });
 
-    test('fillModel', () {
+    test('fillCvModel', () {
       expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
           {'value': 1});
       expect(
@@ -375,37 +375,51 @@ void main() {
               {'sub': 'text_1'}
             ]
           });
-      expect(
-          (AllTypes()
-                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .toMap(),
+      var allTypes = AllTypes()
+        ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1));
+      expect(allTypes.toMap(), {
+        'bool': false,
+        'int': 2,
+        'num': 3.5,
+        'string': 'text_4',
+        'children': [
           {
-            'bool': false,
-            'int': 2,
-            'num': 3.5,
-            'string': 'text_4',
-            'children': [
-              {
-                'child': {'sub': 'text_5'}
-              }
-            ],
-            'intList': [6],
-            'map': {'field_1': 7},
-            'mapList': [
-              {'field_1': 8}
-            ],
-            'stringList': ['text_9'],
-            'list': [10],
-            'modelMap': {
-              'field_1': {
-                'child': {'sub': 'text_11'}
-              }
-            },
-            'model': {'field_1': 12},
-            'modelList': [
-              {'field_1': 13}
-            ]
-          });
+            'child': {'sub': 'text_5'}
+          }
+        ],
+        'intList': [6],
+        'map': {'field_1': 7},
+        'mapList': [
+          {'field_1': 8}
+        ],
+        'stringList': ['text_9'],
+        'list': [10],
+        'modelMap': {
+          'field_1': {
+            'child': {'sub': 'text_11'}
+          }
+        },
+        'model': {'field_1': 12},
+        'modelList': [
+          {'field_1': 13}
+        ]
+      });
+      expect(
+          allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v, 'text_5');
+      expect(allTypes.fieldAtPath<int>(['children', 0, 'child', 'sub'])?.v,
+          isNull);
+      expect(allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub'])?.v,
+          'text_5');
+      expect(
+          allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub_no'])?.v,
+          isNull);
+      expect(
+          allTypes.fieldAtPath<String>(['children_no', 0, 'child', 'sub'])?.v,
+          isNull);
+      expect(
+          allTypes.fieldAtPath<String>(['children', 0, 1, 'sub'])?.v, isNull);
+      expect(allTypes.fieldAtPath<String>(['children', 'sub', 1, 'sub'])?.v,
+          isNull);
       expect(
           (CustomContent()
                 ..fillModel(CvFillOptions(
