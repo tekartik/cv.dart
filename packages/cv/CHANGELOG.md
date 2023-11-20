@@ -1,3 +1,8 @@
+## 0.2.17
+
+* add `fieldAtPath()` helper on `CvModel`
+* add `getKeyPathValue()` helper on `List` and `Map`
+
 ## 0.2.16+2
 
 * add `columns` argument in `CvModel.copyFrom()`
