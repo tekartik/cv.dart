@@ -9,6 +9,12 @@ extension CvJsonStringExt on String {
     return jsonToMap().cv<T>(builder: builder);
   }
 
+  /// Create an object from a json string.
+  T cvType<T extends CvModel>(Type type,
+      {T Function(Map contextData)? builder}) {
+    return jsonToMap().cvType<T>(type, builder: builder);
+  }
+
   /// Create a list from a json string.
   ///
   /// If [lazy] is true, the object in the list are converted when needed.

@@ -115,7 +115,15 @@ void main() {
         newModel().cv<MissingBuilder>();
         fail('should fail');
       } on CvBuilderException catch (e) {
-        expect(e.toString(), contains('Missing builder for MissingBuilder'));
+        expect(
+            e.toString(), contains('Missing builder for \'MissingBuilder\''));
+      }
+      try {
+        newModel().cvType(MissingBuilder);
+        fail('should fail');
+      } on CvBuilderException catch (e) {
+        expect(e.toString(),
+            contains('Missing builder for type \'MissingBuilder\''));
       }
 
       cvAddBuilder<ParentWithMissingBuilderChild>(
@@ -124,7 +132,8 @@ void main() {
         (newModel()..['child'] = {}).cv<ParentWithMissingBuilderChild>();
         fail('should fail');
       } on CvBuilderException catch (e) {
-        expect(e.toString(), contains('Missing builder for MissingBuilder'));
+        expect(
+            e.toString(), contains('Missing builder for \'MissingBuilder\''));
       }
 
       cvAddBuilder<ParentWithMissingBuilderChildren>(
@@ -134,7 +143,8 @@ void main() {
             .cv<ParentWithMissingBuilderChildren>();
         fail('should fail');
       } on CvBuilderException catch (e) {
-        expect(e.toString(), contains('Missing builder for MissingBuilder'));
+        expect(
+            e.toString(), contains('Missing builder for \'MissingBuilder\''));
       }
     });
     test('Sub class', () {
@@ -167,5 +177,15 @@ void main() {
       base = newModel().cv<SubClass2>();
       expect(base, const TypeMatcher<SubClass2>());
     }, skip: 'This does not work (yet)');
+
+    test('getBuilders', () {
+      var existingBuilder = cvGetBuilder<Simple>();
+      expect(cvTypeGetBuilder(Simple), existingBuilder);
+      cvAddConstructor(Simple.new);
+      existingBuilder = cvGetBuilder<Simple>();
+      expect(cvTypeGetBuilder(Simple), existingBuilder);
+      var simple1 = Simple()..value.v = 'test';
+      expect(simple1.toMap().cvType(Simple), simple1);
+    });
   });
 }

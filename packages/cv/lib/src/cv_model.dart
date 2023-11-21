@@ -3,6 +3,16 @@ import 'package:cv/cv.dart';
 import 'content_values.dart';
 import 'cv_model_mixin.dart';
 
+/// Empty map.
+const cvEmptyMap = <String, Object?>{};
+
+/// New model from an empty map.
+T cvNewModel<T extends CvModel>() => cvBuildModel<T>(cvEmptyMap);
+
+/// New model from an empty map.
+T cvTypeNewModel<T extends CvModel>(Type type) =>
+    cvTypeBuildModel(type, cvEmptyMap);
+
 /// Read helper
 abstract class CvModelRead implements CvModelCore {
   /// Convert to map

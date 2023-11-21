@@ -11,4 +11,14 @@ extension ModelListExt on ModelList {
     }
     return map((map) => map.cv<T>(builder: builder)).toList();
   }
+
+  /// Generate a list of cv model.
+  List<T> cvType<T extends CvModel>(Type type,
+      {T Function(Map contextData)? builder, bool lazy = true}) {
+    if (lazy) {
+      return LazyModelList<T>(
+          mapList: this, builder: cvTypeGetBuilder<T>(type, builder: builder));
+    }
+    return map((map) => map.cvType<T>(type, builder: builder)).toList();
+  }
 }

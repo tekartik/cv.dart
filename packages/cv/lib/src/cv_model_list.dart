@@ -3,6 +3,17 @@ import 'dart:collection';
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_model_mixin.dart';
 
+/// Empty map.
+const cvEmptyMapList = <Model>[];
+
+/// New empty cv model list.
+List<T> cvNewModelList<T extends CvModel>({bool lazy = true}) =>
+    cvEmptyMapList.cv<T>(lazy: lazy);
+
+/// New empty cv model list.
+List<T> cvTypeNewModelList<T extends CvModel>(Type type, {bool lazy = true}) =>
+    cvEmptyMapList.cvType(type, lazy: lazy);
+
 /// List<CvModel> convenient extensions.
 extension CvModelListExt<T extends CvModel> on List<T> {
   /// Convert to model list

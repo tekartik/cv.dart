@@ -577,6 +577,13 @@ void main() {
     test('cvModelAreEquals', () {
       expect(CvModelEmpty().toMap(), isEmpty);
     });
+    test('cvNewModel', () {
+      cvAddConstructor(IntContent.new);
+      var model = cvNewModel<IntContent>();
+      var model2 = cvTypeNewModel(IntContent);
+      expect(model2, model);
+      expect(model2, isA<IntContent>());
+    });
     test('fillModel missing builder', () {
       cvAddConstructor(TestInnerWithoutBuilder.new);
       try {

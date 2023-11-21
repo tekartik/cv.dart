@@ -30,6 +30,37 @@ void main() {
         {'value': 1}
       ]);
     });
+    test('cvNewModelList', () async {
+      cvAddConstructor(IntContent.new);
+      expect(cvNewModelList<IntContent>(), isA<List<IntContent>>());
+      expect(cvTypeNewModelList<CvModel>(IntContent), isA<List<CvModel>>());
+
+      expect(
+          [
+            {'value': 1}
+          ].cv<IntContent>(),
+          [IntContent()..value.v = 1]);
+      expect(
+          [
+            {'value': 1}
+          ].cvType(IntContent),
+          [IntContent()..value.v = 1]);
+    });
+    test('CvModelList.cv', () async {
+      cvAddConstructor(IntContent.new);
+      expect(listWithOneEmptyModel.cv<IntContent>(), [IntContent()]);
+
+      expect(
+          [
+            {'value': 1}
+          ].cv<IntContent>(),
+          [IntContent()..value.v = 1]);
+      expect(
+          [
+            {'value': 1}
+          ].cvType(IntContent),
+          [IntContent()..value.v = 1]);
+    });
     test('CvModelList.cv', () async {
       expect(listWithOneEmptyModel.cv<IntContent>(builder: intContentBuilder),
           [IntContent()]);
@@ -38,6 +69,11 @@ void main() {
           [
             {'value': 1}
           ].cv<IntContent>(builder: intContentBuilder),
+          [IntContent()..value.v = 1]);
+      expect(
+          [
+            {'value': 1}
+          ].cvType(IntContent, builder: intContentBuilder),
           [IntContent()..value.v = 1]);
     });
     test('CvModelList no builder', () {
