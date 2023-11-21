@@ -1,5 +1,7 @@
-## 0.2.17
+## 0.2.17+1
 
+* add `cvType()` extensions
+* add `cvNewModel()`, `cvTypeNewModel()`, `cvNewModelList()`, `cvTypeNewModelList()` helper
 * add `fieldAtPath()` helper on `CvModel`
 * add `getKeyPathValue()` helper on `List` and `Map`
 
