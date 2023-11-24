@@ -1,4 +1,4 @@
-// ignore_for_file: omit_local_variable_types
+// ignore_for_file: omit_local_variable_types, avoid_print
 
 import 'package:cv/cv_json.dart';
 import 'package:test/test.dart';

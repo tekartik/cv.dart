@@ -217,6 +217,7 @@ mixin CvModelMixin implements CvModel {
         }
       } catch (e) {
         if (debugContent) {
+          // ignore: avoid_print
           print('ERROR fromMap($map, $columns) at $column');
         }
         if (e is CvBuilderException) {

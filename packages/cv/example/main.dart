@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cv/cv.dart';
 
 class Note extends CvModelBase {

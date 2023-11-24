@@ -7,8 +7,7 @@ import 'package:test/test.dart';
 
 import 'cv_field_test.dart';
 
-CvFillOptions get testFillOptions =>
-    CvFillOptions(valueStart: 0, collectionSize: 1);
+CvFillOptions get testFillOptions => cvFillOptions1;
 
 class Note extends CvModelBase {
   final title = CvField<String>('title');
@@ -208,8 +207,8 @@ void main() {
       try {
         WithDuplicatedCvFields().toMap();
         fail('should fail');
-      } on CvBuilderException catch (e) {
-        print(e);
+      } on CvBuilderException catch (_) {
+        // print(e);
       }
       expect(WithDuplicatedCvFields().toMap(), isEmpty);
       WithDuplicatedCvFields().fromMap({});
@@ -220,8 +219,8 @@ void main() {
       try {
         WithDuplicatedCvFields().toMap();
         fail('should fail');
-      } on CvBuilderException catch (e) {
-        print(e);
+      } on CvBuilderException catch (_) {
+        // print(e);
       }
 
       // ignore: deprecated_member_use_from_same_package
@@ -229,8 +228,8 @@ void main() {
       try {
         WithDuplicatedCvFields().fromMap({});
         fail('should fail');
-      } on CvBuilderException catch (e) {
-        print(e);
+      } on CvBuilderException catch (_) {
+        // print(e);
       }
 
       // ignore: deprecated_member_use_from_same_package
@@ -238,8 +237,8 @@ void main() {
       try {
         WithDuplicatedCvFields().copyFrom(CvMapModel());
         fail('should fail');
-      } on CvBuilderException catch (e) {
-        print(e);
+      } on CvBuilderException catch (_) {
+        // print(e);
       }
     });
     test('content child', () {
@@ -366,17 +365,12 @@ void main() {
           {
             'child': {'sub': 'text_1'}
           });
-      expect(
-          (WithChildListCvField()
-                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .toMap(),
-          {
-            'children': [
-              {'sub': 'text_1'}
-            ]
-          });
-      var allTypes = AllTypes()
-        ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1));
+      expect((WithChildListCvField()..fillModel(cvFillOptions1)).toMap(), {
+        'children': [
+          {'sub': 'text_1'}
+        ]
+      });
+      var allTypes = AllTypes()..fillModel(cvFillOptions1);
       expect(allTypes.toMap(), {
         'bool': false,
         'int': 2,
@@ -474,13 +468,9 @@ void main() {
         'sub': {'value': 1}
       });
 
-      expect(
-          (WithCvFieldWithParent()
-                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .toMap(),
-          {
-            'sub': {'value': 1, 'value2': 2}
-          });
+      expect((WithCvFieldWithParent()..fillModel(cvFillOptions1)).toMap(), {
+        'sub': {'value': 1, 'value2': 2}
+      });
 
       expect(WithCvFieldWithParent()..value.v = 1,
           WithCvFieldWithParent()..value.v = 1);

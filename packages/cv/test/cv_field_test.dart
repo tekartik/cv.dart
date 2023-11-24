@@ -73,11 +73,7 @@ void main() {
       expect((CvField<List>('list')..fillField()).v, null);
       expect((CvField<List>('list')..fillField(CvFillOptions(valueStart: 0))).v,
           isEmpty);
-      expect(
-          (CvField<List>('list')
-                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .v,
-          [1]);
+      expect((CvField<List>('list')..fillField(cvFillOptions1)).v, [1]);
       expect(
           (CvField<List>('list')
                 ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
@@ -88,10 +84,7 @@ void main() {
       expect((CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v,
           isEmpty);
       expect(
-          (CvField<Map>('map')
-                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .v,
-          {'field_1': 1});
+          (CvField<Map>('map')..fillField(cvFillOptions1)).v, {'field_1': 1});
       expect(
           (CvField<Map>('map')
                 ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
@@ -144,6 +137,7 @@ void main() {
         field.valueOrThrow;
         fail('should fail');
       } on TypeError catch (e) {
+        // ignore: avoid_print
         print(e.runtimeType);
       }
       field.setNull();

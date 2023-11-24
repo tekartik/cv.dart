@@ -79,8 +79,8 @@ extension CvModelUtilsExt on CvModel {
   ///
   /// Fill list if listSize is set
   ///
-  void fillModel([CvFillOptions? options]) {
-    var fields = this.fields;
+  void fillModel([CvFillOptions? options, List<String>? columns]) {
+    var fields = this.fields.matchingColumns(columns);
     for (var field in fields) {
       field.fillField(options);
     }

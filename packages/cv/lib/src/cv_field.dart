@@ -7,6 +7,10 @@ import 'package:cv/src/cv_field_with_parent.dart';
 import 'column.dart';
 import 'field.dart';
 
+/// Common fill options for unit tests.
+CvFillOptions get cvFillOptions1 =>
+    CvFillOptions(valueStart: 0, collectionSize: 1);
+
 /// If 2 values are equals, entering nested list/map if any.
 bool cvValuesAreEqual(dynamic v1, dynamic v2) {
   try {
@@ -150,6 +154,19 @@ class CvFillOptions {
 
   /// Fill options.
   CvFillOptions({this.collectionSize, this.valueStart, this.generate});
+
+  /// Copy fill options.
+  CvFillOptions copyWith({
+    int? collectionSize,
+    int? valueStart,
+    CvFillOptionsGenerateFunction? generate,
+  }) {
+    return CvFillOptions(
+      collectionSize: collectionSize ?? this.collectionSize,
+      valueStart: valueStart ?? this.valueStart,
+      generate: generate ?? this.generate,
+    );
+  }
 }
 
 extension _CvFillOptionsMap on CvFillOptions {

@@ -33,7 +33,8 @@ export 'src/cv_field.dart'
         CvModelMapFieldUtilsExt,
         CvFieldUtilsExt,
         CvListFieldUtilsExt,
-        CvFillOptions;
+        CvFillOptions,
+        cvFillOptions1;
 export 'src/cv_model.dart'
     show
         CvModel,

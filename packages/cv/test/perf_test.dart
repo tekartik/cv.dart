@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cv/cv.dart';
 import 'package:test/test.dart';
 
@@ -8,10 +10,7 @@ void main() {
   group('perf', () {
     void perf(int count) {
       var mapList = List.generate(
-          count,
-          (index) => (AllTypes()
-                ..fillModel(CvFillOptions(valueStart: 0, collectionSize: 1)))
-              .toMap());
+          count, (index) => (AllTypes()..fillModel(cvFillOptions1)).toMap());
       var sw = Stopwatch()..start();
       mapList.cv<AllTypes>(lazy: false);
       print('count: $count');
