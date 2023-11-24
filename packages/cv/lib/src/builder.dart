@@ -20,11 +20,20 @@ void cvAddBuilder<T extends CvModel>(CvModelBuilderFunction<T> builder) {
   _builders[T] = builder;
 }
 
+/// Add builder that uses builder function
+void cvTypeAddBuilder(Type type, CvModelBuilderFunction<Object> builder) {
+  _builders[type] = builder;
+}
+
 /// Get a builder.
 CvModelBuilderFunction<T>? _cvGetBuilderOrNull<T extends CvModel>(
     {CvModelBuilderFunction<T>? builder}) {
   var foundBuilder = builder ?? _builders[T];
-  return foundBuilder as CvModelBuilderFunction<T>?;
+  if (foundBuilder is CvModelBuilderFunction<T>?) {
+    return foundBuilder;
+  } else {
+    return (Map contextData) => foundBuilder(contextData) as T;
+  }
 }
 
 /// Get a builder.
@@ -61,10 +70,28 @@ void cvAddConstructor<T extends CvModel>(
   cvAddBuilder<T>((_) => builder());
 }
 
+/// Add convenient constructors tear-off
+void cvAddConstructors<T extends CvModel>(
+    List<CvModelDefaultBuilderFunction<T>> builders) {
+  for (var builder in builders) {
+    /// Here T might not be ok so lets build it!
+    var object = builder();
+    cvTypeAddBuilder(object.runtimeType, (contextData) => builder());
+  }
+}
+
 /// Remove builder
 @visibleForTesting
 void cvRemoveBuilder(Type type) {
   _builders.remove(type);
+}
+
+/// Remove builders
+@visibleForTesting
+void cvRemoveBuilders(List<Type> types) {
+  for (var type in types) {
+    cvRemoveBuilder(type);
+  }
 }
 
 /// Build a model but does not import the data.

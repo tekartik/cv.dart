@@ -1,5 +1,5 @@
 import 'package:cv/cv.dart';
-import 'package:cv/src/builder.dart' show cvRemoveBuilder;
+import 'package:cv/src/builder.dart' show cvRemoveBuilder, cvRemoveBuilders;
 import 'package:test/test.dart';
 
 import 'model_test.dart';
@@ -186,6 +186,13 @@ void main() {
       expect(cvTypeGetBuilder(Simple), existingBuilder);
       var simple1 = Simple()..value.v = 'test';
       expect(simple1.toMap().cvType(Simple), simple1);
+    });
+
+    test('addConstructors', () {
+      cvRemoveBuilders([Simple, Child]);
+      cvAddConstructors([Simple.new, Child.new]);
+      expect(cvNewModel<Simple>(), isA<Simple>());
+      expect(cvNewModel<Child>(), isA<Child>());
     });
   });
 }
