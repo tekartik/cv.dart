@@ -39,9 +39,9 @@ mixin CvModelMixin implements CvModel {
     _debugCheckCvFields();
     for (var field in fields.matchingColumns(columns)) {
       var recordCvField = model.dynamicField(field.name);
-      if (recordCvField != null) {
+      if (recordCvField?.hasValue == true) {
         // ignore: invalid_use_of_visible_for_testing_member
-        field.fromCvField(recordCvField);
+        field.fromCvField(recordCvField!);
       }
     }
   }

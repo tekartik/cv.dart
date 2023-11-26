@@ -26,6 +26,14 @@ void main() {
       expect(cv.toMap(), {'value': null});
       cv = CvMapModel()..copyFrom(IntContent()..value.v = 1);
       expect(cv.toMap(), {'value': 1});
+
+      // Undefined value
+      cv = (CvMapModel()..['value'] = 1)..copyFrom(IntContent());
+      expect(cv.toMap(), {'value': 1});
+      // Null value
+      cv = (CvMapModel()..['value'] = 1)
+        ..copyFrom(IntContent()..value.v = null);
+      expect(cv.toMap(), {'value': null});
     });
     test('toMap', () {
       var cv = CvMapModel();

@@ -191,6 +191,13 @@ void main() {
           (TwoFieldsContent()..copyFrom(twoFieldsMapModel, columns: ['value1']))
               .toMap(),
           (TwoFieldsContent()..value1.v = 1).toMap());
+
+      // Undefined value
+      cv = (IntContent()..value.v = 1)..copyFrom(IntContent());
+      expect(cv.toMap(), {'value': 1});
+      // Null value
+      cv = (IntContent()..value.v = 1)..copyFrom(IntContent()..value.v = null);
+      expect(cv.toMap(), {'value': null});
     });
     test('toMap', () async {
       var note = Note()

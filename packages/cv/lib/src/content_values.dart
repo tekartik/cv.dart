@@ -175,8 +175,6 @@ class ContentValuesMap
     for (var field in model.fields.matchingColumns(columns)) {
       if (field.hasValue) {
         _map[field.k] = field.v;
-      } else {
-        _map.remove(field.k);
       }
     }
   }
