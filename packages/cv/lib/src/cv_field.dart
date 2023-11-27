@@ -169,7 +169,7 @@ class CvFillOptions {
   }
 }
 
-extension _CvFillOptionsMap on CvFillOptions {
+extension _CvFillOptionsExt on CvFillOptions {
   /// Generate a basic map
   Model generateMap({Object Function()? generateMapValue}) {
     var map = newModel();
@@ -292,6 +292,11 @@ extension CvFieldListExt on CvFields {
       return this;
     }
     return where((element) => columns.contains(element.name)).toList();
+  }
+
+  /// Return field matching column.
+  CvField? matchingColumn(String column) {
+    return firstWhereOrNull((element) => element.name == column);
   }
 
   /// Copy all fields

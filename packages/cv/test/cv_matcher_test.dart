@@ -22,10 +22,6 @@ class MatcherComplex extends CvModelBase {
 void main() {
   test('matcher', () {
     cvAddConstructors([MatcherSimple.new, MatcherComplex.new]);
-    expect(
-        MatcherSimple,
-        fillModelMatchesMap(
-            {'value1': 'text_1', 'value2': 'text_2'}, cvFillOptions1));
 
     expect(
         MatcherSimple, fillModelMatchesMap({'value1': null, 'value2': null}));
@@ -36,10 +32,13 @@ void main() {
 
 // Debug it first
     expect(MatcherSimple, isNot(fillModelMatchesMap({'value2': null})));
-
     expect(
         MatcherSimple,
         fillModelMatchesMap(
-            {'value2': 'text_2', 'value1': 'text_1'}, cvFillOptions1));
+            {'value2': 'text_1', 'value1': 'text_2'}, cvFillOptions1));
+    expect(
+        MatcherSimple,
+        fillModelMatchesMap(
+            {'value1': 'text_1', 'value2': 'text_2'}, cvFillOptions1));
   });
 }

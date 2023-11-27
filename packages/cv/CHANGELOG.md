@@ -1,3 +1,7 @@
+## 0.2.18-pending
+
+* add `cvAddConstructors()` and `cvTypeAddBuilder()`
+
 ## 0.2.17+2
 
 * add `cvType()` extensions
