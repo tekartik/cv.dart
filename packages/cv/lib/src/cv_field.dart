@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 
+import 'builder.dart';
 import 'column.dart';
 import 'field.dart';
 
@@ -87,6 +88,10 @@ extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
     } else if (this is CvFieldWithParent) {
       (this as CvFieldWithParent).field.fillField(options);
     } else if (options.valueStart != null) {
+      if (cvTypeGetBuilderOrNull(type) != null) {
+        throw UnsupportedError(
+            '$this should likely be a CvModelField<$type> rather than CvField<$type> right?');
+      }
       v = options.generateValue(type) as T;
     } else {
       // Default to null

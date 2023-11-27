@@ -49,7 +49,7 @@ CvModelBuilderFunction<T> cvGetBuilder<T extends CvModel>(
 /// Get a builder from a type.
 CvModelBuilderFunction<T> cvTypeGetBuilder<T extends CvModel>(Type type,
     {CvModelBuilderFunction<T>? builder}) {
-  var foundBuilder = _cvTypeGetBuilderOrNull<T>(type, builder: builder);
+  var foundBuilder = cvTypeGetBuilderOrNull<T>(type, builder: builder);
   if (foundBuilder == null) {
     throw CvBuilderExceptionImpl(
         'Missing builder for type \'$type\', call addBuilder');
@@ -58,7 +58,7 @@ CvModelBuilderFunction<T> cvTypeGetBuilder<T extends CvModel>(Type type,
 }
 
 /// Get a builder from a type.
-CvModelBuilderFunction<T>? _cvTypeGetBuilderOrNull<T extends CvModel>(Type type,
+CvModelBuilderFunction<T>? cvTypeGetBuilderOrNull<T extends CvModel>(Type type,
     {CvModelBuilderFunction<T>? builder}) {
   var foundBuilder = builder ?? _builders[type];
   return foundBuilder as CvModelBuilderFunction<T>?;

@@ -37,27 +37,33 @@ class _ModelGenerator {
     } else {
       var list = field.createList();
       for (var i = 0; i < collectionSize; i++) {
-        if (this is CvModelListField) {
-          var item = (this as CvModelListField).create({}) as T;
-          fillModel(item as CvModel);
-          list.add(item);
-        } else if (this is CvListField<Map>) {
-          if (options.valueStart != null) {
-            list.add(generateMap() as T);
-          }
-        } else if (this is CvListField<List>) {
-          if (options.valueStart != null) {
-            // print('list $this');
-            list.add(generateList() as T);
-          }
-        } else {
-          if (options.valueStart != null) {
-            // print('item $this');
-            list.add(generateValue(field.itemType) as T);
-          }
-        }
+        fillListFieldItem(field, list, i);
       }
       field.value = list;
+    }
+  }
+
+  /// Fill a list.
+  void fillListFieldItem<T extends Object?>(
+      CvListField<T> field, List<T> list, int i) {
+    if (field is CvModelListField) {
+      var item = (field as CvModelListField).create({}) as T;
+      fillModel(item as CvModel);
+      list.add(item);
+    } else if (field is CvListField<Map>) {
+      if (options.valueStart != null) {
+        list.add(generateMap() as T);
+      }
+    } else if (field is CvListField<List>) {
+      if (options.valueStart != null) {
+        // print('list $this');
+        list.add(generateList() as T);
+      }
+    } else {
+      if (options.valueStart != null) {
+        // print('item $this');
+        list.add(generateValue(field.itemType) as T);
+      }
     }
   }
 
@@ -113,6 +119,10 @@ class _ModelGenerator {
   }
 
   void fillField<T extends Object?>(CvField field) {
+    rawFillField(field);
+  }
+
+  void rawFillField<T extends Object?>(CvField field) {
     if (field is CvListField) {
       fillListField(field);
     } else if (field is CvModelMapField) {
@@ -130,9 +140,136 @@ class _ModelGenerator {
   }
 }
 
+abstract class _SubfieldGenerator {
+  void fillModel(CvModel model, {List<String>? columns});
+  void wrapInGenerator(
+      _SubfieldGenerator subfieldGenerator, void Function() action);
+
+  void fillField(CvField<Object?> field);
+}
+
+class _SubfieldGeneratorImpl implements _SubfieldGenerator {
+  bool get abort => generator.abort;
+
+  @override
+  String toString() => parent == null ? 'root' : '$parent ${field ?? index}';
+
+  _SubfieldGeneratorImpl get parentImpl => parent as _SubfieldGeneratorImpl;
+  final _ModelMapMatcherGenerator generator;
+
+  /// Both are nulls at root, never null otherwise.
+  final _SubfieldGenerator? parent;
+  // Field or index
+  final CvField? field;
+
+  /// Only for list field
+  final int? index;
+
+  CvModel? get currentFilledMapModel {
+    if (parent != null) {
+      var parentModel = parentImpl.currentFilledMapModel;
+      if (parentModel is! CvMapModel) {
+        return null;
+      }
+      if (field != null) {
+        var sourceField = parentModel.dynamicField(field!.name);
+        var sourceValue = sourceField?.value;
+        if (sourceValue is List) {
+          return parentModel;
+        }
+        if (sourceValue is Map) {
+          return CvMapModel()..fromMap(sourceField!.value as Map);
+        }
+      } else if (index != null) {
+        var sourceField = parentModel.dynamicField(parentImpl.field!.name);
+        var sourceValue = sourceField?.value;
+        if (sourceValue is List) {
+          return CvMapModel()..fromMap(sourceValue[index!] as Map);
+        }
+      }
+      return null;
+    } else {
+      return generator.filledMapModel;
+    }
+  }
+
+  _SubfieldGeneratorImpl(
+      {this.field, required this.parent, required this.generator, this.index});
+
+  _SubfieldGenerator get currentSubfieldGenerator =>
+      generator.currentSubfieldGenerator;
+
+  set abort(bool abort) => generator.abort = abort;
+
+  set currentSubfieldGenerator(_SubfieldGenerator currentSubfieldGenerator) =>
+      generator.currentSubfieldGenerator = currentSubfieldGenerator;
+
+  @override
+  void fillField(CvField field) {
+    var subfieldGenerator = _SubfieldGeneratorImpl(
+        field: field, parent: this, generator: generator);
+    wrapInGenerator(subfieldGenerator, () {
+      generator.rawFillField(field);
+    });
+  }
+
+  @override
+  void wrapInGenerator(
+      _SubfieldGenerator subfieldGenerator, void Function() action) {
+    currentSubfieldGenerator = subfieldGenerator;
+    try {
+      action();
+    } finally {
+      currentSubfieldGenerator = this;
+    }
+  }
+
+  @override
+  void fillModel(CvModel model, {List<String>? columns}) {
+    var filledMapModel = currentFilledMapModel;
+    if (filledMapModel == null) {
+      abort = true;
+    }
+    if (abort) {
+      generator.fillModel(model, columns: columns);
+    } else {
+      var fields = CvFields.from(model.fields.matchingColumns(columns));
+
+      // Fill matching fields field
+      var matchingFields = filledMapModel!.fields.matchingColumns(columns);
+      for (var matchingField in matchingFields) {
+        var field = model.dynamicField(matchingField.name);
+        if (field != null) {
+          fillField(field);
+          fields.remove(field);
+        }
+      }
+
+      if (fields.isNotEmpty) {
+        abort = true;
+      }
+      // Fill remaining.
+      for (var field in fields) {
+        fillField(field);
+      }
+    }
+  }
+}
+
+class _SubfieldGeneratorRootImpl extends _SubfieldGeneratorImpl {
+  _SubfieldGeneratorRootImpl({required super.generator}) : super(parent: null);
+}
+
 class _ModelMapMatcherGenerator extends _ModelGenerator {
   final _FillModelMatchesMapMatcher matcher;
   CvMapModel filledMapModel = CvMapModel();
+  CvMapModel? currentFilledMapModelOrNull;
+  CvMapModel get currentFilledMapModel =>
+      currentFilledMapModelOrNull ?? filledMapModel;
+  List<Object>? currentKeysOrNull;
+  List<Object> get currentKeys => currentKeysOrNull ??= <Object>[];
+  late _SubfieldGenerator currentSubfieldGenerator =
+      _SubfieldGeneratorRootImpl(generator: this);
 
   /// Once following matching is cancelled.
   var abort = false;
@@ -144,30 +281,47 @@ class _ModelMapMatcherGenerator extends _ModelGenerator {
     }
   }
 
+  /// Fill a list.
+  @override
+  void fillListField<T extends Object?>(CvListField<T> field) {
+    var collectionSize = options.collectionSize;
+    if (collectionSize == null) {
+      field.value = null;
+    } else {
+      var list = field.createList();
+      for (var i = 0; i < collectionSize; i++) {
+        var subfieldGenerator = _SubfieldGeneratorImpl(
+            field: null,
+            parent: currentSubfieldGenerator,
+            generator: this,
+            index: i);
+        currentSubfieldGenerator.wrapInGenerator(subfieldGenerator, () {
+          fillListFieldItem(field, list, i);
+        });
+      }
+      field.value = list;
+    }
+  }
+
+  @override
+  void fillField<T extends Object?>(CvField<Object?> field) {
+    if (abort) {
+      super.fillField(field);
+    } else {
+      currentSubfieldGenerator.fillField(field);
+    }
+  }
+
   /// Fill all null in model including leaves
   ///
   /// Fill list if listSize is set
   ///
   @override
   void fillModel(CvModel model, {List<String>? columns}) {
-    var fields = CvFields.from(model.fields.matchingColumns(columns));
-
-    // Fill matching fields field
-    var matchingFields = filledMapModel.fields.matchingColumns(columns);
-    for (var matchingField in matchingFields) {
-      var field = model.dynamicField(matchingField.name);
-      if (field != null) {
-        fillField(field);
-        fields.remove(field);
-      }
-    }
-
-    if (fields.isNotEmpty) {
-      abort = true;
-    }
-    // Fill remaining.
-    for (var field in fields) {
-      fillField(field);
+    if (abort) {
+      super.fillModel(model, columns: columns);
+    } else {
+      currentSubfieldGenerator.fillModel(model, columns: columns);
     }
   }
 }
