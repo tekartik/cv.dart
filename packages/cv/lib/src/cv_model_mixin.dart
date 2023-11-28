@@ -33,46 +33,6 @@ CvField<T>? rawGetFieldAtPath<T extends Object?>(
 
 /// Content mixin
 mixin CvModelMixin implements CvModel {
-  /// Copy content
-  @override
-  void copyFrom(CvModel model, {List<String>? columns}) {
-    _debugCheckCvFields();
-    for (var field in fields.matchingColumns(columns)) {
-      var recordCvField = model.dynamicField(field.name);
-      if (recordCvField?.hasValue == true) {
-        // ignore: invalid_use_of_visible_for_testing_member
-        field.fromCvField(recordCvField!);
-      }
-    }
-  }
-
-  void _debugCheckCvFields() {
-    if (isDebug) {
-      var success = _debugCvFieldsCheckDone[runtimeType];
-
-      if (success == null) {
-        // Mark pending
-        _debugCvFieldsCheckDone[runtimeType] = false;
-        var fieldNames = <String>{};
-        for (var field in fields) {
-          if (fieldNames.contains(field.name)) {
-            _debugCvFieldsCheckDone[runtimeType] = false;
-            throw CvBuilderExceptionImpl(
-                'Duplicated CvField ${field.name} in $runtimeType${fields.map((f) => f.name)} - $this');
-          }
-          fieldNames.add(field.name);
-        }
-        _debugCvFieldsCheckDone[runtimeType] = success = true;
-      } else if (!success) {
-        /*
-        throw UnsupportedError(
-            'Duplicated CvFields in $runtimeType${fields.map((f) => f.name)} - $this');
-
-         */
-      }
-    }
-  }
-
   @override
   String toString() {
     try {
@@ -124,7 +84,7 @@ mixin CvModelMixin implements CvModel {
 
   @override
   void fromMap(Map map, {List<String>? columns}) {
-    _debugCheckCvFields();
+    debugCheckCvFields();
     // assert(map != null, 'map cannot be null');
     columns ??= fields.map((e) => e.name).toList();
     var model = asModel(map);
@@ -230,7 +190,7 @@ mixin CvModelMixin implements CvModel {
   @override
   Map<String, Object?> toMap(
       {List<String>? columns, bool includeMissingValue = false}) {
-    _debugCheckCvFields();
+    debugCheckCvFields();
 
     void modelToMap(Model model, CvField field) {
       dynamic value = field.v;
@@ -307,3 +267,43 @@ final _debugCvFieldsCheckDone = <Type, bool>{};
 
 /// Result field check in debug mode (A field is only tested once).
 void debugResetCvModelFieldChecks() => _debugCvFieldsCheckDone.clear();
+
+/// Private extension on CvModel
+extension CvModelPrvExt<T> on CvModelCore {
+  /// Debug check
+  void debugCheckCvFields() {
+    if (isDebug) {
+      var success = _debugCvFieldsCheckDone[runtimeType];
+
+      if (success == null) {
+        // Mark pending
+        _debugCvFieldsCheckDone[runtimeType] = false;
+        var fieldNames = <String>{};
+        for (var field in fields) {
+          if (fieldNames.contains(field.name)) {
+            _debugCvFieldsCheckDone[runtimeType] = false;
+            throw CvBuilderExceptionImpl(
+                'Duplicated CvField ${field.name} in $runtimeType${fields.map((f) => f.name)} - $this');
+          }
+          fieldNames.add(field.name);
+        }
+        _debugCvFieldsCheckDone[runtimeType] = success = true;
+      } else if (!success) {
+        /*
+        throw UnsupportedError(
+            'Duplicated CvFields in $runtimeType${fields.map((f) => f.name)} - $this');
+
+         */
+      }
+    }
+  }
+}
+
+/// Public extension on CvModelWrite
+extension CvModelWriteExt<T> on CvModelWrite {
+  /// Copy content
+  void copyFrom(CvModel model, {List<String>? columns}) {
+    debugCheckCvFields();
+    fromMap(model.toMap(columns: columns));
+  }
+}

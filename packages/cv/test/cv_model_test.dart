@@ -199,6 +199,15 @@ void main() {
       cv = (IntContent()..value.v = 1)..copyFrom(IntContent()..value.v = null);
       expect(cv.toMap(), {'value': null});
     });
+    test('deep copyFrom', () {
+      var child = ChildContent()..sub.v = '1';
+      var cv = WithChildCvField()..child.v = child;
+      var copy = WithChildCvField()..copyFrom(cv);
+      child.sub.v = '2';
+      expect(copy.toMap(), {
+        'child': {'sub': '1'}
+      });
+    });
     test('toMap', () async {
       var note = Note()
         ..title.v = 'my_title'
