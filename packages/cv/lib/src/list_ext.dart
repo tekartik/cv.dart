@@ -1,4 +1,6 @@
-import 'cv_field.dart';
+import 'package:cv/cv.dart';
+import 'package:cv/cv.dart' as cvimpl;
+
 import 'cv_model_mixin.dart';
 import 'map_ext.dart';
 
@@ -28,4 +30,7 @@ extension ModelRawListExt on List {
     }
     return null;
   }
+
+  /// cast to a model list.
+  ModelList asModelList() => cvimpl.asModelList(this);
 }

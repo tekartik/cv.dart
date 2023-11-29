@@ -50,6 +50,7 @@ export 'src/cv_model_mixin.dart' show CvModelWriteExt;
 export 'src/list_ext.dart' show ModelRawListExt;
 export 'src/map_ext.dart' show ModelRawMapExt;
 export 'src/map_list_ext.dart' show ModelListExt;
+export 'src/object_ext.dart' show ModelRawObjectExt;
 export 'src/typedefs.dart'
     show
         Model,

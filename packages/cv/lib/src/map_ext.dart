@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/cv.dart' as cvimpl;
 import 'package:cv/src/typedefs.dart';
 
 /// Get raw value helper for map and list.
@@ -75,4 +76,7 @@ extension ModelRawMapExt on Map {
 
   /// Remove a field.
   void cvRemove(CvField field) => remove(field.k);
+
+  /// Cast the map if needed.
+  Model asModel() => cvimpl.asModel(this);
 }

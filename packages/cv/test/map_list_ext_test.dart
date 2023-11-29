@@ -1,12 +1,10 @@
 import 'package:cv/cv.dart';
-// ignore: unused_import
-import 'package:cv/src/typedefs.dart';
 import 'package:test/test.dart';
 
 List<Map> get listWithOneEmptyModel => [{}];
 void main() {
-  group('getValue', () {
-    test('value', () {
+  group('Map/list ext', () {
+    test('map_ext', () {
       var map = {
         'test': {
           'sub': ['a', 'b']
@@ -18,6 +16,19 @@ void main() {
       expect(map.getKeyPathValue(['test', 'sub', 2]), isNull);
       expect(map.getKeyPathValue(['no', 'sub', 1]), isNull);
       expect(map.getKeyPathValue(['test', 1, 'sub', 1]), isNull);
+
+      expect(map.asModel(), isA<Model>());
+    });
+    test('list_ext', () {
+      var list = [
+        {
+          'test': {
+            'sub': ['a', 'b']
+          }
+        }
+      ];
+      expect(list.asModelList(), list);
+      expect(list.asModelList(), isA<ModelList>());
     });
   });
 }
