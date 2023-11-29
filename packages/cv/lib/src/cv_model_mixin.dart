@@ -289,21 +289,27 @@ extension CvModelPrvExt<T> on CvModelCore {
         }
         _debugCvFieldsCheckDone[runtimeType] = success = true;
       } else if (!success) {
-        /*
-        throw UnsupportedError(
-            'Duplicated CvFields in $runtimeType${fields.map((f) => f.name)} - $this');
-
-         */
+        // Don't yell again
       }
     }
   }
 }
 
 /// Public extension on CvModelWrite
-extension CvModelWriteExt<T> on CvModelWrite {
+extension CvModelWriteExt on CvModelWrite {
   /// Copy content
-  void copyFrom(CvModel model, {List<String>? columns}) {
+  void copyFrom(CvModelRead model, {List<String>? columns}) {
     debugCheckCvFields();
     fromMap(model.toMap(columns: columns));
+  }
+}
+
+/// Public extension on CvModelRead
+extension CvModelReadExt<T extends CvModel> on T {
+  /// Copy content
+  T clone() {
+    var model = cvNewModel<T>();
+    model.copyFrom(this);
+    return model;
   }
 }

@@ -9,6 +9,13 @@ const cvEmptyMap = <String, Object?>{};
 /// New model from an empty map.
 T cvNewModel<T extends CvModel>() => cvBuildModel<T>(cvEmptyMap);
 
+/// Cloning a model
+T cvClone<T extends CvModel>(T original) {
+  var model = cvNewModel<T>();
+  model.copyFrom(original);
+  return model;
+}
+
 /// New model from an empty map.
 T cvTypeNewModel<T extends CvModel>(Type type) =>
     cvTypeBuildModel(type, cvEmptyMap);

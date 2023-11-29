@@ -46,7 +46,7 @@ export 'src/cv_model.dart'
         cvNewModel;
 export 'src/cv_model_list.dart'
     show CvModelListExt, cvNewModelList, cvTypeNewModelList;
-export 'src/cv_model_mixin.dart' show CvModelWriteExt;
+export 'src/cv_model_mixin.dart' show CvModelWriteExt, CvModelReadExt;
 export 'src/list_ext.dart' show ModelRawListExt;
 export 'src/map_ext.dart' show ModelRawMapExt;
 export 'src/map_list_ext.dart' show ModelListExt;

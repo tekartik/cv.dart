@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:cv/cv.dart';
-import 'package:cv/src/builder.dart';
-import 'package:cv/src/cv_model_mixin.dart';
+import 'package:cv/src/builder.dart' show cvRemoveBuilder;
+// ignore: deprecated_member_use_from_same_package
+import 'package:cv/src/cv_model_mixin.dart' show debugResetCvModelFieldChecks;
 import 'package:test/test.dart';
 
 import 'cv_field_test.dart';
@@ -587,6 +588,13 @@ void main() {
       cvAddConstructor(IntContent.new);
       var model = cvNewModel<IntContent>();
       var model2 = cvTypeNewModel(IntContent);
+      expect(model2, model);
+      expect(model2, isA<IntContent>());
+    });
+    test('cvClone', () {
+      cvAddConstructor(IntContent.new);
+      var model = cvNewModel<IntContent>();
+      var model2 = model.clone();
       expect(model2, model);
       expect(model2, isA<IntContent>());
     });
