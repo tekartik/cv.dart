@@ -1,9 +1,10 @@
-## 0.2.18
+## 0.2.18+1
 
 * add `cvAddConstructors()` and `cvTypeAddBuilder()`
 * add `anyAs` on Object to safely convert an object to any type
 * add `asModel` on Map to cast a map to a model
 * add `asModelList` on List to cast a list to a model list
+* add `clone` to `CvModel` to clone a model
 
 ## 0.2.17+2
 
