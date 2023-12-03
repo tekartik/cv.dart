@@ -634,6 +634,14 @@ class WithChildCvField extends CvModelBase {
   CvFields get fields => [child];
 }
 
+class WithGrandChildCvField extends CvModelBase {
+  final firstChild = CvModelField<WithChildCvField>.builder('firstChild',
+      builder: (_) => WithChildCvField());
+
+  @override
+  CvFields get fields => [firstChild];
+}
+
 class WithChildListCvField extends CvModelBase {
   final children = CvModelListField<ChildContent>.builder('children',
       builder: (_) => ChildContent());

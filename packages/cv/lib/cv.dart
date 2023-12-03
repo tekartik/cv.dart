@@ -47,6 +47,14 @@ export 'src/cv_model.dart'
 export 'src/cv_model_list.dart'
     show CvModelListExt, cvNewModelList, cvTypeNewModelList;
 export 'src/cv_model_mixin.dart' show CvModelWriteExt, CvModelReadExt;
+export 'src/cv_tree_path.dart'
+    show
+        CvTreePath,
+        CvTreePathModelReadExt,
+        CvTreePathFieldExt,
+        CvTreePathListFieldExt,
+        CvTreePathModelFieldExt,
+        CvTreePathModelListFieldExt;
 export 'src/list_ext.dart' show ModelRawListExt;
 export 'src/map_ext.dart' show ModelRawMapExt;
 export 'src/map_list_ext.dart' show ModelListExt;
