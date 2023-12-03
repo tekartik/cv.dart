@@ -8,31 +8,36 @@ import 'cv_model_test.dart';
 void main() {
   test('path simple', () {
     var model = IntContent()..value.v = 1;
-    expect(model.path.value.path.parts, ['value']);
+    expect(model.cvPath.value.treePath.parts, ['value']);
   });
   test('path sub', () {
     var model = WithChildCvField();
-    expect(model.path.child.sub.sub.path.parts, ['child', 'sub']);
+    expect(model.cvPath.child.pathSub.sub.treePath.parts, ['child', 'sub']);
   });
 
   test('path grand child', () {
     var model = WithGrandChildCvField();
-    expect(model.path.firstChild.sub.child.sub.sub.path.parts,
+    expect(model.cvPath.firstChild.pathSub.child.pathSub.sub.treePath.parts,
         ['firstChild', 'child', 'sub']);
   });
 
   test('path list simple', () {
     var model = AllTypes();
-    expect(model.path.intListCvField.path.parts, ['intList']);
-    expect(model.path.intListCvField.at(1).parts, ['intList', 1]);
+    expect(model.cvPath.intListCvField.treePath.parts, ['intList']);
+    expect(model.cvPath.intListCvField.treePathAt(1).parts, ['intList', 1]);
   });
   test('path list model', () {
     var model = AllTypes();
-    expect(model.path.children.path.parts, ['children']);
-    expect(model.path.children.at(1).parts, ['children', 1]);
-    expect(model.path.children.subAt(5).child.path.parts,
+    expect(model.cvPath.children.treePath.parts, ['children']);
+    expect(model.cvPath.children.treePathAt(1).parts, ['children', 1]);
+    expect(model.cvPath.children.pathSubAt(5).child.treePath.parts,
         ['children', 5, 'child']);
-    expect(model.path.children.subAt(5).child.sub.sub.path.parts,
+    expect(model.cvPath.children.pathSubAt(5).child.pathSub.sub.treePath.parts,
         ['children', 5, 'child', 'sub']);
+  });
+  test('path map model', () {
+    var model = WithChildMapCvField();
+    expect(model.cvPath.children.pathSubAt('test').cvPath.sub.treePath.parts,
+        ['children', 'test', 'sub']);
   });
 }
