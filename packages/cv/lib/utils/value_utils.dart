@@ -1,1 +1,2 @@
-export 'package:cv/src/utils.dart' show basicTypeCast, isBasicTypeOrNull;
+export 'package:cv/src/utils.dart'
+    show basicTypeCast, basicTypeCastType, isBasicTypeOrNull, CvBasicTypeExt;

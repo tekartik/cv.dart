@@ -105,11 +105,18 @@ extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
 
   /// Only for String/bool/num/int/double
   void fromBasicTypeValue(Object? value, {bool presentIfNull = false}) {
-    var fixedValue = basicTypeCast<T>(value);
-    if (fixedValue != null || presentIfNull) {
-      setValue(fixedValue, presentIfNull: presentIfNull);
+    if (value == null && presentIfNull) {
+      setValue(value as T?, presentIfNull: true);
+    } else {
+      var fixedValue = basicTypeCastType(type, value);
+      if (fixedValue != null) {
+        setValue(fixedValue as T);
+      }
     }
   }
+
+  /// Check if the field is a basic type (num, String, bool, int, double)
+  bool get isBasicType => type.isBasicType;
 }
 
 /// Generate for bool, int, num, text

@@ -1,7 +1,7 @@
-## 0.2.19-3
+## 0.2.19-4
 
 * add `CvTreePath` field tree path helper.
-* add `basicTypeCast` utils in `utils/value_utils.dart`
+* add `basicTypeCast, basicTypeCastType` utils in `utils/value_utils.dart`
 
 ## 0.2.18+1
 

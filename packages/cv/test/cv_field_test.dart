@@ -43,16 +43,36 @@ void main() {
     });
 
     test('fromCvField', () {
+      // set
       expect(CvField<String>('name')..fromCvField(CvField('name', 'value')),
           CvField('name', 'value'));
+      // erase
+      expect(CvField<String>('name', 'value')..fromCvField(CvField('name')),
+          CvField('name'));
+      // replace
+      expect(
+          CvField<String>('name', 'value')
+            ..fromCvField(CvField('name', 'value2')),
+          CvField('name', 'value2'));
+      // clear
+      expect(
+          CvField<String>('name', 'value')
+            ..fromCvField(CvField.withNull('name')),
+          CvField.withNull('name'));
+
       // bad type
-      expect(CvField<int>('name')..fromCvField(CvField('name', 'value')),
-          CvField<Object?>('name'));
+      expect(CvField<int>('name', 1)..fromCvField(CvField('name', 'value')),
+          CvField<Object?>.withNull('name'));
     });
 
     test('fromCvFieldToString', () {
       expect(CvField<String>('name')..fromCvField(CvField('name', 12)),
           CvField('name', '12'));
+    });
+
+    test('fromCvFieldBasicType', () {
+      expect(CvField<int>('count')..fromCvField(CvField('count', '12')),
+          CvField('count', 12));
     });
 
     test('fillField', () {
@@ -227,7 +247,7 @@ void main() {
       intField.fromBasicTypeValue('dummy', presentIfNull: false);
       expect(intField.v, 1);
       intField.fromBasicTypeValue('dummy', presentIfNull: true);
-      expect(intField.v, isNull);
+      expect(intField.v, 1);
     });
   });
 }

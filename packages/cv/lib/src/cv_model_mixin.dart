@@ -162,6 +162,9 @@ mixin CvModelMixin implements CvModel {
               decodedValue = encodedValue;
             }
             field.v = decodedValue;
+          } else if (field is CvFieldImpl && field.isBasicType) {
+            /// Only replace
+            field.fromBasicTypeValue(entry.value, presentIfNull: true);
           } else {
             try {
               field.v = entry.value;
