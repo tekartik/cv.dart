@@ -216,6 +216,19 @@ void main() {
       var field2 = CvField<int>('count');
       expect([field1, field2].columns, ['name', 'count']);
     });
+    test('fromBasicTypeValue', () {
+      var field = CvField<String>('name');
+      field.fromBasicTypeValue(1);
+      expect(field.v, '1');
+
+      var intField = CvField<int>('count');
+      intField.fromBasicTypeValue('1');
+      expect(intField.v, 1);
+      intField.fromBasicTypeValue('dummy', presentIfNull: false);
+      expect(intField.v, 1);
+      intField.fromBasicTypeValue('dummy', presentIfNull: true);
+      expect(intField.v, isNull);
+    });
   });
 }
 
