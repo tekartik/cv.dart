@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
+import 'package:cv/src/utils.dart';
 
 import 'column.dart';
 
@@ -299,11 +300,12 @@ mixin CvFieldMixin<T> implements CvField<T> {
   /// Allow dynamic CvFields
   @override
   void fromCvField(CvField cvField) {
-    if (cvField.v is T?) {
-      setValue(cvField.v as T?, presentIfNull: cvField.hasValue);
-    } else if (type == String && cvField.hasValue) {
+    var fieldValue = cvField.valueOrNull;
+    if (fieldValue is T?) {
+      setValue(fieldValue, presentIfNull: cvField.hasValue);
+    } else if (type.isBasicType && cvField.hasValue) {
       /// To string conversion
-      setValue(cvField.v?.toString() as T?, presentIfNull: true);
+      setValue(basicTypeCast<T>(fieldValue), presentIfNull: true);
     }
   }
 

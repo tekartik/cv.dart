@@ -342,6 +342,13 @@ void main() {
       doCheck();
     });
 
+    test('basic type types', () {
+      var allTypes = AllTypes();
+      allTypes.intCvField.v = 1;
+      expect(AllTypes()..fromMap({'int': 1}), allTypes);
+      expect(AllTypes()..fromMap({'int': '1'}), allTypes);
+    });
+
     test('builderCompat', () {
       expect(
           (CvModelField<IntContent>('int', (_) => IntContent())
@@ -392,35 +399,36 @@ void main() {
         'bool': false,
         'int': 2,
         'num': 3.5,
-        'string': 'text_4',
+        'double': 4,
+        'string': 'text_5',
         'children': [
           {
-            'child': {'sub': 'text_5'}
+            'child': {'sub': 'text_6'}
           }
         ],
-        'intList': [6],
-        'map': {'field_1': 7},
+        'intList': [7],
+        'map': {'field_1': 8},
         'mapList': [
-          {'field_1': 8}
+          {'field_1': 9}
         ],
-        'stringList': ['text_9'],
-        'list': [10],
+        'stringList': ['text_10'],
+        'list': [11],
         'modelMap': {
           'field_1': {
-            'child': {'sub': 'text_11'}
+            'child': {'sub': 'text_12'}
           }
         },
-        'model': {'field_1': 12},
+        'model': {'field_1': 13},
         'modelList': [
-          {'field_1': 13}
+          {'field_1': 14}
         ]
       });
       expect(
-          allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v, 'text_5');
+          allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v, 'text_6');
       expect(allTypes.fieldAtPath<int>(['children', 0, 'child', 'sub'])?.v,
           isNull);
       expect(allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub'])?.v,
-          'text_5');
+          'text_6');
       expect(
           allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub_no'])?.v,
           isNull);
@@ -634,6 +642,14 @@ class WithChildCvField extends CvModelBase {
   CvFields get fields => [child];
 }
 
+class WithGrandChildCvField extends CvModelBase {
+  final firstChild = CvModelField<WithChildCvField>.builder('firstChild',
+      builder: (_) => WithChildCvField());
+
+  @override
+  CvFields get fields => [firstChild];
+}
+
 class WithChildListCvField extends CvModelBase {
   final children = CvModelListField<ChildContent>.builder('children',
       builder: (_) => ChildContent());
@@ -678,6 +694,7 @@ class AllTypes extends CvModelBase {
   final boolCvField = CvField<bool>('bool');
   final intCvField = CvField<int>('int');
   final numCvField = CvField<num>('num');
+  final doubleCvField = CvField<num>('double');
   final stringCvField = CvField<String>('string');
   final intListCvField = CvListField<int>('intList');
   final stringListCvField = CvListField<String>('stringList');
@@ -696,6 +713,7 @@ class AllTypes extends CvModelBase {
         boolCvField,
         intCvField,
         numCvField,
+        doubleCvField,
         stringCvField,
         children,
         intListCvField,

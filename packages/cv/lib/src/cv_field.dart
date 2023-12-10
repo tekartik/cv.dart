@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
+import 'package:cv/utils/value_utils.dart';
 
 import 'builder.dart';
 import 'column.dart';
@@ -101,6 +102,21 @@ extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
 
   /// Create a new field with a new name
   CvField<T> withName(String name) => CvField<T>(name, value);
+
+  /// Only for String/bool/num/int/double
+  void fromBasicTypeValue(Object? value, {bool presentIfNull = false}) {
+    if (value == null && presentIfNull) {
+      setValue(value as T?, presentIfNull: true);
+    } else {
+      var fixedValue = basicTypeCastType(type, value);
+      if (fixedValue != null) {
+        setValue(fixedValue as T);
+      }
+    }
+  }
+
+  /// Check if the field is a basic type (num, String, bool, int, double)
+  bool get isBasicType => type.isBasicType;
 }
 
 /// Generate for bool, int, num, text
