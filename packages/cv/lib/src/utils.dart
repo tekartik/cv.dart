@@ -168,7 +168,7 @@ Object? _nonNullBasicTypeCastType(Type type, Object value) {
       return value;
     }
     if (value is num) {
-      return value.toInt();
+      return value.round();
     }
     if (value is bool) {
       return (value ? 1 : 0);

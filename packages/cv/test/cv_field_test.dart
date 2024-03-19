@@ -249,6 +249,29 @@ void main() {
       intField.fromBasicTypeValue('dummy', presentIfNull: true);
       expect(intField.v, 1);
     });
+    test('int', () {
+      var field = CvField<int>('int');
+      field.fromBasicTypeValue(1.1);
+      expect(field.v, 1);
+      field.fromBasicTypeValue(2.9);
+      expect(field.v, 3);
+    });
+    test('double', () {
+      var field = CvField<double>('double');
+      field.fromBasicTypeValue(1);
+      expect(field.v, closeTo(1.0, 0.0001));
+      field.fromBasicTypeValue(12345678912345678);
+      expect(field.v, closeTo(12345678912345678, 0.00001));
+    });
+    test('num', () {
+      var field = CvField<num>('num');
+      field.fromBasicTypeValue(1);
+      expect(field.v, isA<int>());
+      expect(field.v, 1);
+      field.fromBasicTypeValue(1.5);
+      expect(field.v, isA<double>());
+      expect(field.v, closeTo(1.5, 0.00001));
+    });
   });
 }
 
