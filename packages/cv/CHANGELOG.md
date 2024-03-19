@@ -1,7 +1,8 @@
-## 0.2.19-4
+## 0.2.19
 
 * add `CvTreePath` field tree path helper.
-* add `basicTypeCast, basicTypeCastType` utils in `utils/value_utils.dart`
+* add `basicTypeCast, basicTypeCastType` utils in `utils/value_utils.dart`.
+* round double read as int instead of truncate.
 
 ## 0.2.18+1
 

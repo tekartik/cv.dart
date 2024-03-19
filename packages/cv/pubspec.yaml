@@ -1,13 +1,13 @@
 name: cv
 description: Content Values map helpers. Define objects that can be converted to/from maps.
-version: 0.2.19-4
+version: 0.2.19
 homepage: https://github.com/tekartik/cv.dart/tree/main/packages/cv
 
 topics:
   - json
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   collection: '>=1.0.0 <3.0.0'
