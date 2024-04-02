@@ -32,9 +32,13 @@ void main() {
       expect([(IntContent()..value.v = 1)].toJson(), '[{"value":1}]');
     });
     test('fromJson', () {
+      cvAddConstructor<IntContent>(IntContent.new);
       for (var text in ['{}', '{"value":null}', '{"value":1}']) {
-        expect(text.cv(builder: (_) => IntContent()).toJson(), text);
+        expect(text.cv<IntContent>().toJson(), text);
       }
+      // int
+      expect('{"value":1.1}'.cv<IntContent>().toMap(), {'value': 1});
+      expect('{"value":2.999}'.cv<IntContent>().toMap(), {'value': 3});
     });
 
     test('listFromJson', () {
