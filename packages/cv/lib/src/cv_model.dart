@@ -18,7 +18,7 @@ T cvClone<T extends CvModel>(T original) {
 
 /// New model from an empty map.
 T cvTypeNewModel<T extends CvModel>(Type type) =>
-    cvTypeBuildModel(type, cvEmptyMap);
+    cvTypeBuildModel<T>(type, cvEmptyMap);
 
 /// Read helper
 abstract class CvModelRead implements CvModelCore {

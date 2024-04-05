@@ -598,6 +598,8 @@ void main() {
       var model2 = cvTypeNewModel(IntContent);
       expect(model2, model);
       expect(model2, isA<IntContent>());
+      var model3 = cvTypeNewModel<CvModel>(IntContent);
+      expect(model3, isA<IntContent>());
     });
     test('cvClone', () {
       cvAddConstructor(IntContent.new);
