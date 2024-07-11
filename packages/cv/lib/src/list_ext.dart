@@ -1,5 +1,6 @@
 import 'package:cv/cv.dart';
 import 'package:cv/cv.dart' as cvimpl;
+import 'package:cv/src/object_ext.dart';
 
 import 'cv_model_mixin.dart';
 import 'map_ext.dart';
@@ -33,4 +34,9 @@ extension ModelRawListExt on List {
 
   /// cast to a model list.
   ModelList asModelList() => cvimpl.asModelList(this);
+
+  /// Deep clone a list.
+  List<T> deepClone<T extends Object?>() {
+    return map<T>((e) => (e as Object?)?.anyDeepClone<T>() as T).toList();
+  }
 }

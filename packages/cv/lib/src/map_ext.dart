@@ -79,4 +79,21 @@ extension ModelRawMapExt on Map {
 
   /// Cast the map if needed.
   Model asModel() => cvimpl.asModel(this);
+
+  /// Clone as a model.
+  Model deepClone() {
+    var model = newModel();
+    for (var anyKey in keys) {
+      var key = anyKey.toString();
+      var value = this[key];
+      if (value is Map) {
+        model[key] = value.deepClone();
+      } else if (value is List) {
+        model[key] = value.deepClone();
+      } else {
+        model[key] = value;
+      }
+    }
+    return model;
+  }
 }
