@@ -1,4 +1,4 @@
-## 0.2.20
+## 0.2.20+1
 
 * Add `Map.deepClone`, `List.deepClone` and `Object.anyDeepClone`.
  

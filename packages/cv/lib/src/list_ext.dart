@@ -1,6 +1,5 @@
 import 'package:cv/cv.dart';
 import 'package:cv/cv.dart' as cvimpl;
-import 'package:cv/src/object_ext.dart';
 
 import 'cv_model_mixin.dart';
 import 'map_ext.dart';
