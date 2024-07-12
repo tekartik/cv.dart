@@ -1,3 +1,7 @@
+## 0.2.20+1
+
+* Add `Map.deepClone`, `List.deepClone` and `Object.anyDeepClone`.
+ 
 ## 0.2.19+1
 
 * add `CvTreePath` field tree path helper.
