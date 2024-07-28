@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Make it `1.0.0`
+* requires dart `3.4.0`
+* add default `CvMapModel` builder
+
 ## 0.2.20+1
 
 * Add `Map.deepClone`, `List.deepClone` and `Object.anyDeepClone`.
