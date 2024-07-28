@@ -3,6 +3,13 @@ import 'package:test/test.dart';
 
 import 'cv_model_test.dart';
 
+class CvModelWithMapModel extends CvModelBase {
+  final map = CvModelField<CvMapModel>('map');
+
+  @override
+  CvFields get fields => [map];
+}
+
 void main() {
   group('CvMapModel', () {
     test('fromMap', () {
@@ -19,6 +26,7 @@ void main() {
       src['test'] = 1;
       expect(src.toMap(), {'test': 1});
       var cv = CvMapModel()..copyFrom(src);
+      src['test'] = 2;
       expect(cv.toMap(), {'test': 1});
       cv = CvMapModel()..copyFrom(IntContent());
       expect(cv.toMap(), isEmpty);
@@ -88,6 +96,18 @@ void main() {
       expect(cv.fields, [CvField('test', 1)]);
       cv.clear();
       expect(cv.fields, isEmpty);
+    });
+
+    test('auto_builder', () {
+      cvAddConstructor(CvModelWithMapModel.new);
+      var test = {'test': 1}.cv<CvMapModel>();
+      expect(test.toMap(), {'test': 1});
+
+      var model = CvModelWithMapModel()..map.v = test;
+      var map = model.toMap();
+      expect(map.cv<CvModelWithMapModel>().toMap(), {
+        'map': {'test': 1}
+      });
     });
   });
 }
