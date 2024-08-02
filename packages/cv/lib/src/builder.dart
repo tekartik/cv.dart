@@ -13,7 +13,12 @@ typedef CvModelBuilderFunction<T extends Object> = T Function(Map contextData);
 typedef CvModelDefaultBuilderFunction<T extends Object> = T Function();
 
 /// Global builder map
-var _builders = <Type, Object Function(Map data)>{};
+final _builders = () {
+  var map = <Type, Object Function(Map data)>{};
+  // Always add the map model
+  map[CvMapModel] = (_) => CvMapModel();
+  return map;
+}();
 
 /// Add builder that uses builder function
 void cvAddBuilder<T extends CvModel>(CvModelBuilderFunction<T> builder) {
@@ -71,6 +76,10 @@ void cvAddConstructor<T extends CvModel>(
 }
 
 /// Add convenient constructors tear-off
+///
+/// Warning each builder must be of the same base type
+/// i.e. use a different construction for CvMapModel and CvModelBase models and
+/// other based)
 void cvAddConstructors<T extends CvModel>(
     List<CvModelDefaultBuilderFunction<T>> builders) {
   for (var builder in builders) {
