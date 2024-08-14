@@ -343,7 +343,7 @@ class _FillModelMatchesMapMatcher extends Matcher {
       var model = cvTypeNewModel(type);
       generator.fillModel(model);
       lastModel = model;
-      if (DeepCollectionEquality().equals(model.toMap(), map)) {
+      if (const DeepCollectionEquality().equals(model.toMap(), map)) {
         return true;
       }
     } else if (item is CvModel) {
@@ -358,7 +358,7 @@ class _FillModelMatchesMapMatcher extends Matcher {
     description = description.add('expecting map:\n');
     try {
       description = description.add(
-          'expecting ${JsonEncoder.withIndent(' ').convert(lastModel?.toMap())}');
+          'expecting ${const JsonEncoder.withIndent(' ').convert(lastModel?.toMap())}');
     } catch (e) {
       description = description.add('expecting $lastModel');
     }
