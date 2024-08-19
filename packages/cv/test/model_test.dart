@@ -12,8 +12,8 @@ void main() {
     });
 
     test('entry', () {
-      expect(ModelEntry('test', null).key, 'test');
-      expect(ModelEntry('test', 'value').value, 'value');
+      expect(const ModelEntry('test', null).key, 'test');
+      expect(const ModelEntry('test', 'value').value, 'value');
     });
 
     test('value', () {
