@@ -608,6 +608,16 @@ void main() {
       expect(model2, model);
       expect(model2, isA<IntContent>());
     });
+    test('basic list', () {
+      var model = AllTypes();
+      model.fromMap({
+        'intList': [1, 2.1, '3.1'],
+        'stringList': [4, '5', true]
+      });
+      expect(model.intListCvField.v, [1, 2, 3]);
+      expect(model.stringListCvField.v, ['4', '5', 'true']);
+    });
+
     test('fillModel missing builder', () {
       cvAddConstructor(TestInnerWithoutBuilder.new);
       try {

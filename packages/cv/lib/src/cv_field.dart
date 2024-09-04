@@ -247,6 +247,27 @@ extension CvListFieldUtilsExt<T extends Object?> on CvListField<T> {
       value = list;
     }
   }
+
+  /// Only for String/bool/num/int/double
+  void fromBasicTypeValueList(Object? value, {bool presentIfNull = false}) {
+    if (value is List) {
+      var list = createList();
+      for (var rawItem in value) {
+        var item = basicTypeCastType(itemType, rawItem);
+        if (item is T) {
+          list.add(item);
+        }
+      }
+      setValue(list);
+    } else {
+      if (presentIfNull) {
+        setValue(null, presentIfNull: true);
+      }
+    }
+  }
+
+  /// Check if the field is a basic type (num, String, bool, int, double)
+  bool get isBasicItemType => itemType.isBasicType;
 }
 
 /// Fill helpers
