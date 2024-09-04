@@ -1,8 +1,9 @@
-## 1.0.0
+## 1.0.0+1
 
 * Make it `1.0.0`
 * requires dart `3.4.0`
 * add default `CvMapModel` builder
+* Fix basic list item safe conversion
 
 ## 0.2.20+1
 
