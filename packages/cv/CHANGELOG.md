@@ -1,3 +1,8 @@
+## 1.1.0
+
+* add `keyPartsToString` and `keyPartsFromString`
+* add helper `CvModel.valueAtPath(path)` to get a model value at a given path.
+
 ## 1.0.0+1
 
 * Make it `1.0.0`
