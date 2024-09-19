@@ -12,21 +12,70 @@ var debugContent = false; // devWarning(true);
 
 /// Get raw value helper for map and list.
 CvField<T>? rawGetFieldAtPath<T extends Object?>(
-    Object rawValue, List<Object> paths) {
-  if (paths.isEmpty) {
+    Object rawValue, List<Object> parts) {
+  if (parts.isEmpty) {
     if (rawValue is CvField<T>) {
       return rawValue;
     }
     return null;
   }
   if (rawValue is CvModelField) {
-    return rawValue.v?.fieldAtPath<T>(paths);
+    return rawValue.v?.fieldAtPath<T>(parts);
   } else if (rawValue is CvModelListField) {
-    return rawValue.v?.fieldAtPath<T>(paths);
+    return rawValue.v?.fieldAtPath<T>(parts);
   } else if (rawValue is CvModel) {
-    return rawValue.fieldAtPath<T>(paths);
+    return rawValue.fieldAtPath<T>(parts);
   } else if (rawValue is List) {
-    return rawValue.fieldAtPath<T>(paths);
+    return rawValue.fieldAtPath<T>(parts);
+  }
+  return null;
+}
+
+/// ['key1', 'key2', index3, 'key4]
+T? _rawListGetValueAtPath<T extends Object?>(
+    List<Object?> list, List<Object> parts) {
+  var path = parts.first;
+  if (path is int && path >= 0 && list.length > path) {
+    var rawValue = list[path];
+    if (rawValue != null) {
+      return rawGetValueAtPath(rawValue, parts.sublist(1));
+    }
+  }
+  return null;
+}
+
+/// ['key1', 'key2', index3, 'key4]
+T? _rawMapGetValueAtPath<T extends Object?>(
+    Map<Object?, Object?> map, List<Object> parts) {
+  var path = parts.first;
+  var rawValue = map[path];
+  if (rawValue != null) {
+    return rawGetValueAtPath(rawValue, parts.sublist(1));
+  }
+  return null;
+}
+
+/// Get a value at a given path - internal, handle CvField, CvModel (toMap), List<CvModel> (toMapList)
+/// other types are returned as is for now (this might change in the future)
+T? rawGetValueAtPath<T extends Object?>(Object rawValue, List<Object> parts) {
+  var value = (rawValue is CvField) ? rawValue.v : rawValue;
+  if (value == null) {
+    return null;
+  } else if (parts.isEmpty) {
+    if (value is CvModelRead) {
+      return value.toMap().anyAs<T?>();
+    } else if (value is List<CvModelRead>) {
+      return value.toMapList().anyAs<T?>();
+    } else if (value is CvModelField) {
+      return value.v?.toMap().anyAs<T?>();
+    }
+    return value.anyAs<T?>();
+  } else if (rawValue is List) {
+    return _rawListGetValueAtPath(rawValue, parts);
+  } else if (rawValue is Map) {
+    return _rawMapGetValueAtPath(rawValue, parts);
+  } else if (rawValue is CvModel) {
+    return rawValue.valueAtPath<T>(parts);
   }
   return null;
 }
@@ -56,19 +105,6 @@ mixin CvModelMixin implements CvModel {
     _cvFieldMap ??=
         Map.fromEntries(fields.map((field) => MapEntry(field.name, field)));
     return _cvFieldMap![name]?.cast<T>();
-  }
-
-  @override
-  CvField<T>? fieldAtPath<T extends Object?>(List<Object> paths) {
-    var path = paths.first;
-    if (path is String) {
-      var rawField = field<Object>(path);
-      if (rawField?.isNotNull ?? false) {
-        return rawGetFieldAtPath<T>(rawField!, paths.sublist(1));
-      }
-    }
-
-    return null;
   }
 
   @override
@@ -201,8 +237,10 @@ mixin CvModelMixin implements CvModel {
 
     void modelToMap(Model model, CvField field) {
       dynamic value = field.v;
-      if (value is List<CvModelCore>) {
-        value = value.map((e) => (e as CvModelRead).toMap()).toList();
+      if (value is List<CvModelRead>) {
+        value = value
+            .map((e) => e.toMap(includeMissingValue: includeMissingValue))
+            .toList();
       } else if (value is CvModelRead) {
         value = value.toMap(includeMissingValue: includeMissingValue);
       }
@@ -311,12 +349,40 @@ extension CvModelWriteExt on CvModelWrite {
   }
 }
 
-/// Public extension on CvModelRead
-extension CvModelReadExt<T extends CvModel> on T {
+/// Public extension on CvModelWrite
+extension CvModelCloneExt<T extends CvModel> on T {
   /// Copy content
   T clone() {
     var model = cvNewModel<T>();
     model.copyFrom(this);
     return model;
+  }
+}
+
+/// Public extension on CvModelCore
+extension CvModelReadExt on CvModelRead {
+  /// Deep CvField access
+  CvField<T>? fieldAtPath<T extends Object?>(List<Object> parts) {
+    var path = parts.first;
+    if (path is String) {
+      var rawField = field<Object>(path);
+      if (rawField?.isNotNull ?? false) {
+        return rawGetFieldAtPath<T>(rawField!, parts.sublist(1));
+      }
+    }
+    return null;
+  }
+
+  /// Get a value at a given path
+  /// fields value is returned. CvModel/List<CvModel> are converted to map/mapList.
+  T? valueAtPath<T extends Object?>(List<Object> parts) {
+    var path = parts.first;
+    if (path is String) {
+      var rawValue = field<Object>(path)?.value;
+      if (rawValue != null) {
+        return rawGetValueAtPath(rawValue, parts.sublist(1));
+      }
+    }
+    return null;
   }
 }

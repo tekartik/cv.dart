@@ -72,5 +72,16 @@ void main() {
       expect(newSub1, isNot(same(sub1)));
       expect(oldSub1, same(sub1));
     });
+    test('keyPartsToString', () {
+      expect(keyPartsToString(['test', 1, 'sub', 2]), 'test.1.sub.2');
+      expect(keyPartsToString(['test', '1', 'sub', 2]), 'test."1".sub.2');
+    });
+    test('keyPartsFromString', () {
+      expect(keyPartsFromString('test.1.sub.2'), ['test', 1, 'sub', 2]);
+      expect(
+        keyPartsFromString('test."1".sub.2'),
+        ['test', '1', 'sub', 2],
+      );
+    });
   });
 }

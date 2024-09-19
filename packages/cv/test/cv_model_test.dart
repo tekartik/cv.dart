@@ -381,7 +381,7 @@ void main() {
           [IntContent()..value.v = 1]);
     });
 
-    test('fillCvModel', () {
+    test('fillCvModel/fieldAtPath/valueAtPath', () {
       expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
           {'value': 1});
       expect(
@@ -425,9 +425,31 @@ void main() {
       });
       expect(
           allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v, 'text_6');
+      expect(allTypes.valueAtPath(['children', 0, 'child', 'sub']), 'text_6');
+
+      expect(allTypes.fieldAtPath(['children', 0, 'child'])?.v,
+          isA<ChildContent>());
+      expect(allTypes.valueAtPath(['children', 0, 'child']), {'sub': 'text_6'});
+
+      expect(allTypes.fieldAtPath(['modelList']), isA<CvListField>());
+      expect(allTypes.valueAtPath(['modelList']), [
+        {'field_1': 14}
+      ]);
+
+      expect(allTypes.fieldAtPath(['children']), isA<CvModelListField>());
+      expect(allTypes.valueAtPath(['children']), [
+        {
+          'child': {'sub': 'text_6'}
+        }
+      ]);
+
       expect(allTypes.fieldAtPath<int>(['children', 0, 'child', 'sub'])?.v,
           isNull);
+      expect(
+          allTypes.valueAtPath<int>(['children', 0, 'child', 'sub']), isNull);
       expect(allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub'])?.v,
+          'text_6');
+      expect(allTypes.valueAtPath<String>(['children', 0, 'child', 'sub']),
           'text_6');
       expect(
           allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub_no'])?.v,

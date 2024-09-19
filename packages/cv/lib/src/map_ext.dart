@@ -2,17 +2,53 @@ import 'package:cv/cv.dart';
 import 'package:cv/cv.dart' as cvimpl;
 import 'package:cv/src/typedefs.dart';
 
-/// Get raw value helper for map and list.
-T? rawGetKeyPathValue<T extends Object?>(Object? rawValue, List<Object> paths) {
-  if (paths.isEmpty) {
-    if (rawValue is T) {
-      return rawValue;
-    }
-    return null;
+String _keyPartToString(Object part) {
+  if (part is int) {
+    return part.toString();
+  }
+  assert(part is String);
+  var partText = part as String;
+
+  /// Look like an int
+  var intValue = int.tryParse(partText);
+  if (intValue != null) {
+    return '"$partText"';
+  }
+
+  return partText;
+}
+
+Object _keyPartFromString(String partText) {
+  if (partText.startsWith('"') && partText.endsWith('"')) {
+    return partText.substring(1, partText.length - 1);
+  }
+  var intValue = int.tryParse(partText);
+  if (intValue is int) {
+    return intValue;
+  }
+  return partText;
+}
+
+/// Convert ['key1', 'key2', index3, 'key4] to 'key1.key2.index3.key4'
+/// string representing are double quoted (i.e. "1")
+/// part with a dot are not supported yet...
+String keyPartsToString(List<Object> parts) {
+  return parts.map(_keyPartToString).join('.');
+}
+
+/// Convert 'key1.key2.index3.key4' to ['key1', 'key2', index3, 'key4]
+List<Object> keyPartsFromString(String key) {
+  return key.split('.').map(_keyPartFromString).toList();
+}
+
+/// Get raw value helper for map and list - internal
+T? rawGetKeyPathValue<T extends Object?>(Object rawValue, List<Object> parts) {
+  if (parts.isEmpty) {
+    return rawValue.anyAs<T?>();
   } else if (rawValue is Map) {
-    return rawValue.getKeyPathValue<T>(paths);
+    return rawValue.getKeyPathValue<T>(parts);
   } else if (rawValue is List) {
-    return rawValue.getKeyPathValue<T>(paths);
+    return rawValue.getKeyPathValue<T>(parts);
   }
   return null;
 }
@@ -45,16 +81,13 @@ extension ModelRawMapExt on Map {
   }
 
   /// ['key1', 'key2', index3, 'key4]
-  T? getKeyPathValue<T extends Object?>(List<Object> paths) {
-    Object? rawValue;
-    var path = paths.first;
-    for (var entry in entries) {
-      if (entry.key == path) {
-        rawValue = entry.value;
-        return rawGetKeyPathValue(rawValue, paths.sublist(1));
-      }
+  T? getKeyPathValue<T extends Object?>(List<Object> parts) {
+    var path = parts.first;
+    var rawValue = this[path] as Object?;
+    if (rawValue == null) {
+      return null;
     }
-    return null;
+    return rawGetKeyPathValue(rawValue, parts.sublist(1));
   }
 
   /// Get a value expecting a given type

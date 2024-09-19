@@ -26,8 +26,8 @@ abstract class CvModelRead implements CvModelCore {
   Model toMap({List<String>? columns, bool includeMissingValue = false});
 }
 
-/// Write helper
-abstract class CvModelWrite implements CvModelCore {
+/// Write helper (implies CvModelCore)
+abstract class CvModelWrite implements CvModelRead {
   /// Map alias
   void fromMap(Map map, {List<String>? columns});
 
@@ -42,9 +42,6 @@ abstract class CvModelCore {
 
   /// CvField access
   CvField<T>? field<T extends Object?>(String name);
-
-  /// Deep CvField access
-  CvField<T>? fieldAtPath<T extends Object?>(List<Object> paths);
 }
 
 /// Modifiable map.
@@ -59,8 +56,8 @@ abstract class CvMapModel implements CvModel, Model {
   }
 }
 
-/// Model to access the data
-abstract class CvModel implements CvModelRead, CvModelWrite, CvModelCore {}
+/// Model to access the data (implies CvModelRead and CvModelCore)
+abstract class CvModel implements CvModelWrite {}
 
 /// Empty model.
 class CvModelEmpty extends CvModelBase {
