@@ -2,6 +2,7 @@
 
 * add `keyPartsToString` and `keyPartsFromString`
 * add helper `CvModel.valueAtPath(path)` to get a model value at a given path.
+* Fixe clone issue with subclasses dispatch.
 
 ## 1.0.0+1
 
