@@ -100,6 +100,39 @@ class StringContent extends CvModelBase {
   CvFields get fields => [value];
 }
 
+class CloneBaseClass extends CvModelBase {
+  final type = CvField<int>('type');
+  @override
+  CvFields get fields => [type];
+}
+
+class CloneBaseClass1 extends CloneBaseClass {}
+
+class CloneBaseClass2 extends CloneBaseClass {}
+
+abstract class AbstractCloneBaseClass extends CvModelBase {
+  // 1 for SubClass1, 2 for SubClass 2
+  final type = CvField<int>('type');
+  final other = CvField<int>('other');
+  @override
+  CvFields get fields => [type, other];
+
+  AbstractCloneBaseClass();
+
+  /// Constructor tear off for builder
+  factory AbstractCloneBaseClass.builder(Map contextData) {
+    if (contextData['type'] == 2) {
+      return NonAbstractSubClass2();
+    } else {
+      return NonAbstractSubClass1();
+    }
+  }
+}
+
+class NonAbstractSubClass1 extends AbstractCloneBaseClass {}
+
+class NonAbstractSubClass2 extends AbstractCloneBaseClass {}
+
 void main() {
   group('cv', () {
     test('CvModel', () {
@@ -146,6 +179,11 @@ void main() {
       var stringContent = StringContent()..fromMap({'value': 12});
       expect(stringContent.value.hasValue, true);
       expect(stringContent.value.v, '12');
+
+      cvAddConstructor(IntContent.new);
+      content = newModel().cv<IntContent>();
+      expect(content.value.hasValue, false);
+      expect(content.value.v, null);
     });
     test('fromMap2', () async {
       expect(IntContent()..fromMap({}), IntContent());
@@ -629,6 +667,33 @@ void main() {
       var model2 = model.clone();
       expect(model2, model);
       expect(model2, isA<IntContent>());
+    });
+    test('clone sub class', () {
+      cvAddConstructor(CloneBaseClass.new);
+      cvAddConstructor(CloneBaseClass1.new);
+      CloneBaseClass base = CloneBaseClass1();
+      var clone = base.clone();
+      expect(clone, isNot(isA<CloneBaseClass1>()));
+      expect(clone, isA<CloneBaseClass>());
+    });
+    test('clone sub class abstract', () {
+      cvAddConstructor(NonAbstractSubClass1.new);
+      cvAddBuilder(AbstractCloneBaseClass.builder);
+      var base = cvNewModel<AbstractCloneBaseClass>();
+      var clone = base.clone();
+      expect(clone, isA<NonAbstractSubClass1>());
+      var class1 = NonAbstractSubClass1();
+      var clone1 = class1.clone();
+      expect(clone1, isA<NonAbstractSubClass1>());
+      base = NonAbstractSubClass2();
+      var clone2 = base.clone();
+      expect(clone2, isA<NonAbstractSubClass1>());
+      base = NonAbstractSubClass2()
+        ..type.v = 2
+        ..other.v = 123;
+      var clone3 = base.clone();
+      expect(clone3, isA<NonAbstractSubClass2>());
+      expect(clone3.other.v, 123);
     });
     test('basic list', () {
       var model = AllTypes();

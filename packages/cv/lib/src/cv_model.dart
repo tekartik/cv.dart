@@ -11,7 +11,7 @@ T cvNewModel<T extends CvModel>() => cvBuildModel<T>(cvEmptyMap);
 
 /// Cloning a model
 T cvClone<T extends CvModel>(T original) {
-  var model = cvNewModel<T>();
+  var model = cvBuildModel<T>(original.toMap());
   model.copyFrom(original);
   return model;
 }

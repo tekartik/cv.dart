@@ -353,9 +353,7 @@ extension CvModelWriteExt on CvModelWrite {
 extension CvModelCloneExt<T extends CvModel> on T {
   /// Copy content
   T clone() {
-    var model = cvNewModel<T>();
-    model.copyFrom(this);
-    return model;
+    return cvClone<T>(this);
   }
 }
 
