@@ -29,7 +29,7 @@ abstract class ModelBase with MapMixin<String, Object?> {
   Object? remove(Object? key) => _map.remove(key);
 }
 
-/// List class to use as a [List<dynamic>].
+/// List class to use as a `[List<dynamic>]`.
 class ModelListImpl extends ModelListBase {
   /// Create a model. If list is null, the model
   /// is an empty list

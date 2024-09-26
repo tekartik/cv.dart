@@ -55,7 +55,7 @@ T? _rawMapGetValueAtPath<T extends Object?>(
   return null;
 }
 
-/// Get a value at a given path - internal, handle CvField, CvModel (toMap), List<CvModel> (toMapList)
+/// Get a value at a given path - internal, handle CvField, CvModel (toMap), `List<CvModel>` (toMapList)
 /// other types are returned as is for now (this might change in the future)
 T? rawGetValueAtPath<T extends Object?>(Object rawValue, List<Object> parts) {
   var value = (rawValue is CvField) ? rawValue.v : rawValue;
@@ -372,7 +372,7 @@ extension CvModelReadExt on CvModelRead {
   }
 
   /// Get a value at a given path
-  /// fields value is returned. CvModel/List<CvModel> are converted to map/mapList.
+  /// fields value is returned. `CvModel/List<CvModel>` are converted to map/mapList.
   T? valueAtPath<T extends Object?>(List<Object> parts) {
     var path = parts.first;
     if (path is String) {

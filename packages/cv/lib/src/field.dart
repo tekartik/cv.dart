@@ -351,7 +351,7 @@ mixin CvFieldMixin<T> implements CvField<T> {
   CvField<T> withParent(String parent) => CvFieldWithParentImpl(this, parent);
 }
 
-/// List<Column> helpers
+/// `List<Column>` helpers
 extension CvColumnExtension on List<CvColumn> {
   /// Column names.
   List<String> get names => map((c) => c.name).toList();

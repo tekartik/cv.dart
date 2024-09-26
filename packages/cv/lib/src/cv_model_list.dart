@@ -16,7 +16,7 @@ List<T> cvNewModelList<T extends CvModel>({bool lazy = true}) =>
 List<T> cvTypeNewModelList<T extends CvModel>(Type type, {bool lazy = true}) =>
     cvEmptyMapList.cvType(type, lazy: lazy);
 
-/// List<CvModel> convenient extensions.
+/// `List<CvModel>` convenient extensions.
 extension CvModelReadListExt<T extends CvModelRead> on List<T> {
   /// Convert to model list
   List<Model> toMapList(

@@ -207,9 +207,9 @@ Object? _nonNullBasicTypeCastType(Type type, Object value) {
 
 /// Handle int, num, double, String, bool
 ///
-/// <bool>
+/// [bool]
 ///   non 0/null nom value are converted to true
-/// <int>, <double>
+/// [int], [double]
 ///   num are rounder to int if needed
 
 T? basicTypeCast<T extends Object?>(Object? value) {
@@ -222,9 +222,9 @@ T? basicTypeCast<T extends Object?>(Object? value) {
 
 /// Handle int, num, double, String, bool
 ///
-/// <bool>
+/// [bool]
 ///   non 0/null nom value are converted to true
-/// <int>, <double>
+/// [int], [double]
 ///   num are rounder to int if needed
 
 Object? basicTypeCastType(Type type, Object? value) {
