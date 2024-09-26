@@ -1,5 +1,5 @@
 /// ContentValue helpers.
-library cv;
+library;
 
 export 'src/builder.dart'
     show

@@ -1,5 +1,5 @@
 /// ContentValue Json helpers.
-library cv_json;
+library;
 
 export 'cv.dart';
 export 'src/cv_json.dart'
