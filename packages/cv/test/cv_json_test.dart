@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cv/cv_json.dart';
 import 'package:test/test.dart';
 
@@ -9,6 +11,29 @@ void main() {
       var model = CvMapModel();
       model['test'] = 1;
       expect(model.toJson(), '{"test":1}');
+    });
+    test('jsonPrettyEncode', () {
+      expect(jsonEncode(null), 'null');
+      expect(jsonPrettyEncode(1), '1');
+      expect(jsonPrettyEncode(1.5), '1.5');
+      expect(jsonPrettyEncode('test'), '"test"');
+      expect(jsonPrettyEncode(true), 'true');
+      expect(jsonPrettyEncode(null), 'null');
+      expect(json.decode('null'), isNull);
+      expect(jsonPrettyEncode({}), '{}');
+      var list = ['test', 1];
+      var map = {'test': 1};
+      expect(jsonPrettyEncode(list), '[\n  "test",\n  1\n]');
+      expect(jsonPrettyEncode(map), '{\n  "test": 1\n}');
+      expect(map.cvToJsonPretty(), jsonPrettyEncode(map));
+      expect(map.cvToJson(), jsonEncode(map));
+      expect(list.cvToJsonPretty(), jsonPrettyEncode(list));
+      expect(list.cvToJson(), jsonEncode(list));
+      var model = CvMapModel();
+      model['test'] = 1;
+      expect(model.toJsonPretty(), jsonPrettyEncode(map));
+      expect('{"test":1}'.cvToJsonPretty(), jsonPrettyEncode(map));
+      expect('["test",1]'.cvToJsonPretty(), jsonPrettyEncode(list));
     });
 
     test('CvModel.toJson', () async {
