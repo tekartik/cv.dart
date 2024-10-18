@@ -1,6 +1,7 @@
-## 1.1.3-0
+## 1.1.3
 
 * Add `basicTypeToInt`, `basicTypeToBool`, `basicTypeToNum` and `basicTypeToDouble` in `utils/value_utils.dart`
+* Add `cvAnyToJsonObject` and `cvAnyToJsonArray` to  `json_utils.dart`
 
 ## 1.1.1+1
 
