@@ -1,23 +1,75 @@
-import 'package:cv/src/utils.dart';
+import 'package:cv/utils/value_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
   var now = DateTime.now();
   group('value_utils', () {
-    test('basicTypeCast<int>', () {
-      expect(basicTypeCast<int>(null), isNull);
-      expect(basicTypeCast<int>(now), isNull);
-      expect(basicTypeCast<int>('dummy'), isNull);
-      expect(basicTypeCast<int>(0), 0);
-      expect(basicTypeCast<int>('0'), 0);
-      expect(basicTypeCastType(int, '0'), 0);
-      expect(basicTypeCast<int>(1), 1);
-      expect(basicTypeCast<int>('1'), 1);
-      expect(basicTypeCast<int>(2), 2);
-      expect(basicTypeCast<int>('2'), 2);
-      expect(basicTypeCast<int>(true), 1);
-      expect(basicTypeCast<int>(1.1), 1);
-      expect(basicTypeCast<int>('1.1'), 1);
+    test('basicTypeCast<any>', () {
+      for (var value in [
+        null,
+        now,
+        'dummy',
+        0,
+        '0',
+        1,
+        '1',
+        2,
+        '2',
+        true,
+        false,
+        int,
+        1.1,
+        1.9,
+        '1.1',
+        '-1.1',
+        '-1.9',
+        '1.9',
+        '3notyetstartingwithnumberbutcouldchangeandthatsok'
+      ]) {
+        var intExpected = basicTypeToInt(value);
+        expect(basicTypeCast<int>(value), intExpected);
+        expect(basicTypeCastType(int, value), intExpected);
+        var numExpected = basicTypeToNum(value);
+        expect(basicTypeCast<num>(value), numExpected);
+        expect(basicTypeCastType(num, value), numExpected);
+        var boolExpected = basicTypeToBool(value);
+        expect(basicTypeCast<bool>(value), boolExpected);
+        expect(basicTypeCastType(bool, value), boolExpected);
+        var doubleExpected = basicTypeToDouble(value);
+        expect(basicTypeCast<double>(value), doubleExpected);
+        expect(basicTypeCastType(double, value), doubleExpected);
+      }
+    });
+    test('basicTypeToInt', () {
+      expect(basicTypeToInt(1.1), 1);
+      expect(basicTypeToInt('1.1'), 1);
+      expect(basicTypeToInt(''), isNull);
+      expect(basicTypeToInt(1.9), 2);
+      expect(basicTypeToInt('1.9'), 2);
+      expect(basicTypeToInt(1.1), 1);
+      expect(basicTypeToInt(1.9), 2);
+      expect(basicTypeToInt(null), isNull);
+      expect(basicTypeToInt(now), isNull);
+      expect(basicTypeToInt('dummy'), isNull);
+      expect(basicTypeToInt(0), 0);
+      expect(basicTypeToInt('0'), 0);
+      expect(basicTypeToInt(1), 1);
+      expect(basicTypeToInt('1'), 1);
+      expect(basicTypeToInt(-1), -1);
+      expect(basicTypeToInt('-1'), -1);
+      expect(basicTypeToInt(2), 2);
+      expect(basicTypeToInt('2'), 2);
+      expect(basicTypeToInt(true), 1);
+      expect(basicTypeToInt(false), 0);
+      expect(basicTypeToInt(1.1), 1);
+      expect(basicTypeToInt('1.1'), 1);
+      expect(basicTypeToInt(-1.1), -1);
+      expect(basicTypeToInt('-1.1'), -1);
+      expect(basicTypeToInt(-1.9), -2);
+      expect(basicTypeToInt('-1.9'), -2);
+      expect(
+          basicTypeToInt('3notyetstartingwithnumberbutcouldchangeandthatsok'),
+          isNull);
     });
     test('basicTypeCast<num>', () {
       expect(basicTypeCast<num>(null), isNull);
