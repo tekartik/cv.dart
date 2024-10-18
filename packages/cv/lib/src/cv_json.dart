@@ -2,6 +2,56 @@ import 'dart:convert';
 
 import 'package:cv/cv.dart';
 
+/// Decode any object
+Model? cvAnyToJsonObjectOrNull(Object? source) {
+  if (source is Map) {
+    return source.cast<String, Object?>();
+  } else if (source is String) {
+    return _parseJsonObjectOrNull(source)?.cast<String, Object?>();
+  }
+  return null;
+}
+
+/// Decode any object list
+List<Object?>? cvAnyToJsonArrayOrNull(Object? source) {
+  if (source is List) {
+    return _castList(source);
+  } else if (source is String) {
+    return _parseJsonListOrNull(source);
+  }
+  return null;
+}
+
+List<Object?>? _castList(List? list) => list?.cast<Object?>();
+
+/// Safely parse a list
+List<Object?>? _parseJsonListOrNull(String? text) {
+  var list = _parseJsonStringOrNull(text);
+  if (list is List) {
+    return _castList(list);
+  }
+  return null;
+}
+
+/// Safely parse a map
+Map<String, Object?>? _parseJsonObjectOrNull(String? text) {
+  var map = _parseJsonStringOrNull(text);
+  if (map is Map) {
+    return map.cast<String, Object?>();
+  }
+  return null;
+}
+
+/// safely parse text or null
+Object? _parseJsonStringOrNull(String? text) {
+  if (text != null) {
+    try {
+      return json.decode(text);
+    } catch (_) {}
+  }
+  return null;
+}
+
 /// Easy string extension, assume a json encoded
 extension CvJsonStringExt on String {
   /// Create an object from a json string.

@@ -9,4 +9,6 @@ export 'src/cv_json.dart'
         CvJsonStringExt,
         jsonPrettyEncode,
         CvJsonListExt,
-        CvJsonMapExt;
+        CvJsonMapExt,
+        cvAnyToJsonArrayOrNull,
+        cvAnyToJsonObjectOrNull;

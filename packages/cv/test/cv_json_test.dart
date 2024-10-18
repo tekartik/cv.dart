@@ -98,5 +98,22 @@ void main() {
         fail('should fail');
       } catch (_) {}
     });
+    test('cvAnyToJsonObjectOrNull', () {
+      expect(cvAnyToJsonObjectOrNull(null), isNull);
+      expect(cvAnyToJsonObjectOrNull(1), null);
+      var map = {'test': 1};
+      expect(cvAnyToJsonObjectOrNull(map), map);
+      expect(cvAnyToJsonObjectOrNull(jsonEncode(map)), map);
+    });
+    test('cvAnyToJsonObjectOrNull', () {
+      expect(cvAnyToJsonArrayOrNull(null), isNull);
+      expect(cvAnyToJsonArrayOrNull(1), null);
+      var list = [
+        {'test': 1},
+        2
+      ];
+      expect(cvAnyToJsonArrayOrNull(list), list);
+      expect(cvAnyToJsonArrayOrNull(jsonEncode(list)), list);
+    });
   });
 }

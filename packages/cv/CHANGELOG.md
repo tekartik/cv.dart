@@ -1,4 +1,4 @@
-## 1.1.2
+## 1.1.3-0
 
 * Add `basicTypeToInt`, `basicTypeToBool`, `basicTypeToNum` and `basicTypeToDouble` in `utils/value_utils.dart`
 
