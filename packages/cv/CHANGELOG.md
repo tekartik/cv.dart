@@ -1,6 +1,11 @@
-## 1.1.1
+## 1.1.2
+
+* Add `basicTypeToInt`, `basicTypeToBool`, `basicTypeToNum` and `basicTypeToDouble` in `utils/value_utils.dart`
+
+## 1.1.1+1
 
 * add `jsonPrettyEncode`, toJsonPretty utility and extension on Map and List in cv_json
+
 ## 1.1.0+4
 
 * add `keyPartsToString` and `keyPartsFromString`
