@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cv/cv.dart';
 
 import 'content_values.dart';
@@ -66,8 +68,109 @@ class CvModelEmpty extends CvModelBase {
 }
 
 /// Base content class
+///
+/// Just defined the fields.
+/// ```
+/// class Car extends CvModelBase {
+///  final engine = CvField<String>('engine');
+///  @override
+///  CvFields get fields => [engine];
+/// }
+/// ```
 abstract class CvModelBase with CvModelMixin {}
 
+/// Base content class that holds unknown fields in a map.
+///
+/// Just defined the extra fields.
+/// ```
+/// class Car extends CvModelBase {
+///  final engine = CvField<String>('engine');
+///  @override
+///  CvFields get fields => [engine];
+/// }
+/// ```
+abstract class CvMapModelBase
+    with CvModelMixin, MapModelBaseMixin, MapMixin<String, Object?>
+    implements CvMapModel, CvModel, ContentValues {
+  /// Default constructor
+  CvMapModelBase() {
+    initMap();
+  }
+
+  CvField<T>? _modelField<T extends Object?>(String name) {
+    return modelField<T>(name, fields: modelFields);
+  }
+
+  @override
+  CvField<T>? field<T extends Object?>(String name) {
+    /// Look in model first
+    return _modelField<T>(name) ?? mapModelField<T>(name);
+  }
+
+  @override
+  Object? operator [](Object? key) {
+    if (key == null) {
+      return null;
+    }
+    var field = this.field(key.toString());
+    return field?.valueOrNull;
+  }
+
+  @override
+  void operator []=(String key, Object? value) {
+    var field = _modelField(key.toString());
+    if (field != null) {
+      field.value = value;
+    } else {
+      setMapValue(key, value);
+    }
+  }
+
+  @override
+  void clear() {
+    for (var field in modelFields) {
+      field.clear();
+    }
+    clearMap();
+  }
+
+  @override
+  Object? remove(Object? key) {
+    var field = _modelField(key as String);
+    if (field != null) {
+      var value = field.valueOrNull;
+      field.clear();
+      return value;
+    } else {
+      return mapRemove(key);
+    }
+  }
+
+  @override
+  void fromMap(Map? map, {List<String>? columns}) {
+    if (map == null) {
+      return;
+    }
+    var modelFields = this.modelFields.columns;
+    var modelFieldsSet = modelFields.toSet();
+    fromModelMap(map, columns: modelFields);
+    map.forEach((key, value) {
+      if (modelFieldsSet.contains(key)) {
+        return;
+      }
+      setMapValue(key!.toString(), value);
+    });
+  }
+
+  /// To implement
+  CvFields get modelFields;
+
+  @override
+  CvFields get fields =>
+      [...modelFields, ...getMapKeys().map((key) => mapModelField(key)!)];
+}
+
+/// Compilation purpose only.
 // ignore: unused_element
 class _CvModelMock extends CvModelBase {
   @override

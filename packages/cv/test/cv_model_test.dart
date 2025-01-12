@@ -159,6 +159,8 @@ void main() {
           isEmpty);
       expect((IntContent()..value.v = 1).toMap(columns: [IntContent().value.k]),
           {'value': 1});
+      expect((IntContent()..field('value')!.v = 1).toMap(), {'value': 1});
+      expect(IntContent().field('dummy'), isNull);
     });
     test('fromMap1', () async {
       var content = IntContent()..fromMap({});
@@ -247,7 +249,7 @@ void main() {
         'child': {'sub': '1'}
       });
     });
-    test('toMap', () async {
+    test('Object.toMap', () async {
       var note = Note()
         ..title.v = 'my_title'
         ..content.v = 'my_content'

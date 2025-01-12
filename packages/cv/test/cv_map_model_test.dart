@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/field.dart';
 import 'package:test/test.dart';
 
 import 'cv_model_test.dart';
@@ -79,7 +80,9 @@ void main() {
     test('map', () {
       var cv = CvMapModel();
       expect(cv.fields, isEmpty);
+      expect(cv.field('test'), isNull);
       cv['test'] = 1;
+      expect(cv.field('test')!.v, 1);
       expect(cv.fields, [CvField('test', 1)]);
       cv['test'] = null;
       expect(cv.fields, [CvField<Object?>.withNull('test')]);
@@ -109,5 +112,61 @@ void main() {
         'map': {'test': 1}
       });
     });
+    test('CvMapModelBase', () {
+      var test = IntMapModelExtended();
+      expect(test.fields, [test.value]);
+      test.value.v = 1;
+      //test['value'] = 1;
+      expect(test.toMap(), {'value': 1});
+      expect(test['value'], 1);
+      test['value'] = 2;
+      expect(test.toMap(), {'value': 2});
+      expect(test.fields.names.toList(), ['value']);
+      test['other'] = 3;
+      expect(test.fields.names.toSet(), {'value', 'other'});
+      expect(test['other'], 3);
+      expect(test.toMap(), {'value': 2, 'other': 3});
+      test.setValue('other', null, presentIfNull: true);
+      expect(test.toMap(), {'value': 2, 'other': null});
+      test.setValue('other', null, presentIfNull: false);
+      expect(test.fields.names.toList(), ['value']);
+      expect(test.toMap(), {'value': 2});
+
+      test = IntMapModelExtended();
+      test['value'] = 3;
+      expect(test.value.v, 3);
+      expect(test.fields.names.toSet(), {'value'});
+      expect(test.toMap(), {'value': 3});
+
+      test = IntMapModelExtended();
+      test['other'] = 3;
+      expect(test.toMap(), {'other': 3});
+      expect(test.fields.names.toSet(), {'value', 'other'});
+      expect(test['other'], 3);
+
+      test = IntMapModelExtended()..fromMap({'value': 2, 'other': 3});
+      expect(test.toMap(), {'value': 2, 'other': 3});
+      expect(test.fields.names.toSet(), {'value', 'other'});
+
+      test.clear();
+      expect(test.toMap(), isEmpty);
+
+      test = IntMapModelExtended();
+      test['value'] = 3;
+      test.remove('value');
+      expect(test.toMap(), isEmpty);
+
+      test = IntMapModelExtended();
+      test['other'] = 3;
+      test.remove('other');
+      expect(test.toMap(), isEmpty);
+    });
   });
+}
+
+class IntMapModelExtended extends CvMapModelBase {
+  final value = CvField<int>('value');
+
+  @override
+  CvFields get modelFields => [value];
 }

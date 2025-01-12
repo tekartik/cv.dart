@@ -17,7 +17,7 @@ abstract class CvBase
         ContentValuesMapMixin,
         ConventValuesKeysFromCvFieldsMixin,
         CvModelMixin,
-        MapMixin<String, dynamic> {}
+        MapMixin<String, Object?> {}
 
 /// Raw content value
 abstract class ContentValues implements Map<K, V>, CvMapModel {
@@ -31,33 +31,39 @@ abstract class ContentValues implements Map<K, V>, CvMapModel {
 }
 
 /// CvField in the map base implementation
-class _CvMapField<T extends Object?>
+class CvMapField<T extends Object?>
     with
         CvColumnMixin<T>,
         ColumnNameMixin,
         CvFieldHelperMixin<T>,
         CvFieldMixin<T>
     implements CvField<T> {
+  /// Content values (this holder)
   final ContentValues cv;
 
   /// Only set value if not null
-  _CvMapField(this.cv, String name, [T? value]) {
+  CvMapField(this.cv, String name, [T? value]) {
     this.name = name;
     setValue(value);
   }
 
+  /// Only set value if not null
+  CvMapField.noSet(this.cv, String name) {
+    this.name = name;
+  }
+
   /// Force a null value
-  _CvMapField.withNull(this.cv, String name) {
+  CvMapField.withNull(this.cv, String name) {
     this.name = name;
     setNull();
   }
 
   @override
-  T? get valueOrNull => cv[name] as T?;
+  T? get valueOrNull => cv.getMapValue(name) as T?;
 
   @override
   CvField<RT> cast<RT>() =>
-      T == RT ? this as CvField<RT> : _CvMapField<RT>(cv, name);
+      T == RT ? this as CvField<RT> : CvMapField<RT>(cv, name);
 
   @override
   void clear() => cv.remove(name);
@@ -100,45 +106,98 @@ class _CvMapField<T extends Object?>
   }
 }
 
-mixin _MapBaseMixin implements Map<String, dynamic> {
+/// Map model base mixin
+mixin MapModelBaseMixin implements Model {
   late Map<String, dynamic> _map;
 
   @override
-  dynamic operator [](Object? key) => _map[key as String];
+  Object? operator [](Object? key) => getMapValue(key as String);
 
   @override
-  void operator []=(String key, value) => _map[key] = value;
+  void operator []=(String key, value) => setMapValue(key, value);
 
   @override
-  void clear() => _map.clear();
+  void clear() => clearMap();
 
   @override
-  Iterable<String> get keys => _map.keys;
+  Iterable<String> get keys => getMapKeys();
 
   @override
-  dynamic remove(Object? key) => _map.remove(key);
+  dynamic remove(Object? key) => mapRemove(key as String);
+}
+
+/// Private extension
+extension MapModelBaseMixinExtPrv on MapModelBaseMixin {
+  /// Initialize the map
+  void initMap([Map<String, Object?>? map]) {
+    _map = map ?? <String, Object?>{};
+  }
+
+  /// Set a map value
+  void setMapValue(String key, Object? value) {
+    _map[key] = value;
+  }
+
+  /// Clear the map
+  void clearMap() {
+    _map.clear();
+  }
+
+  ///
+  Object? mapRemove(String key) {
+    return _map.remove(key);
+  }
+
+  /// Set a map value
+  Object? getMapValue(String key) {
+    return _map[key];
+  }
+
+  /// Get the map keys
+  Iterable<String> getMapKeys() => _map.keys;
+}
+
+/// Private extension
+extension ContentValuesPrv on ContentValues {
+  /// Set a map value
+  Object? getMapValue(String key) {
+    return (this as MapModelBaseMixin).getMapValue(key);
+  }
+
+  /// Field in the map model, generated if needed
+  CvField<T>? mapModelField<T extends Object?>(String name) {
+    var value = getMapValue(name);
+    if (value != null) {
+      return CvMapField.noSet(this, name);
+    } else {
+      if (containsKey(name)) {
+        return CvMapField.noSet(this, name);
+      }
+    }
+    return null;
+  }
 }
 
 // ignore: unused_element
-class _TestClass with _MapBaseMixin, MapMixin<String, dynamic> {}
+class _TestClass with MapModelBaseMixin, MapMixin<String, Object?> {}
 
 /// A Map based implementation. Default implementation for content values
 class ContentValuesMap
     with
 // Order is important, first one wins
         CvModelMixin,
-        _MapBaseMixin,
-        MapMixin<String, dynamic> //ContentValuesMapMixin
+        MapModelBaseMixin,
+        MapMixin<String, Object?> //ContentValuesMapMixin
     implements
         ContentValues {
   /// Content value map.
-  ContentValuesMap([Map<String, dynamic>? map]) {
-    _map = map ?? <String, dynamic>{};
+  ContentValuesMap([Map<String, Object?>? map]) {
+    initMap(map);
   }
 
   @override
   CvFields get fields => keys
-      .map((name) => field<dynamic>(name)!)
+      .map((name) => field<Object?>(name)!)
       //.where((field) => field != null)
       .toList();
 
@@ -146,10 +205,10 @@ class ContentValuesMap
   CvField<T>? field<T extends Object?>(String name) {
     var value = this[name];
     if (value != null) {
-      return _CvMapField(this, name, value as T);
+      return CvMapField(this, name, value as T);
     } else {
       if (containsKey(name)) {
-        return _CvMapField<T>.withNull(this, name);
+        return CvMapField<T>.withNull(this, name);
       }
     }
     return null;
@@ -180,7 +239,7 @@ mixin ConventValuesKeysFromCvFieldsMixin implements ContentValues {
 /// Content value implementation mixin
 mixin ContentValuesMapMixin implements ContentValues {
   @override
-  dynamic operator [](Object? key) {
+  Object? operator [](Object? key) {
     if (key != null) {
       return dynamicField(key)?.v;
     } else {
@@ -189,7 +248,7 @@ mixin ContentValuesMapMixin implements ContentValues {
   }
 
   @override
-  void operator []=(key, value) {
+  void operator []=(String key, Object? value) {
     dynamicField(key)?.v = value;
   }
 

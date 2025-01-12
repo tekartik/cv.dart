@@ -40,6 +40,7 @@ export 'src/cv_model.dart'
         CvModel,
         CvMapModel,
         CvModelBase,
+        CvMapModelBase,
         CvModelUtilsExt,
         CvModelEmpty,
         cvTypeNewModel,

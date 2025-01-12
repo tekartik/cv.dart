@@ -80,6 +80,23 @@ T? rawGetValueAtPath<T extends Object?>(Object rawValue, List<Object> parts) {
   return null;
 }
 
+/// Private extension on CvModel
+extension CvModelMixinPrvExt on CvModelMixin {
+  /// Get a model field defined.
+  CvField<T>? modelField<T extends Object?>(String name, {CvFields? fields}) {
+    var modelFields = fields ?? this.fields;
+    // Invalidate if needed
+    if (_cvFieldMap != null) {
+      if (_cvFieldMap!.length != modelFields.length) {
+        _cvFieldMap = null;
+      }
+    }
+    _cvFieldMap ??= Map.fromEntries(
+        modelFields.map((field) => MapEntry(field.name, field)));
+    return _cvFieldMap![name]?.cast<T>();
+  }
+}
+
 /// Content mixin
 mixin CvModelMixin implements CvModel {
   @override
@@ -120,6 +137,97 @@ mixin CvModelMixin implements CvModel {
 
   @override
   void fromMap(Map map, {List<String>? columns}) {
+    fromModelMap(map, columns: columns);
+  }
+
+  @override
+  Map<String, Object?> toMap(
+      {List<String>? columns, bool includeMissingValue = false}) {
+    debugCheckCvFields();
+
+    void modelToMap(Model model, CvField field) {
+      dynamic value = field.v;
+      if (value is List<CvModelRead>) {
+        value = value
+            .map((e) => e.toMap(includeMissingValue: includeMissingValue))
+            .toList();
+      } else if (value is CvModelRead) {
+        value = value.toMap(includeMissingValue: includeMissingValue);
+      }
+      if (field is CvFieldWithParent) {
+        // Check sub model
+        if (field.hasValue || includeMissingValue) {
+          var subModel = model[field.parent] as Model?;
+          if (subModel is! Model) {
+            subModel = <String, Object?>{};
+            model.setValue(field.parent, subModel);
+          }
+          // Try existing if any
+          modelToMap(subModel, field.field);
+        }
+      } else if (field is CvModelMapField && field.isNotNull) {
+        // The submodel will be a mode too, replace existing if any
+        var subModel = model[field.key] as Model?;
+        if (subModel is! Model) {
+          subModel = newModel();
+          model.setValue(field.key, subModel);
+        }
+        field.valueOrNull?.forEach((key, value) {
+          subModel![key] =
+              value.toMap(includeMissingValue: includeMissingValue);
+        });
+      } else if (field is CvFieldEncodedImpl && field.isNotNull) {
+        Object? encodedValue;
+        if (field.codec != null) {
+          encodedValue = field.codec!.encode(value);
+        } else {
+          encodedValue = value;
+        }
+        model.setValue(field.name, encodedValue,
+            presentIfNull: field.hasValue || includeMissingValue);
+      } else {
+        model.setValue(field.name, value,
+            presentIfNull: field.hasValue || includeMissingValue);
+      }
+    }
+
+    var model = <String, Object?>{};
+
+    if (columns == null) {
+      for (var field in fields) {
+        modelToMap(model, field);
+      }
+    } else {
+      for (var column in columns) {
+        var field = dynamicField(column);
+        if (field != null) {
+          modelToMap(model, field);
+        }
+      }
+    }
+    return model;
+  }
+
+  @override
+  void clear() {
+    for (var field in fields) {
+      field.clear();
+    }
+  }
+}
+
+/// Set a field value
+extension CvModelMixinExtPrv on CvModelMixin {
+  /// Set a field value
+  void setModelFieldValue(String name, Object? value) {
+    var field = dynamicField(name);
+    if (field != null) {
+      field.v = value;
+    }
+  }
+
+  /// Only fill what's in the model
+  void fromModelMap(Map map, {List<String>? columns}) {
     debugCheckCvFields();
     // assert(map != null, 'map cannot be null');
     columns ??= fields.map((e) => e.name).toList();
@@ -227,81 +335,6 @@ mixin CvModelMixin implements CvModel {
           rethrow;
         }
       }
-    }
-  }
-
-  @override
-  Map<String, Object?> toMap(
-      {List<String>? columns, bool includeMissingValue = false}) {
-    debugCheckCvFields();
-
-    void modelToMap(Model model, CvField field) {
-      dynamic value = field.v;
-      if (value is List<CvModelRead>) {
-        value = value
-            .map((e) => e.toMap(includeMissingValue: includeMissingValue))
-            .toList();
-      } else if (value is CvModelRead) {
-        value = value.toMap(includeMissingValue: includeMissingValue);
-      }
-      if (field is CvFieldWithParent) {
-        // Check sub model
-        if (field.hasValue || includeMissingValue) {
-          var subModel = model[field.parent] as Model?;
-          if (subModel is! Model) {
-            subModel = <String, Object?>{};
-            model.setValue(field.parent, subModel);
-          }
-          // Try existing if any
-          modelToMap(subModel, field.field);
-        }
-      } else if (field is CvModelMapField && field.isNotNull) {
-        // The submodel will be a mode too, replace existing if any
-        var subModel = model[field.key] as Model?;
-        if (subModel is! Model) {
-          subModel = newModel();
-          model.setValue(field.key, subModel);
-        }
-        field.valueOrNull?.forEach((key, value) {
-          subModel![key] =
-              value.toMap(includeMissingValue: includeMissingValue);
-        });
-      } else if (field is CvFieldEncodedImpl && field.isNotNull) {
-        Object? encodedValue;
-        if (field.codec != null) {
-          encodedValue = field.codec!.encode(value);
-        } else {
-          encodedValue = value;
-        }
-        model.setValue(field.name, encodedValue,
-            presentIfNull: field.hasValue || includeMissingValue);
-      } else {
-        model.setValue(field.name, value,
-            presentIfNull: field.hasValue || includeMissingValue);
-      }
-    }
-
-    var model = <String, Object?>{};
-
-    if (columns == null) {
-      for (var field in fields) {
-        modelToMap(model, field);
-      }
-    } else {
-      for (var column in columns) {
-        var field = dynamicField(column);
-        if (field != null) {
-          modelToMap(model, field);
-        }
-      }
-    }
-    return model;
-  }
-
-  @override
-  void clear() {
-    for (var field in fields) {
-      field.clear();
     }
   }
 }
