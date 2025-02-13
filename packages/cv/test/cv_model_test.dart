@@ -86,11 +86,7 @@ class CustomContent extends CvModelBase {
   final text = CvField<String>('text');
 
   @override
-  CvFields get fields => [
-        custom1,
-        custom2,
-        text,
-      ];
+  CvFields get fields => [custom1, custom2, text];
 }
 
 class StringContent extends CvModelBase {
@@ -152,13 +148,19 @@ void main() {
       expect((IntContent()..value.v = null).toMap(), {'value': null});
       expect((IntContent()..value.setValue(null)).toMap(), isEmpty);
 
-      expect((IntContent()..value.setValue(null, presentIfNull: true)).toMap(),
-          {'value': null});
+      expect(
+        (IntContent()..value.setValue(null, presentIfNull: true)).toMap(),
+        {'value': null},
+      );
       expect((IntContent()..value.v = 1).toMap(columns: <String>[]), isEmpty);
-      expect((IntContent()..value.v = 1).toMap(columns: <String>['other']),
-          isEmpty);
-      expect((IntContent()..value.v = 1).toMap(columns: [IntContent().value.k]),
-          {'value': 1});
+      expect(
+        (IntContent()..value.v = 1).toMap(columns: <String>['other']),
+        isEmpty,
+      );
+      expect(
+        (IntContent()..value.v = 1).toMap(columns: [IntContent().value.k]),
+        {'value': 1},
+      );
       expect((IntContent()..field('value')!.v = 1).toMap(), {'value': 1});
       expect(IntContent().field('dummy'), isNull);
     });
@@ -191,12 +193,14 @@ void main() {
       expect(IntContent()..fromMap({}), IntContent());
       expect(IntContent()..fromMap({'value': 1}), IntContent()..value.v = 1);
       expect(
-          IntContent()
-            ..fromMap({'value': 1}, columns: [IntContent().value.name]),
-          IntContent()..value.v = 1);
+        IntContent()..fromMap({'value': 1}, columns: [IntContent().value.name]),
+        IntContent()..value.v = 1,
+      );
       expect(IntContent()..fromMap({'value': 1}, columns: []), IntContent());
-      expect(IntContent()..fromMap({'value': 1}, columns: ['other']),
-          IntContent());
+      expect(
+        IntContent()..fromMap({'value': 1}, columns: ['other']),
+        IntContent(),
+      );
     });
     test('copyFrom', () {
       var cv = IntContent()..copyFrom(IntContent());
@@ -218,20 +222,26 @@ void main() {
       cv = IntContent()..copyFrom(src);
       expect(cv.toMap(), isEmpty);
 
-      var twoFields = TwoFieldsContent()
-        ..value1.v = 1
-        ..value2.v = 2;
+      var twoFields =
+          TwoFieldsContent()
+            ..value1.v = 1
+            ..value2.v = 2;
       expect(TwoFieldsContent()..copyFrom(twoFields), twoFields);
-      expect(TwoFieldsContent()..copyFrom(twoFields, columns: ['value1']),
-          TwoFieldsContent()..value1.v = 1);
+      expect(
+        TwoFieldsContent()..copyFrom(twoFields, columns: ['value1']),
+        TwoFieldsContent()..value1.v = 1,
+      );
       var twoFieldsMapModel = CvMapModel()..copyFrom(twoFields);
       expect(twoFieldsMapModel, twoFields);
-      expect((CvMapModel()..copyFrom(twoFields, columns: ['value1'])).toMap(),
-          (TwoFieldsContent()..value1.v = 1).toMap());
       expect(
-          (TwoFieldsContent()..copyFrom(twoFieldsMapModel, columns: ['value1']))
-              .toMap(),
-          (TwoFieldsContent()..value1.v = 1).toMap());
+        (CvMapModel()..copyFrom(twoFields, columns: ['value1'])).toMap(),
+        (TwoFieldsContent()..value1.v = 1).toMap(),
+      );
+      expect(
+        (TwoFieldsContent()..copyFrom(twoFieldsMapModel, columns: ['value1']))
+            .toMap(),
+        (TwoFieldsContent()..value1.v = 1).toMap(),
+      );
 
       // Undefined value
       cv = (IntContent()..value.v = 1)..copyFrom(IntContent());
@@ -246,16 +256,20 @@ void main() {
       var copy = WithChildCvField()..copyFrom(cv);
       child.sub.v = '2';
       expect(copy.toMap(), {
-        'child': {'sub': '1'}
+        'child': {'sub': '1'},
       });
     });
     test('Object.toMap', () async {
-      var note = Note()
-        ..title.v = 'my_title'
-        ..content.v = 'my_content'
-        ..date.v = 1;
-      expect(note.toMap(),
-          {'title': 'my_title', 'content': 'my_content', 'date': 1});
+      var note =
+          Note()
+            ..title.v = 'my_title'
+            ..content.v = 'my_content'
+            ..date.v = 1;
+      expect(note.toMap(), {
+        'title': 'my_title',
+        'content': 'my_content',
+        'date': 1,
+      });
       expect(note.toMap(columns: [note.title.name]), {'title': 'my_title'});
     });
     test('duplicated CvField', () {
@@ -300,18 +314,21 @@ void main() {
     });
     test('content child', () {
       expect(WithChildCvField().toMap(), isEmpty);
+      expect(WithChildCvField().toMap(includeMissingValue: true), {
+        'child': null,
+      });
       expect(
-          WithChildCvField().toMap(includeMissingValue: true), {'child': null});
-      expect(
-          (WithChildCvField()..child.v = ChildContent())
-              .toMap(includeMissingValue: true),
-          {
-            'child': {'sub': null}
-          });
-      var parent = WithChildCvField()
-        ..child.v = (ChildContent()..sub.v = 'sub_value');
+        (WithChildCvField()..child.v = ChildContent()).toMap(
+          includeMissingValue: true,
+        ),
+        {
+          'child': {'sub': null},
+        },
+      );
+      var parent =
+          WithChildCvField()..child.v = (ChildContent()..sub.v = 'sub_value');
       var map = {
-        'child': {'sub': 'sub_value'}
+        'child': {'sub': 'sub_value'},
       };
       expect(parent.toMap(), map);
       parent = WithChildCvField()..fromMap(map);
@@ -319,15 +336,17 @@ void main() {
     });
     test('content child list', () {
       expect(WithChildListCvField().toMap(), isEmpty);
-      expect(WithChildListCvField().toMap(includeMissingValue: true),
-          {'children': null});
+      expect(WithChildListCvField().toMap(includeMissingValue: true), {
+        'children': null,
+      });
 
-      var parent = WithChildListCvField()
-        ..children.v = [ChildContent()..sub.v = 'sub_value'];
+      var parent =
+          WithChildListCvField()
+            ..children.v = [ChildContent()..sub.v = 'sub_value'];
       var map = {
         'children': [
-          {'sub': 'sub_value'}
-        ]
+          {'sub': 'sub_value'},
+        ],
       };
       expect(parent.children.v!.first.sub.v, 'sub_value');
       expect(parent.toMap(), map);
@@ -336,17 +355,19 @@ void main() {
     });
     test('content child map', () {
       expect(WithChildMapCvField().toMap(), isEmpty);
-      expect(WithChildMapCvField().toMap(includeMissingValue: true),
-          {'children': null});
+      expect(WithChildMapCvField().toMap(includeMissingValue: true), {
+        'children': null,
+      });
 
-      var parent = WithChildMapCvField()
-        ..children.v = <String, ChildContent>{
-          'key': ChildContent()..sub.v = 'sub_value'
-        };
+      var parent =
+          WithChildMapCvField()
+            ..children.v = <String, ChildContent>{
+              'key': ChildContent()..sub.v = 'sub_value',
+            };
       var map = {
         'children': {
-          'key': {'sub': 'sub_value'}
-        }
+          'key': {'sub': 'sub_value'},
+        },
       };
       expect(parent.children.v!.values.first.sub.v, 'sub_value');
       expect(parent.toMap(), map);
@@ -374,10 +395,10 @@ void main() {
         ..intListCvField.v = [2, 3, 4]
         ..mapCvField.v = {'sub': 'map'}
         ..mapListCvField.v = [
-          {'sub': 'map'}
+          {'sub': 'map'},
         ]
         ..children.v = [
-          WithChildCvField()..child.v = (ChildContent()..sub.v = 'sub_value')
+          WithChildCvField()..child.v = (ChildContent()..sub.v = 'sub_value'),
         ];
       doCheck();
     });
@@ -391,48 +412,51 @@ void main() {
 
     test('builderCompat', () {
       expect(
-          (CvModelField<IntContent>('int', (_) => IntContent())
-                ..fillModel(CvFillOptions(valueStart: 0)))
-              .v,
-          IntContent()..value.v = 1);
+        (CvModelField<IntContent>('int', (_) => IntContent())
+          ..fillModel(CvFillOptions(valueStart: 0))).v,
+        IntContent()..value.v = 1,
+      );
     });
 
     test('basic fillModel', () {
       expect(
-          (CvModelField<IntContent>.builder('int', builder: (_) => IntContent())
-                ..fillModel(CvFillOptions(valueStart: 0)))
-              .v,
-          IntContent()..value.v = 1);
+        (CvModelField<IntContent>.builder('int', builder: (_) => IntContent())
+          ..fillModel(CvFillOptions(valueStart: 0))).v,
+        IntContent()..value.v = 1,
+      );
     });
 
     test('builderCompat', () {
       expect(
-          (CvModelListField<IntContent>('int', (_) => IntContent())
-                ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0)))
-              .v,
-          [IntContent()..value.v = 1]);
+        (CvModelListField<IntContent>('int', (_) => IntContent())
+          ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        [IntContent()..value.v = 1],
+      );
     });
     test('fillModelList', () {
       expect(
-          (CvModelListField<IntContent>.builder('int',
-                  builder: (_) => IntContent())
-                ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0)))
-              .v,
-          [IntContent()..value.v = 1]);
+        (CvModelListField<IntContent>.builder(
+          'int',
+          builder: (_) => IntContent(),
+        )..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        [IntContent()..value.v = 1],
+      );
     });
 
     test('fillCvModel/fieldAtPath/valueAtPath', () {
-      expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
-          {'value': 1});
+      expect((IntContent()..fillModel(CvFillOptions(valueStart: 0))).toMap(), {
+        'value': 1,
+      });
       expect(
-          (WithChildCvField()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
-          {
-            'child': {'sub': 'text_1'}
-          });
+        (WithChildCvField()..fillModel(CvFillOptions(valueStart: 0))).toMap(),
+        {
+          'child': {'sub': 'text_1'},
+        },
+      );
       expect((WithChildListCvField()..fillModel(cvFillOptions1)).toMap(), {
         'children': [
-          {'sub': 'text_1'}
-        ]
+          {'sub': 'text_1'},
+        ],
       });
       var allTypes = AllTypes()..fillModel(cvFillOptions1);
       expect(allTypes.toMap(), {
@@ -443,126 +467,152 @@ void main() {
         'string': 'text_5',
         'children': [
           {
-            'child': {'sub': 'text_6'}
-          }
+            'child': {'sub': 'text_6'},
+          },
         ],
         'intList': [7],
         'map': {'field_1': 8},
         'mapList': [
-          {'field_1': 9}
+          {'field_1': 9},
         ],
         'stringList': ['text_10'],
         'list': [11],
         'modelMap': {
           'field_1': {
-            'child': {'sub': 'text_12'}
-          }
+            'child': {'sub': 'text_12'},
+          },
         },
         'model': {'field_1': 13},
         'modelList': [
-          {'field_1': 14}
-        ]
+          {'field_1': 14},
+        ],
       });
       expect(
-          allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v, 'text_6');
+        allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v,
+        'text_6',
+      );
       expect(allTypes.valueAtPath(['children', 0, 'child', 'sub']), 'text_6');
 
-      expect(allTypes.fieldAtPath(['children', 0, 'child'])?.v,
-          isA<ChildContent>());
+      expect(
+        allTypes.fieldAtPath(['children', 0, 'child'])?.v,
+        isA<ChildContent>(),
+      );
       expect(allTypes.valueAtPath(['children', 0, 'child']), {'sub': 'text_6'});
 
       expect(allTypes.fieldAtPath(['modelList']), isA<CvListField>());
       expect(allTypes.valueAtPath(['modelList']), [
-        {'field_1': 14}
+        {'field_1': 14},
       ]);
 
       expect(allTypes.fieldAtPath(['children']), isA<CvModelListField>());
       expect(allTypes.valueAtPath(['children']), [
         {
-          'child': {'sub': 'text_6'}
-        }
+          'child': {'sub': 'text_6'},
+        },
       ]);
 
-      expect(allTypes.fieldAtPath<int>(['children', 0, 'child', 'sub'])?.v,
-          isNull);
       expect(
-          allTypes.valueAtPath<int>(['children', 0, 'child', 'sub']), isNull);
-      expect(allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub'])?.v,
-          'text_6');
-      expect(allTypes.valueAtPath<String>(['children', 0, 'child', 'sub']),
-          'text_6');
+        allTypes.fieldAtPath<int>(['children', 0, 'child', 'sub'])?.v,
+        isNull,
+      );
       expect(
-          allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub_no'])?.v,
-          isNull);
+        allTypes.valueAtPath<int>(['children', 0, 'child', 'sub']),
+        isNull,
+      );
       expect(
-          allTypes.fieldAtPath<String>(['children_no', 0, 'child', 'sub'])?.v,
-          isNull);
+        allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub'])?.v,
+        'text_6',
+      );
       expect(
-          allTypes.fieldAtPath<String>(['children', 0, 1, 'sub'])?.v, isNull);
-      expect(allTypes.fieldAtPath<String>(['children', 'sub', 1, 'sub'])?.v,
-          isNull);
+        allTypes.valueAtPath<String>(['children', 0, 'child', 'sub']),
+        'text_6',
+      );
       expect(
-          (CustomContent()
-                ..fillModel(CvFillOptions(
-                    valueStart: 0,
-                    collectionSize: 1,
-                    generate: (type, options) {
-                      if (type == Custom) {
-                        if (options.valueStart != null) {
-                          var value =
-                              options.valueStart = options.valueStart! + 1;
-                          return Custom('custom_$value');
-                        }
-                      }
-                      return null;
-                    })))
-              .toMap(),
-          {
-            'custom1': Custom('custom_1'),
-            'custom2': Custom('custom_2'),
-            'text': 'text_3'
-          });
+        allTypes.fieldAtPath<String>(['children', 0, 'child', 'sub_no'])?.v,
+        isNull,
+      );
+      expect(
+        allTypes.fieldAtPath<String>(['children_no', 0, 'child', 'sub'])?.v,
+        isNull,
+      );
+      expect(
+        allTypes.fieldAtPath<String>(['children', 0, 1, 'sub'])?.v,
+        isNull,
+      );
+      expect(
+        allTypes.fieldAtPath<String>(['children', 'sub', 1, 'sub'])?.v,
+        isNull,
+      );
+      expect(
+        (CustomContent()..fillModel(
+              CvFillOptions(
+                valueStart: 0,
+                collectionSize: 1,
+                generate: (type, options) {
+                  if (type == Custom) {
+                    if (options.valueStart != null) {
+                      var value = options.valueStart = options.valueStart! + 1;
+                      return Custom('custom_$value');
+                    }
+                  }
+                  return null;
+                },
+              ),
+            ))
+            .toMap(),
+        {
+          'custom1': Custom('custom_1'),
+          'custom2': Custom('custom_2'),
+          'text': 'text_3',
+        },
+      );
     });
     test('custom', () {
-      expect((CustomContent()..custom1.v = Custom('test')).toMap(),
-          {'custom1': Custom('test')});
+      expect((CustomContent()..custom1.v = Custom('test')).toMap(), {
+        'custom1': Custom('test'),
+      });
     });
     test('CvFieldWithParent', () {
       var object = WithCvFieldWithParent();
       expect(object.fields.map((e) => e.name), ['sub.value', 'sub.value2']);
       expect((WithCvFieldWithParent()..value.v = 1).toMap(), {
-        'sub': {'value': 1}
+        'sub': {'value': 1},
       });
       expect(
-          (WithCvFieldWithParent()
-                ..value.v = 1
-                ..value2.v = 2)
-              .toMap(),
-          {
-            'sub': {'value': 1, 'value2': 2}
-          });
+        (WithCvFieldWithParent()
+              ..value.v = 1
+              ..value2.v = 2)
+            .toMap(),
+        {
+          'sub': {'value': 1, 'value2': 2},
+        },
+      );
       expect((WithCvFieldWithParent()..value.v = null).toMap(), {
-        'sub': {'value': null}
+        'sub': {'value': null},
       });
       expect(WithCvFieldWithParent().toMap(), isEmpty);
 
-      object = WithCvFieldWithParent()
-        ..fromMap({
-          'sub': {'value': 1}
-        });
+      object =
+          WithCvFieldWithParent()..fromMap({
+            'sub': {'value': 1},
+          });
       expect(object.value.v, 1);
       expect(object.toMap(), {
-        'sub': {'value': 1}
+        'sub': {'value': 1},
       });
 
       expect((WithCvFieldWithParent()..fillModel(cvFillOptions1)).toMap(), {
-        'sub': {'value': 1, 'value2': 2}
+        'sub': {'value': 1, 'value2': 2},
       });
 
-      expect(WithCvFieldWithParent()..value.v = 1,
-          WithCvFieldWithParent()..value.v = 1);
-      expect((WithCvFieldWithParent()..value.v = 1).hashCode,
-          (WithCvFieldWithParent()..value.v = 1).hashCode);
+      expect(
+        WithCvFieldWithParent()..value.v = 1,
+        WithCvFieldWithParent()..value.v = 1,
+      );
+      expect(
+        (WithCvFieldWithParent()..value.v = 1).hashCode,
+        (WithCvFieldWithParent()..value.v = 1).hashCode,
+      );
 
       // Missing map
       object = WithCvFieldWithParent()..fromMap({'dummy': 1});
@@ -577,11 +627,11 @@ void main() {
     test('CvModelFieldWithParent', () {
       var map = {
         'sub': {
-          'value': {'value': 1}
-        }
+          'value': {'value': 1},
+        },
       };
-      var model = WithCvModelFieldWithParent()
-        ..value.v = (IntContent()..value.v = 1);
+      var model =
+          WithCvModelFieldWithParent()..value.v = (IntContent()..value.v = 1);
       expect(model.toMap(), map);
       model = WithCvModelFieldWithParent()..fromMap(map);
       expect(model.toMap(), map);
@@ -592,8 +642,8 @@ void main() {
       expect((WithAutoChildren()..fillModel(testFillOptions)).toMap(), {
         'child': {'sub': 'text_1'},
         'children': [
-          {'sub': 'text_2'}
-        ]
+          {'sub': 'text_2'},
+        ],
       });
     });
     test('updated fields', () {
@@ -631,25 +681,33 @@ void main() {
       expect(model.toMap(), {'dep': 'pre', 'test': 'pre,2'});
     });
     test('cvModelAreEquals', () {
-      var content1 = TwoFieldsContent()
-        ..value1.v = 1
-        ..value2.v = 2;
-      var content2 = TwoFieldsContent()
-        ..value1.v = 1
-        ..value2.v = 2;
+      var content1 =
+          TwoFieldsContent()
+            ..value1.v = 1
+            ..value2.v = 2;
+      var content2 =
+          TwoFieldsContent()
+            ..value1.v = 1
+            ..value2.v = 2;
       expect(cvModelsAreEquals(content1, content2), true);
       content1.value1.v = 3;
       expect(cvModelsAreEquals(content1, content2), false);
       expect(
-          cvModelsAreEquals(content1, content2, columns: [content1.value1.key]),
-          false);
+        cvModelsAreEquals(content1, content2, columns: [content1.value1.key]),
+        false,
+      );
       expect(
-          cvModelsAreEquals(content1, content2, columns: [content1.value2.key]),
-          true);
+        cvModelsAreEquals(content1, content2, columns: [content1.value2.key]),
+        true,
+      );
       expect(
-          cvModelsAreEquals(content1, content2,
-              columns: [content1.value1.key, content1.value2.key]),
-          false);
+        cvModelsAreEquals(
+          content1,
+          content2,
+          columns: [content1.value1.key, content1.value2.key],
+        ),
+        false,
+      );
     });
     test('cvModelAreEquals', () {
       expect(CvModelEmpty().toMap(), isEmpty);
@@ -690,9 +748,10 @@ void main() {
       base = NonAbstractSubClass2();
       var clone2 = base.clone();
       expect(clone2, isA<NonAbstractSubClass1>());
-      base = NonAbstractSubClass2()
-        ..type.v = 2
-        ..other.v = 123;
+      base =
+          NonAbstractSubClass2()
+            ..type.v = 2
+            ..other.v = 123;
       var clone3 = base.clone();
       expect(clone3, isA<NonAbstractSubClass2>());
       expect(clone3.other.v, 123);
@@ -701,7 +760,7 @@ void main() {
       var model = AllTypes();
       model.fromMap({
         'intList': [1, 2.1, '3.1'],
-        'stringList': [4, '5', true]
+        'stringList': [4, '5', true],
       });
       expect(model.intListCvField.v, [1, 2, 3]);
       expect(model.stringListCvField.v, ['4', '5', 'true']);
@@ -711,10 +770,10 @@ void main() {
       cvAddConstructor(TestInnerWithoutBuilder.new);
       try {
         expect(
-            (newModel().cv<TestInnerWithoutBuilder>()
-                  ..fillModel(testFillOptions))
-                .toMap(),
-            isEmpty);
+          (newModel().cv<TestInnerWithoutBuilder>()..fillModel(testFillOptions))
+              .toMap(),
+          isEmpty,
+        );
         fail('should fail');
       } on CvBuilderException catch (e) {
         //print(e.runtimeType);
@@ -736,32 +795,40 @@ class WithDuplicatedCvFields extends CvModelBase {
 }
 
 class WithChildCvField extends CvModelBase {
-  final child = CvModelField<ChildContent>.builder('child',
-      builder: (_) => ChildContent());
+  final child = CvModelField<ChildContent>.builder(
+    'child',
+    builder: (_) => ChildContent(),
+  );
 
   @override
   CvFields get fields => [child];
 }
 
 class WithGrandChildCvField extends CvModelBase {
-  final firstChild = CvModelField<WithChildCvField>.builder('firstChild',
-      builder: (_) => WithChildCvField());
+  final firstChild = CvModelField<WithChildCvField>.builder(
+    'firstChild',
+    builder: (_) => WithChildCvField(),
+  );
 
   @override
   CvFields get fields => [firstChild];
 }
 
 class WithChildListCvField extends CvModelBase {
-  final children = CvModelListField<ChildContent>.builder('children',
-      builder: (_) => ChildContent());
+  final children = CvModelListField<ChildContent>.builder(
+    'children',
+    builder: (_) => ChildContent(),
+  );
 
   @override
   CvFields get fields => [children];
 }
 
 class WithChildMapCvField extends CvModelBase {
-  final children = CvModelMapField<ChildContent>.builder('children',
-      builder: (_) => ChildContent());
+  final children = CvModelMapField<ChildContent>.builder(
+    'children',
+    builder: (_) => ChildContent(),
+  );
 
   @override
   CvFields get fields => [children];
@@ -776,9 +843,10 @@ class WithCvFieldWithParent extends CvModelBase {
 }
 
 class WithCvModelFieldWithParent extends CvModelBase {
-  final value =
-      CvModelField<IntContent>.builder('value', builder: (_) => IntContent())
-          .withParent('sub');
+  final value = CvModelField<IntContent>.builder(
+    'value',
+    builder: (_) => IntContent(),
+  ).withParent('sub');
 
   @override
   CvFields get fields => [value];
@@ -804,28 +872,32 @@ class AllTypes extends CvModelBase {
   final listCvField = CvField<List>('list');
   final mapListCvField = CvListField<Map>('mapList');
   final modelListCvField = CvListField<Model>('modelList');
-  final children = CvModelListField<WithChildCvField>.builder('children',
-      builder: (_) => WithChildCvField());
-  final modelMap = CvModelMapField<WithChildCvField>.builder('modelMap',
-      builder: (_) => WithChildCvField());
+  final children = CvModelListField<WithChildCvField>.builder(
+    'children',
+    builder: (_) => WithChildCvField(),
+  );
+  final modelMap = CvModelMapField<WithChildCvField>.builder(
+    'modelMap',
+    builder: (_) => WithChildCvField(),
+  );
 
   @override
   CvFields get fields => [
-        boolCvField,
-        intCvField,
-        numCvField,
-        doubleCvField,
-        stringCvField,
-        children,
-        intListCvField,
-        mapCvField,
-        mapListCvField,
-        stringListCvField,
-        listCvField,
-        modelMap,
-        modelCvField,
-        modelListCvField,
-      ];
+    boolCvField,
+    intCvField,
+    numCvField,
+    doubleCvField,
+    stringCvField,
+    children,
+    intListCvField,
+    mapCvField,
+    mapListCvField,
+    stringListCvField,
+    listCvField,
+    modelMap,
+    modelCvField,
+    modelListCvField,
+  ];
 }
 
 class WithAutoChildren extends CvModelBase {
@@ -905,8 +977,10 @@ class WithDependentEncodedFields extends CvModelBase {
   final dep = CvField<String>('dep');
 
   // Must be after
-  late final test = CvField.encoded<String, String>('test',
-      codec: _CheckDependendentCodec(this));
+  late final test = CvField.encoded<String, String>(
+    'test',
+    codec: _CheckDependendentCodec(this),
+  );
 
   @override
   CvFields get fields => [dep, test];

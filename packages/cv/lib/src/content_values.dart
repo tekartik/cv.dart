@@ -184,22 +184,22 @@ class _TestClass with MapModelBaseMixin, MapMixin<String, Object?> {}
 /// A Map based implementation. Default implementation for content values
 class ContentValuesMap
     with
-// Order is important, first one wins
+        // Order is important, first one wins
         CvModelMixin,
         MapModelBaseMixin,
         MapMixin<String, Object?> //ContentValuesMapMixin
-    implements
-        ContentValues {
+    implements ContentValues {
   /// Content value map.
   ContentValuesMap([Map<String, Object?>? map]) {
     initMap(map);
   }
 
   @override
-  CvFields get fields => keys
-      .map((name) => field<Object?>(name)!)
-      //.where((field) => field != null)
-      .toList();
+  CvFields get fields =>
+      keys
+          .map((name) => field<Object?>(name)!)
+          //.where((field) => field != null)
+          .toList();
 
   @override
   CvField<T>? field<T extends Object?>(String name) {

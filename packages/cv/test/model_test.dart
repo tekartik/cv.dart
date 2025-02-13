@@ -121,8 +121,9 @@ void main() {
       expect(asModel({})..cvOverride(CvField('test', 1), 2), {'test': 2});
     });
     test('cvRemove', () {
-      expect(asModel({'test': 2, 'other': 3})..cvRemove(CvField('test', 1)),
-          {'other': 3});
+      expect(asModel({'test': 2, 'other': 3})..cvRemove(CvField('test', 1)), {
+        'other': 3,
+      });
       expect(asModel({'test': 2})..cvRemove(CvField('test')), isEmpty);
     });
     test('cvSetNull', () {

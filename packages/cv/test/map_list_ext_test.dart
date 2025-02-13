@@ -7,8 +7,8 @@ void main() {
     test('map_ext', () {
       var map = {
         'test': {
-          'sub': ['a', 'b']
-        }
+          'sub': ['a', 'b'],
+        },
       };
       expect(map.getKeyPathValue(['test', 'sub', 1]), 'b');
       expect(map.getKeyPathValue<int>(['test', 'sub', 1]), isNull);
@@ -23,9 +23,9 @@ void main() {
       var list = [
         {
           'test': {
-            'sub': ['a', 'b']
-          }
-        }
+            'sub': ['a', 'b'],
+          },
+        },
       ];
       expect(list.asModelList(), list);
       expect(list.asModelList(), isA<ModelList>());
@@ -54,12 +54,12 @@ void main() {
           'sub2': {
             'list1': [
               [
-                [sub1, sub2]
-              ]
-            ]
-          }
+                [sub1, sub2],
+              ],
+            ],
+          },
         },
-        'sub3': sub1
+        'sub3': sub1,
       };
 
       var newMap = complex.deepClone();
@@ -78,10 +78,7 @@ void main() {
     });
     test('keyPartsFromString', () {
       expect(keyPartsFromString('test.1.sub.2'), ['test', 1, 'sub', 2]);
-      expect(
-        keyPartsFromString('test."1".sub.2'),
-        ['test', '1', 'sub', 2],
-      );
+      expect(keyPartsFromString('test."1".sub.2'), ['test', '1', 'sub', 2]);
     });
   });
 }

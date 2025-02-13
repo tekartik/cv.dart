@@ -24,7 +24,7 @@ void main() {
         '-1.1',
         '-1.9',
         '1.9',
-        '3notyetstartingwithnumberbutcouldchangeandthatsok'
+        '3notyetstartingwithnumberbutcouldchangeandthatsok',
       ]) {
         var intExpected = basicTypeToInt(value);
         expect(basicTypeCast<int>(value), intExpected);
@@ -68,8 +68,9 @@ void main() {
       expect(basicTypeToInt(-1.9), -2);
       expect(basicTypeToInt('-1.9'), -2);
       expect(
-          basicTypeToInt('3notyetstartingwithnumberbutcouldchangeandthatsok'),
-          isNull);
+        basicTypeToInt('3notyetstartingwithnumberbutcouldchangeandthatsok'),
+        isNull,
+      );
     });
     test('basicTypeCast<num>', () {
       expect(basicTypeCast<num>(null), isNull);

@@ -14,13 +14,13 @@ void main() {
       list.add(IntContent()..value.v = 2);
       expect(list.toMapList(), [
         {'value': 1},
-        {'value': 2}
+        {'value': 2},
       ]);
       expect(list.toMapList(), list.toMapList().cv<IntContent>().toMapList());
       expect(list.toMapList(), list.toMapList().cvType(IntContent).toMapList());
       list.removeAt(0);
       expect(list.toMapList(), [
-        {'value': 2}
+        {'value': 2},
       ]);
     });
   });

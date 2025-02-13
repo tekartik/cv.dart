@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Requires dart 3.7
+
 ## 1.1.3
 
 * Add `basicTypeToInt`, `basicTypeToBool`, `basicTypeToNum` and `basicTypeToDouble` in `utils/value_utils.dart`

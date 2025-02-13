@@ -80,8 +80,9 @@ abstract class CvFieldContent<T extends CvModel>
     implements CvField<T>, CvModelFieldCreator<T> {
   /// Only set value if not null
   factory CvFieldContent(
-          String name, T Function(dynamic contentValue) create) =>
-      CvFieldContentImpl(name, create);
+    String name,
+    T Function(dynamic contentValue) create,
+  ) => CvFieldContentImpl(name, create);
 }
 
 /// Nested list
@@ -92,8 +93,9 @@ abstract class CvFieldContentList<T extends CvModel>
 
   /// Only set value if not null
   factory CvFieldContentList(
-          String name, T Function(dynamic contentValue) create) =>
-      CvFieldContentListImpl(name, create);
+    String name,
+    T Function(dynamic contentValue) create,
+  ) => CvFieldContentListImpl(name, create);
 }
 
 class _List<T> extends ListBase<T> {
@@ -154,7 +156,9 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
 
   /// Nexted field content creator.
   CvFieldContentListImpl(
-      super.name, T Function(Map contentValue)? createObjectFn) {
+    super.name,
+    T Function(Map contentValue)? createObjectFn,
+  ) {
     _create = createObjectFn;
   }
 
@@ -169,7 +173,9 @@ class CvFieldContentMapImpl<T extends CvModel>
     implements CvModelMapField<T> {
   /// Nexted field content creator.
   CvFieldContentMapImpl(
-      super.name, T Function(Map contentValue)? createObjectFn) {
+    super.name,
+    T Function(Map contentValue)? createObjectFn,
+  ) {
     _create = createObjectFn;
   }
 

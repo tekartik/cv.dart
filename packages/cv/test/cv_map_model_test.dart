@@ -40,8 +40,8 @@ void main() {
       cv = (CvMapModel()..['value'] = 1)..copyFrom(IntContent());
       expect(cv.toMap(), {'value': 1});
       // Null value
-      cv = (CvMapModel()..['value'] = 1)
-        ..copyFrom(IntContent()..value.v = null);
+      cv =
+          (CvMapModel()..['value'] = 1)..copyFrom(IntContent()..value.v = null);
       expect(cv.toMap(), {'value': null});
     });
     test('toMap', () {
@@ -54,7 +54,7 @@ void main() {
       var cv = CvMapModel();
       cv['test'] = ChildContent()..sub.v = 'sub_v';
       expect(cv.toMap(columns: ['test']), {
-        'test': {'sub': 'sub_v'}
+        'test': {'sub': 'sub_v'},
       });
       expect(cv.toMap(columns: []), isEmpty);
     });
@@ -63,8 +63,8 @@ void main() {
       cv['test'] = [ChildContent()..sub.v = 'sub_v'];
       expect(cv.toMap(columns: ['test']), {
         'test': [
-          {'sub': 'sub_v'}
-        ]
+          {'sub': 'sub_v'},
+        ],
       });
       expect(cv.toMap(columns: []), isEmpty);
     });
@@ -109,7 +109,7 @@ void main() {
       var model = CvModelWithMapModel()..map.v = test;
       var map = model.toMap();
       expect(map.cv<CvModelWithMapModel>().toMap(), {
-        'map': {'test': 1}
+        'map': {'test': 1},
       });
     });
     test('CvMapModelBase', () {

@@ -92,7 +92,7 @@ void main() {
     test('cvModelField', () async {
       var parent = Parent()..child.v = (Child()..value.v = 'test');
       expect(parent.toMap(), {
-        'child': {'value': 'test'}
+        'child': {'value': 'test'},
       });
       expect(parent.toMap().cv<Parent>(), parent);
     });
@@ -100,8 +100,8 @@ void main() {
       var parent = ParentWithList()..children.v = [Child()..value.v = 'test'];
       expect(parent.toMap(), {
         'children': [
-          {'value': 'test'}
-        ]
+          {'value': 'test'},
+        ],
       });
       expect(parent.toMap().cv<ParentWithList>(), parent);
     });
@@ -116,35 +116,45 @@ void main() {
         fail('should fail');
       } on CvBuilderException catch (e) {
         expect(
-            e.toString(), contains('Missing builder for \'MissingBuilder\''));
+          e.toString(),
+          contains('Missing builder for \'MissingBuilder\''),
+        );
       }
       try {
         newModel().cvType(MissingBuilder);
         fail('should fail');
       } on CvBuilderException catch (e) {
-        expect(e.toString(),
-            contains('Missing builder for type \'MissingBuilder\''));
+        expect(
+          e.toString(),
+          contains('Missing builder for type \'MissingBuilder\''),
+        );
       }
 
       cvAddBuilder<ParentWithMissingBuilderChild>(
-          (_) => ParentWithMissingBuilderChild());
+        (_) => ParentWithMissingBuilderChild(),
+      );
       try {
         (newModel()..['child'] = {}).cv<ParentWithMissingBuilderChild>();
         fail('should fail');
       } on CvBuilderException catch (e) {
         expect(
-            e.toString(), contains('Missing builder for \'MissingBuilder\''));
+          e.toString(),
+          contains('Missing builder for \'MissingBuilder\''),
+        );
       }
 
       cvAddBuilder<ParentWithMissingBuilderChildren>(
-          (_) => ParentWithMissingBuilderChildren());
+        (_) => ParentWithMissingBuilderChildren(),
+      );
       try {
         (newModel()..['children'] = listWithOneEmptyModel)
             .cv<ParentWithMissingBuilderChildren>();
         fail('should fail');
       } on CvBuilderException catch (e) {
         expect(
-            e.toString(), contains('Missing builder for \'MissingBuilder\''));
+          e.toString(),
+          contains('Missing builder for \'MissingBuilder\''),
+        );
       }
     });
     test('Sub class', () {

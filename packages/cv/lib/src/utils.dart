@@ -31,8 +31,11 @@ bool cvModelAreEquals(CvModelRead model1, CvModelRead model2) =>
     cvModelsAreEquals(model1, model2);
 
 /// If 2 models are equals
-bool cvModelsAreEquals(CvModelRead model1, CvModelRead model2,
-    {List<String>? columns}) {
+bool cvModelsAreEquals(
+  CvModelRead model1,
+  CvModelRead model2, {
+  List<String>? columns,
+}) {
   if (columns == null) {
     if (model1.fields.length != model2.fields.length) {
       return false;

@@ -45,7 +45,10 @@ class _ModelGenerator {
 
   /// Fill a list.
   void fillListFieldItem<T extends Object?>(
-      CvListField<T> field, List<T> list, int i) {
+    CvListField<T> field,
+    List<T> list,
+    int i,
+  ) {
     if (field is CvModelListField) {
       var item = (field as CvModelListField).create({}) as T;
       fillModel(item as CvModel);
@@ -98,11 +101,13 @@ class _ModelGenerator {
     if (collectionSize == null) {
       field.value = null;
     } else {
-      var rawMap = generateMap(generateMapValue: () {
-        var item = field.create({});
-        fillModel(item);
-        return item;
-      });
+      var rawMap = generateMap(
+        generateMapValue: () {
+          var item = field.create({});
+          fillModel(item);
+          return item;
+        },
+      );
       var map = field.createMap();
       rawMap.forEach((key, value) {
         map[key] = value as T;
@@ -143,7 +148,9 @@ class _ModelGenerator {
 abstract class _SubfieldGenerator {
   void fillModel(CvModel model, {List<String>? columns});
   void wrapInGenerator(
-      _SubfieldGenerator subfieldGenerator, void Function() action);
+    _SubfieldGenerator subfieldGenerator,
+    void Function() action,
+  );
 
   void fillField(CvField<Object?> field);
 }
@@ -193,8 +200,12 @@ class _SubfieldGeneratorImpl implements _SubfieldGenerator {
     }
   }
 
-  _SubfieldGeneratorImpl(
-      {this.field, required this.parent, required this.generator, this.index});
+  _SubfieldGeneratorImpl({
+    this.field,
+    required this.parent,
+    required this.generator,
+    this.index,
+  });
 
   _SubfieldGenerator get currentSubfieldGenerator =>
       generator.currentSubfieldGenerator;
@@ -207,7 +218,10 @@ class _SubfieldGeneratorImpl implements _SubfieldGenerator {
   @override
   void fillField(CvField field) {
     var subfieldGenerator = _SubfieldGeneratorImpl(
-        field: field, parent: this, generator: generator);
+      field: field,
+      parent: this,
+      generator: generator,
+    );
     wrapInGenerator(subfieldGenerator, () {
       generator.rawFillField(field);
     });
@@ -215,7 +229,9 @@ class _SubfieldGeneratorImpl implements _SubfieldGenerator {
 
   @override
   void wrapInGenerator(
-      _SubfieldGenerator subfieldGenerator, void Function() action) {
+    _SubfieldGenerator subfieldGenerator,
+    void Function() action,
+  ) {
     currentSubfieldGenerator = subfieldGenerator;
     try {
       action();
@@ -268,8 +284,9 @@ class _ModelMapMatcherGenerator extends _ModelGenerator {
       currentFilledMapModelOrNull ?? filledMapModel;
   List<Object>? currentKeysOrNull;
   List<Object> get currentKeys => currentKeysOrNull ??= <Object>[];
-  late _SubfieldGenerator currentSubfieldGenerator =
-      _SubfieldGeneratorRootImpl(generator: this);
+  late _SubfieldGenerator currentSubfieldGenerator = _SubfieldGeneratorRootImpl(
+    generator: this,
+  );
 
   /// Once following matching is cancelled.
   var abort = false;
@@ -291,10 +308,11 @@ class _ModelMapMatcherGenerator extends _ModelGenerator {
       var list = field.createList();
       for (var i = 0; i < collectionSize; i++) {
         var subfieldGenerator = _SubfieldGeneratorImpl(
-            field: null,
-            parent: currentSubfieldGenerator,
-            generator: this,
-            index: i);
+          field: null,
+          parent: currentSubfieldGenerator,
+          generator: this,
+          index: i,
+        );
         currentSubfieldGenerator.wrapInGenerator(subfieldGenerator, () {
           fillListFieldItem(field, list, i);
         });
@@ -331,7 +349,7 @@ class _FillModelMatchesMapMatcher extends Matcher {
   final Map? map;
 
   _FillModelMatchesMapMatcher(this.map, CvFillOptions? options)
-      : options = options?.copyWith() ?? CvFillOptions();
+    : options = options?.copyWith() ?? CvFillOptions();
 
   CvModel? lastModel;
 
@@ -358,7 +376,8 @@ class _FillModelMatchesMapMatcher extends Matcher {
     description = description.add('expecting map:\n');
     try {
       description = description.add(
-          'expecting ${const JsonEncoder.withIndent(' ').convert(lastModel?.toMap())}');
+        'expecting ${const JsonEncoder.withIndent(' ').convert(lastModel?.toMap())}',
+      );
     } catch (e) {
       description = description.add('expecting $lastModel');
     }

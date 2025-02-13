@@ -12,7 +12,9 @@ var debugContent = false; // devWarning(true);
 
 /// Get raw value helper for map and list.
 CvField<T>? rawGetFieldAtPath<T extends Object?>(
-    Object rawValue, List<Object> parts) {
+  Object rawValue,
+  List<Object> parts,
+) {
   if (parts.isEmpty) {
     if (rawValue is CvField<T>) {
       return rawValue;
@@ -33,7 +35,9 @@ CvField<T>? rawGetFieldAtPath<T extends Object?>(
 
 /// ['key1', 'key2', index3, 'key4]
 T? _rawListGetValueAtPath<T extends Object?>(
-    List<Object?> list, List<Object> parts) {
+  List<Object?> list,
+  List<Object> parts,
+) {
   var path = parts.first;
   if (path is int && path >= 0 && list.length > path) {
     var rawValue = list[path];
@@ -46,7 +50,9 @@ T? _rawListGetValueAtPath<T extends Object?>(
 
 /// ['key1', 'key2', index3, 'key4]
 T? _rawMapGetValueAtPath<T extends Object?>(
-    Map<Object?, Object?> map, List<Object> parts) {
+  Map<Object?, Object?> map,
+  List<Object> parts,
+) {
   var path = parts.first;
   var rawValue = map[path];
   if (rawValue != null) {
@@ -92,7 +98,8 @@ extension CvModelMixinPrvExt on CvModelMixin {
       }
     }
     _cvFieldMap ??= Map.fromEntries(
-        modelFields.map((field) => MapEntry(field.name, field)));
+      modelFields.map((field) => MapEntry(field.name, field)),
+    );
     return _cvFieldMap![name]?.cast<T>();
   }
 }
@@ -119,8 +126,9 @@ mixin CvModelMixin implements CvModel {
         _cvFieldMap = null;
       }
     }
-    _cvFieldMap ??=
-        Map.fromEntries(fields.map((field) => MapEntry(field.name, field)));
+    _cvFieldMap ??= Map.fromEntries(
+      fields.map((field) => MapEntry(field.name, field)),
+    );
     return _cvFieldMap![name]?.cast<T>();
   }
 
@@ -141,16 +149,19 @@ mixin CvModelMixin implements CvModel {
   }
 
   @override
-  Map<String, Object?> toMap(
-      {List<String>? columns, bool includeMissingValue = false}) {
+  Map<String, Object?> toMap({
+    List<String>? columns,
+    bool includeMissingValue = false,
+  }) {
     debugCheckCvFields();
 
     void modelToMap(Model model, CvField field) {
       dynamic value = field.v;
       if (value is List<CvModelRead>) {
-        value = value
-            .map((e) => e.toMap(includeMissingValue: includeMissingValue))
-            .toList();
+        value =
+            value
+                .map((e) => e.toMap(includeMissingValue: includeMissingValue))
+                .toList();
       } else if (value is CvModelRead) {
         value = value.toMap(includeMissingValue: includeMissingValue);
       }
@@ -173,8 +184,9 @@ mixin CvModelMixin implements CvModel {
           model.setValue(field.key, subModel);
         }
         field.valueOrNull?.forEach((key, value) {
-          subModel![key] =
-              value.toMap(includeMissingValue: includeMissingValue);
+          subModel![key] = value.toMap(
+            includeMissingValue: includeMissingValue,
+          );
         });
       } else if (field is CvFieldEncodedImpl && field.isNotNull) {
         Object? encodedValue;
@@ -183,11 +195,17 @@ mixin CvModelMixin implements CvModel {
         } else {
           encodedValue = value;
         }
-        model.setValue(field.name, encodedValue,
-            presentIfNull: field.hasValue || includeMissingValue);
+        model.setValue(
+          field.name,
+          encodedValue,
+          presentIfNull: field.hasValue || includeMissingValue,
+        );
       } else {
-        model.setValue(field.name, value,
-            presentIfNull: field.hasValue || includeMissingValue);
+        model.setValue(
+          field.name,
+          value,
+          presentIfNull: field.hasValue || includeMissingValue,
+        );
       }
     }
 
@@ -252,9 +270,9 @@ extension CvModelMixinExtPrv on CvModelMixin {
                 var modelEntryValue = modelEntry?.value;
                 if (modelEntryValue is Map) {
                   entry = ModelEntry(
-                      modelEntry!.key.toString(),
-                      subField.create(modelEntryValue)
-                        ..fromMap(modelEntryValue));
+                    modelEntry!.key.toString(),
+                    subField.create(modelEntryValue)..fromMap(modelEntryValue),
+                  );
                 }
 
                 break;
@@ -342,7 +360,6 @@ extension CvModelMixinExtPrv on CvModelMixin {
 final _debugCvFieldsCheckDone = <Type, bool>{};
 
 @Deprecated('Debug only')
-
 /// Result field check in debug mode (A field is only tested once).
 void debugResetCvModelFieldChecks() => _debugCvFieldsCheckDone.clear();
 
@@ -361,7 +378,8 @@ extension CvModelPrvExt<T> on CvModelCore {
           if (fieldNames.contains(field.name)) {
             _debugCvFieldsCheckDone[runtimeType] = false;
             throw CvBuilderExceptionImpl(
-                'Duplicated CvField ${field.name} in $runtimeType${fields.map((f) => f.name)} - $this');
+              'Duplicated CvField ${field.name} in $runtimeType${fields.map((f) => f.name)} - $this',
+            );
           }
           fieldNames.add(field.name);
         }

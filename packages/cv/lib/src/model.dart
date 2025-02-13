@@ -47,7 +47,7 @@ abstract class ModelListBase with ListMixin<Model> {
       _mapList = iterable;
     } else {
       _mapList = <Model>[
-        if (iterable != null) ...iterable.map((e) => asModel(e as Map))
+        if (iterable != null) ...iterable.map((e) => asModel(e as Map)),
       ];
     }
   }

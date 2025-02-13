@@ -10,7 +10,9 @@ void main() {
   group('perf', () {
     void perf(int count) {
       var mapList = List.generate(
-          count, (index) => (AllTypes()..fillModel(cvFillOptions1)).toMap());
+        count,
+        (index) => (AllTypes()..fillModel(cvFillOptions1)).toMap(),
+      );
       var sw = Stopwatch()..start();
       mapList.cv<AllTypes>(lazy: false);
       print('count: $count');

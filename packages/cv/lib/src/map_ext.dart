@@ -71,8 +71,11 @@ extension ModelRawMapExt on Map {
 
   /// Set a value, remove the key if [value] is null and [presentIfNull]
   /// is false.
-  void setValue<T extends Object?>(K key, T value,
-      {bool presentIfNull = false}) {
+  void setValue<T extends Object?>(
+    K key,
+    T value, {
+    bool presentIfNull = false,
+  }) {
     if (value == null && (!presentIfNull)) {
       remove(key);
     } else {

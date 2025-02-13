@@ -166,8 +166,10 @@ abstract class CvMapModelBase
   CvFields get modelFields;
 
   @override
-  CvFields get fields =>
-      [...modelFields, ...getMapKeys().map((key) => mapModelField(key)!)];
+  CvFields get fields => [
+    ...modelFields,
+    ...getMapKeys().map((key) => mapModelField(key)!),
+  ];
 }
 
 /// Compilation purpose only.

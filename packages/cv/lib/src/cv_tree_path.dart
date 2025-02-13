@@ -47,7 +47,9 @@ extension CvTreePathFieldExt on CvField {
   CvTreePath get treePath {
     var state = _treePathState;
     assert(
-        state != null, 'path<F> must be called inside a  model path<F> block');
+      state != null,
+      'path<F> must be called inside a  model path<F> block',
+    );
 
     state = _TreePathState(key, _treePathState);
     _treePathState = null;
@@ -64,7 +66,9 @@ extension CvTreePathListFieldExt on CvListField {
   CvTreePath treePathAt(int index) {
     var state = _treePathState;
     assert(
-        state != null, 'path<F> must be called inside a  model path<F> block');
+      state != null,
+      'path<F> must be called inside a  model path<F> block',
+    );
 
     state = _TreePathState(index, _TreePathState(key, _treePathState));
     _treePathState = null;
@@ -77,8 +81,10 @@ extension CvTreePathModelListFieldExt<T extends CvModel>
     on CvModelListField<T> {
   /// Sub list index.
   T pathSubAt(int index) {
-    assert(_treePathState != null,
-        'path<F> must be called inside a  model path<F> block');
+    assert(
+      _treePathState != null,
+      'path<F> must be called inside a  model path<F> block',
+    );
 
     _treePathState = _TreePathState(index, _TreePathState(key, _treePathState));
     return create({});
@@ -89,11 +95,15 @@ extension CvTreePathModelListFieldExt<T extends CvModel>
 extension CvTreePathModelMapField<T extends CvModel> on CvModelMapField<T> {
   /// Sub map index.
   T pathSubAt(String key) {
-    assert(_treePathState != null,
-        'path<F> must be called inside a  model path<F> block');
+    assert(
+      _treePathState != null,
+      'path<F> must be called inside a  model path<F> block',
+    );
 
-    _treePathState =
-        _TreePathState(key, _TreePathState(this.key, _treePathState));
+    _treePathState = _TreePathState(
+      key,
+      _TreePathState(this.key, _treePathState),
+    );
     return create({});
   }
 }
@@ -102,8 +112,10 @@ extension CvTreePathModelMapField<T extends CvModel> on CvModelMapField<T> {
 extension CvTreePathModelFieldExt<T extends CvModel> on CvModelField<T> {
   /// Path sub computation.
   T get pathSub {
-    assert(_treePathState != null,
-        'path<F> must be called inside a  model path<F> block');
+    assert(
+      _treePathState != null,
+      'path<F> must be called inside a  model path<F> block',
+    );
 
     _treePathState = _TreePathState(key, _treePathState);
     return create({});

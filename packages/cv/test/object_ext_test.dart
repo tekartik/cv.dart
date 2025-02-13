@@ -25,7 +25,7 @@ void main() {
       var map = {
         'a': 1,
         'b': [1, 2],
-        'c': {'d': 1}
+        'c': {'d': 1},
       };
       var newMap = map.anyDeepClone<Model>();
       expect(newMap, map);

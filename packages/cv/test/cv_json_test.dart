@@ -43,14 +43,19 @@ void main() {
       expect((IntContent()..value.v = null).toJson(), '{"value":null}');
       expect((IntContent()..value.setValue(null)).toJson(), '{}');
 
-      expect((IntContent()..value.setValue(null, presentIfNull: true)).toJson(),
-          '{"value":null}');
+      expect(
+        (IntContent()..value.setValue(null, presentIfNull: true)).toJson(),
+        '{"value":null}',
+      );
       expect((IntContent()..value.v = 1).toJson(columns: <String>[]), '{}');
       expect(
-          (IntContent()..value.v = 1).toJson(columns: <String>['other']), '{}');
+        (IntContent()..value.v = 1).toJson(columns: <String>['other']),
+        '{}',
+      );
       expect(
-          (IntContent()..value.v = 1).toJson(columns: [IntContent().value.k]),
-          '{"value":1}');
+        (IntContent()..value.v = 1).toJson(columns: [IntContent().value.k]),
+        '{"value":1}',
+      );
     });
     test('CvModelList.toJson', () async {
       expect([IntContent()].toJson(), '[{}]');
@@ -87,7 +92,7 @@ void main() {
     test('jsonToMapList', () {
       expect('[]'.jsonToMapList(), isEmpty);
       expect('[{"test": 1}]'.jsonToMapList(), [
-        {'test': 1}
+        {'test': 1},
       ]);
       try {
         expect('{}'.jsonToMapList(), isEmpty);
@@ -110,7 +115,7 @@ void main() {
       expect(cvAnyToJsonArrayOrNull(1), null);
       var list = [
         {'test': 1},
-        2
+        2,
       ];
       expect(cvAnyToJsonArrayOrNull(list), list);
       expect(cvAnyToJsonArrayOrNull(jsonEncode(list)), list);

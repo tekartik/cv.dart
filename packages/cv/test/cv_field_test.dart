@@ -19,8 +19,10 @@ void main() {
     });
     test('hashCode', () {
       expect(CvField<int>('name').hashCode, CvField<String>('name').hashCode);
-      expect((CvField<Object?>('name').v = 'test').hashCode,
-          (CvField<Object?>('name').v = 'test').hashCode);
+      expect(
+        (CvField<Object?>('name').v = 'test').hashCode,
+        (CvField<Object?>('name').v = 'test').hashCode,
+      );
     });
     test('withValue', () {
       expect(CvField<String>.withValue('name', null).v, isNull);
@@ -33,7 +35,9 @@ void main() {
       expect(CvField<Object?>('name'), CvField('name', null));
       expect(CvField<Object?>('name'), isNot(CvField.withValue('name', null)));
       expect(
-          CvField<Object?>('name'), isNot(CvField<Object?>.withNull('name')));
+        CvField<Object?>('name'),
+        isNot(CvField<Object?>.withNull('name')),
+      );
       expect(CvField('name', 1), CvField('name', 1));
       expect(CvField('name', [1]), CvField('name', [1]));
       expect(CvField('name', {'a': 'b'}), CvField('name', {'a': 'b'}));
@@ -44,72 +48,94 @@ void main() {
 
     test('fromCvField', () {
       // set
-      expect(CvField<String>('name')..fromCvField(CvField('name', 'value')),
-          CvField('name', 'value'));
+      expect(
+        CvField<String>('name')..fromCvField(CvField('name', 'value')),
+        CvField('name', 'value'),
+      );
       // erase
-      expect(CvField<String>('name', 'value')..fromCvField(CvField('name')),
-          CvField('name'));
+      expect(
+        CvField<String>('name', 'value')..fromCvField(CvField('name')),
+        CvField('name'),
+      );
       // replace
       expect(
-          CvField<String>('name', 'value')
-            ..fromCvField(CvField('name', 'value2')),
-          CvField('name', 'value2'));
+        CvField<String>('name', 'value')
+          ..fromCvField(CvField('name', 'value2')),
+        CvField('name', 'value2'),
+      );
       // clear
       expect(
-          CvField<String>('name', 'value')
-            ..fromCvField(CvField.withNull('name')),
-          CvField.withNull('name'));
+        CvField<String>('name', 'value')..fromCvField(CvField.withNull('name')),
+        CvField.withNull('name'),
+      );
 
       // bad type
-      expect(CvField<int>('name', 1)..fromCvField(CvField('name', 'value')),
-          CvField<Object?>.withNull('name'));
+      expect(
+        CvField<int>('name', 1)..fromCvField(CvField('name', 'value')),
+        CvField<Object?>.withNull('name'),
+      );
     });
 
     test('fromCvFieldToString', () {
-      expect(CvField<String>('name')..fromCvField(CvField('name', 12)),
-          CvField('name', '12'));
+      expect(
+        CvField<String>('name')..fromCvField(CvField('name', 12)),
+        CvField('name', '12'),
+      );
     });
 
     test('fromCvFieldBasicType', () {
-      expect(CvField<int>('count')..fromCvField(CvField('count', '12')),
-          CvField('count', 12));
+      expect(
+        CvField<int>('count')..fromCvField(CvField('count', '12')),
+        CvField('count', 12),
+      );
     });
 
     test('fillField', () {
       expect((CvField<int>('int')..fillField()).v, null);
       expect((CvField<int>('int')..fillField()).hasValue, true);
       expect(
-          (CvField<int>('int')..fillField(CvFillOptions(valueStart: 0))).v, 1);
+        (CvField<int>('int')..fillField(CvFillOptions(valueStart: 0))).v,
+        1,
+      );
       expect(
-          (CvField<String>('text')..fillField(CvFillOptions(valueStart: 0))).v,
-          'text_1');
-      expect((CvField<num>('num')..fillField(CvFillOptions(valueStart: 0))).v,
-          1.5);
+        (CvField<String>('text')..fillField(CvFillOptions(valueStart: 0))).v,
+        'text_1',
+      );
       expect(
-          (CvField<num>('double')..fillField(CvFillOptions(valueStart: 0))).v,
-          1.5);
+        (CvField<num>('num')..fillField(CvFillOptions(valueStart: 0))).v,
+        1.5,
+      );
+      expect(
+        (CvField<num>('double')..fillField(CvFillOptions(valueStart: 0))).v,
+        1.5,
+      );
 
       // List
       expect((CvField<List>('list')..fillField()).v, null);
-      expect((CvField<List>('list')..fillField(CvFillOptions(valueStart: 0))).v,
-          isEmpty);
+      expect(
+        (CvField<List>('list')..fillField(CvFillOptions(valueStart: 0))).v,
+        isEmpty,
+      );
       expect((CvField<List>('list')..fillField(cvFillOptions1)).v, [1]);
       expect(
-          (CvField<List>('list')
-                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
-              .v,
-          [1, 2]);
+        (CvField<List>('list')
+          ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2))).v,
+        [1, 2],
+      );
       // Map
       expect((CvField<Map>('map')..fillField()).v, null);
-      expect((CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v,
-          isEmpty);
       expect(
-          (CvField<Map>('map')..fillField(cvFillOptions1)).v, {'field_1': 1});
+        (CvField<Map>('map')..fillField(CvFillOptions(valueStart: 0))).v,
+        isEmpty,
+      );
+      expect((CvField<Map>('map')..fillField(cvFillOptions1)).v, {
+        'field_1': 1,
+      });
       expect(
-          (CvField<Map>('map')
-                ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2)))
-              .v,
-          {'field_1': 1, 'field_2': 2});
+        (CvField<Map>('map')
+          ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2))).v,
+        {'field_1': 1, 'field_2': 2},
+      );
     });
 
     test('withName', () {
@@ -134,19 +160,19 @@ void main() {
 
     test('fillList', () {
       expect(
-          (CvListField<int>('int')
-                ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0)))
-              .v,
-          [1]);
+        (CvListField<int>('int')
+          ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        [1],
+      );
     });
 
     test('fillModelMap', () {
       cvAddConstructor(IntContent.new);
       expect(
-          (CvModelMapField<IntContent>('modelMap')
-                ..fillMap(CvFillOptions(collectionSize: 1, valueStart: 0)))
-              .v,
-          {'field_1': IntContent()..value.v = 1});
+        (CvModelMapField<IntContent>('modelMap')
+          ..fillMap(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        {'field_1': IntContent()..value.v = 1},
+      );
     });
     test('hasValue', () {
       var field = CvField<int>('name');
@@ -200,8 +226,10 @@ void main() {
     test('CvFields', () {
       var field1 = CvField<String>('name');
       var field2 = CvField<int>('count');
-      [field1, field2]
-          .fromCvFields([CvField('other', 'test'), CvField('yet', 1)]);
+      [
+        field1,
+        field2,
+      ].fromCvFields([CvField('other', 'test'), CvField('yet', 1)]);
       expect(field1.v, 'test');
       expect(field2.v, 1);
     });
@@ -220,8 +248,10 @@ void main() {
     test('CvFields.fromCvFields', () {
       var field1 = CvField<String>('name');
       var field2 = CvField<int>('count');
-      [field1, field2]
-          .fromCvFields([CvField('other', 'test'), CvField('yet', 1)]);
+      [
+        field1,
+        field2,
+      ].fromCvFields([CvField('other', 'test'), CvField('yet', 1)]);
       expect(field1.v, 'test');
       expect(field2.v, 1);
     });

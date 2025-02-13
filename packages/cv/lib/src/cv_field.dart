@@ -35,8 +35,10 @@ abstract class CvField<T extends Object?> implements CvFieldCore<T> {
       CvFieldImpl.withValue(name, value);
 
   /// Encode a [S] source exposed value to an encoded [T] saved value
-  static CvField<S> encoded<S extends Object?, T extends Object?>(String name,
-      {required Codec<S, T>? codec}) {
+  static CvField<S> encoded<S extends Object?, T extends Object?>(
+    String name, {
+    required Codec<S, T>? codec,
+  }) {
     var encryptedField = CvField<T>(name);
     return CvFieldEncodedImpl<S, T>(name, encryptedField, codec);
   }
@@ -91,7 +93,8 @@ extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
     } else if (options.valueStart != null) {
       if (cvTypeGetBuilderOrNull(type) != null) {
         throw UnsupportedError(
-            '$this should likely be a CvModelField<$type> rather than CvField<$type> right?');
+          '$this should likely be a CvModelField<$type> rather than CvField<$type> right?',
+        );
       }
       v = options.generateValue(type) as T;
     } else {
@@ -154,8 +157,8 @@ Object? cvFillOptionsGenerateBasicType(Type type, CvFillOptions options) {
 }
 
 /// Test fill generator function definition.
-typedef CvFillOptionsGenerateFunction = Object? Function(
-    Type type, CvFillOptions options);
+typedef CvFillOptionsGenerateFunction =
+    Object? Function(Type type, CvFillOptions options);
 
 /// Fill options for unit tests
 class CvFillOptions {
@@ -169,9 +172,11 @@ class CvFillOptions {
   final CvFillOptionsGenerateFunction? generate;
 
   /// Generate a value.
-  Object? generateValue(Type type) => (generate == null)
-      ? cvFillOptionsGenerateBasicType(type, this)
-      : (generate!(type, this) ?? cvFillOptionsGenerateBasicType(type, this));
+  Object? generateValue(Type type) =>
+      (generate == null)
+          ? cvFillOptionsGenerateBasicType(type, this)
+          : (generate!(type, this) ??
+              cvFillOptionsGenerateBasicType(type, this));
 
   /// Fill options.
   CvFillOptions({this.collectionSize, this.valueStart, this.generate});
@@ -279,11 +284,13 @@ extension CvModelMapFieldUtilsExt<T extends CvModel> on CvModelMapField<T> {
     if (collectionSize == null) {
       value = null;
     } else {
-      var rawMap = options.generateMap(generateMapValue: () {
-        var item = create({});
-        item.fillModel(options);
-        return item;
-      });
+      var rawMap = options.generateMap(
+        generateMapValue: () {
+          var item = create({});
+          item.fillModel(options);
+          return item;
+        },
+      );
       var map = createMap();
       rawMap.forEach((key, value) {
         map[key] = value as T;
@@ -313,17 +320,18 @@ abstract class CvModelField<T extends CvModel> implements CvField<T> {
   T create(Map contentValue);
 
   /// Only set value if not null
-  factory CvModelField(String name,
-          [
-          // Arg... I want to deprecate this... please use builder instead
-          // @Deprecated('Use CvModelField.builder() instead')
-          T Function(dynamic contentValue)? create]) =>
-      CvFieldContentImpl<T>(name, create);
+  factory CvModelField(
+    String name, [
+    // Arg... I want to deprecate this... please use builder instead
+    // @Deprecated('Use CvModelField.builder() instead')
+    T Function(dynamic contentValue)? create,
+  ]) => CvFieldContentImpl<T>(name, create);
 
   /// Only set value if not null, optional builder method
-  factory CvModelField.builder(String name,
-          {CvModelBuilderFunction<T>? builder}) =>
-      CvFieldContentImpl<T>(name, builder);
+  factory CvModelField.builder(
+    String name, {
+    CvModelBuilderFunction<T>? builder,
+  }) => CvFieldContentImpl<T>(name, builder);
 }
 
 /// Utilities
@@ -363,17 +371,18 @@ abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
   List<T> createList();
 
   /// Only set value if not null
-  factory CvModelListField(String name,
-          [
-          // Soon to be deprecated
-          // @Deprecated('User CvModelListField.builder() instead')
-          T Function(dynamic contentValue)? create]) =>
-      CvFieldContentListImpl<T>(name, create);
+  factory CvModelListField(
+    String name, [
+    // Soon to be deprecated
+    // @Deprecated('User CvModelListField.builder() instead')
+    T Function(dynamic contentValue)? create,
+  ]) => CvFieldContentListImpl<T>(name, create);
 
   /// Only set value if not null, optional builder method
-  factory CvModelListField.builder(String name,
-          {CvModelBuilderFunction<T>? builder}) =>
-      CvFieldContentListImpl<T>(name, builder);
+  factory CvModelListField.builder(
+    String name, {
+    CvModelBuilderFunction<T>? builder,
+  }) => CvFieldContentListImpl<T>(name, builder);
 }
 
 /// Nested map where each value is of type T, (key is a string)
@@ -390,9 +399,10 @@ abstract class CvModelMapField<T extends CvModel>
   factory CvModelMapField(String name) => CvFieldContentMapImpl<T>(name, null);
 
   /// Only set value if not null, optional builder method
-  factory CvModelMapField.builder(String name,
-          {CvModelBuilderFunction<T>? builder}) =>
-      CvFieldContentMapImpl<T>(name, builder);
+  factory CvModelMapField.builder(
+    String name, {
+    CvModelBuilderFunction<T>? builder,
+  }) => CvFieldContentMapImpl<T>(name, builder);
 }
 
 /// Generic fields type helper for model fields value.

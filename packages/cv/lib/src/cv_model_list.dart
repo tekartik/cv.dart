@@ -19,11 +19,14 @@ List<T> cvTypeNewModelList<T extends CvModel>(Type type, {bool lazy = true}) =>
 /// `List<CvModel>` convenient extensions.
 extension CvModelReadListExt<T extends CvModelRead> on List<T> {
   /// Convert to model list
-  List<Model> toMapList(
-      {List<String>? columns, bool includeMissingValue = false}) {
-    return map((e) =>
-            e.toMap(columns: columns, includeMissingValue: includeMissingValue))
-        .toList();
+  List<Model> toMapList({
+    List<String>? columns,
+    bool includeMissingValue = false,
+  }) {
+    return map(
+      (e) =>
+          e.toMap(columns: columns, includeMissingValue: includeMissingValue),
+    ).toList();
   }
 
   /// Deep CvField access
