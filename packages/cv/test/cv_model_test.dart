@@ -10,6 +10,9 @@ import 'cv_field_test.dart';
 
 CvFillOptions get testFillOptions => cvFillOptions1;
 
+Model _fill<T extends CvModel>() =>
+    (cvNewModel<T>()..fillModel(cvFillOptions1)).toMap();
+
 class Note extends CvModelBase {
   final title = CvField<String>('title');
   final content = CvField<String>('content');
@@ -128,6 +131,14 @@ abstract class AbstractCloneBaseClass extends CvModelBase {
 class NonAbstractSubClass1 extends AbstractCloneBaseClass {}
 
 class NonAbstractSubClass2 extends AbstractCloneBaseClass {}
+
+class RecursiveContent extends CvModelBase {
+  final value = CvField<int>('value');
+  final recursive = CvModelField<RecursiveContent>('recursive');
+
+  @override
+  CvFields get fields => [value, recursive];
+}
 
 void main() {
   group('cv', () {
@@ -416,6 +427,13 @@ void main() {
           ..fillModel(CvFillOptions(valueStart: 0))).v,
         IntContent()..value.v = 1,
       );
+    });
+    test('recursive', () {
+      cvAddConstructor(RecursiveContent.new);
+      expect(_fill<RecursiveContent>(), {
+        'value': 1,
+        'recursive': {'value': 2, 'recursive': <String, Object?>{}},
+      });
     });
 
     test('basic fillModel', () {

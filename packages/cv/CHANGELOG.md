@@ -1,6 +1,7 @@
-## 1.1.4
+## 1.1.4+1
 
 * Requires dart 3.7
+* Fix test fill options to avoid StackOverflowError with recursive field
 
 ## 1.1.3
 

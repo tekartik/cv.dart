@@ -86,7 +86,18 @@ extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
     } else if (this is CvModelMapField) {
       (this as CvModelMapField).fillMap(options);
     } else if (this is CvModelField) {
-      var modelValue = (this as CvModelField).create({})..fillModel(options);
+      var modelValue = (this as CvModelField).create({});
+      var usedTypes = options.usedTypes;
+      if (!(usedTypes?.contains(modelValue.runtimeType) ?? false)) {
+        var newOptions = options.copyWith(
+          usedTypes: {
+            if (usedTypes != null) ...usedTypes,
+            modelValue.runtimeType,
+          },
+        );
+        modelValue.fillModel(newOptions);
+        options.valueStart = newOptions.valueStart;
+      }
       v = modelValue as T;
     } else if (this is CvFieldWithParent) {
       (this as CvFieldWithParent).field.fillField(options);
@@ -160,7 +171,7 @@ Object? cvFillOptionsGenerateBasicType(Type type, CvFillOptions options) {
 typedef CvFillOptionsGenerateFunction =
     Object? Function(Type type, CvFillOptions options);
 
-/// Fill options for unit tests
+/// Fill options for unit tests must be created each time as it handles recursion.
 class CvFillOptions {
   /// Default collection size. If nul no collections
   final int? collectionSize;
@@ -171,6 +182,9 @@ class CvFillOptions {
   /// Generator function.
   final CvFillOptionsGenerateFunction? generate;
 
+  /// Used types to avoid recursion.
+  Set<Type>? usedTypes;
+
   /// Generate a value.
   Object? generateValue(Type type) =>
       (generate == null)
@@ -179,18 +193,25 @@ class CvFillOptions {
               cvFillOptionsGenerateBasicType(type, this));
 
   /// Fill options.
-  CvFillOptions({this.collectionSize, this.valueStart, this.generate});
+  CvFillOptions({
+    this.collectionSize,
+    this.valueStart,
+    this.generate,
+    this.usedTypes,
+  });
 
   /// Copy fill options.
   CvFillOptions copyWith({
     int? collectionSize,
     int? valueStart,
     CvFillOptionsGenerateFunction? generate,
+    Set<Type>? usedTypes,
   }) {
     return CvFillOptions(
       collectionSize: collectionSize ?? this.collectionSize,
       valueStart: valueStart ?? this.valueStart,
       generate: generate ?? this.generate,
+      usedTypes: usedTypes ?? this.usedTypes,
     );
   }
 }
