@@ -76,6 +76,17 @@ abstract class CvListField<T extends Object?> implements CvField<List<T>> {
   factory CvListField(String name) => ListCvFieldImpl<T>(name);
 }
 
+void _fillModel(CvModel model, CvFillOptions options) {
+  var usedTypes = options.usedTypes;
+  if (!(usedTypes?.contains(model.runtimeType) ?? false)) {
+    var newOptions = options.copyWith(
+      usedTypes: {if (usedTypes != null) ...usedTypes, model.runtimeType},
+    );
+    model.fillModel(newOptions);
+    options.valueStart = newOptions.valueStart;
+  }
+}
+
 /// Field utils.
 extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
   /// For test
@@ -87,17 +98,8 @@ extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
       (this as CvModelMapField).fillMap(options);
     } else if (this is CvModelField) {
       var modelValue = (this as CvModelField).create({});
-      var usedTypes = options.usedTypes;
-      if (!(usedTypes?.contains(modelValue.runtimeType) ?? false)) {
-        var newOptions = options.copyWith(
-          usedTypes: {
-            if (usedTypes != null) ...usedTypes,
-            modelValue.runtimeType,
-          },
-        );
-        modelValue.fillModel(newOptions);
-        options.valueStart = newOptions.valueStart;
-      }
+      _fillModel(modelValue, options);
+
       v = modelValue as T;
     } else if (this is CvFieldWithParent) {
       (this as CvFieldWithParent).field.fillField(options);
@@ -252,7 +254,7 @@ extension CvListFieldUtilsExt<T extends Object?> on CvListField<T> {
       for (var i = 0; i < collectionSize; i++) {
         if (this is CvModelListField) {
           var item = (this as CvModelListField).create({}) as T;
-          (item as CvModel).fillModel(options);
+          _fillModel(item as CvModel, options);
           list.add(item);
         } else if (this is CvListField<Map>) {
           if (options.valueStart != null) {
@@ -308,7 +310,8 @@ extension CvModelMapFieldUtilsExt<T extends CvModel> on CvModelMapField<T> {
       var rawMap = options.generateMap(
         generateMapValue: () {
           var item = create({});
-          item.fillModel(options);
+          _fillModel(item, options!);
+
           return item;
         },
       );
@@ -331,7 +334,7 @@ extension CvModelFieldUtilsExt<T extends CvModel> on CvModelField<T> {
   void fillModel([CvFillOptions? options]) {
     options ??= CvFillOptions();
     value = create({});
-    value!.fillModel(options);
+    _fillModel(value as CvModel, options);
   }
 }
 

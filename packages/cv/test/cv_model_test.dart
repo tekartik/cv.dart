@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_collection_literal
+
 import 'dart:convert';
 
 import 'package:cv/cv.dart';
@@ -135,9 +137,11 @@ class NonAbstractSubClass2 extends AbstractCloneBaseClass {}
 class RecursiveContent extends CvModelBase {
   final value = CvField<int>('value');
   final recursive = CvModelField<RecursiveContent>('recursive');
+  final recursives = CvModelListField<RecursiveContent>('recursives');
+  final recursiveMap = CvModelMapField<RecursiveContent>('recursiveMap');
 
   @override
-  CvFields get fields => [value, recursive];
+  CvFields get fields => [value, recursive, recursives, recursiveMap];
 }
 
 void main() {
@@ -432,7 +436,28 @@ void main() {
       cvAddConstructor(RecursiveContent.new);
       expect(_fill<RecursiveContent>(), {
         'value': 1,
-        'recursive': {'value': 2, 'recursive': <String, Object?>{}},
+        'recursive': {
+          'value': 2,
+          'recursive': {},
+          'recursives': [{}],
+          'recursiveMap': {'field_1': {}},
+        },
+        'recursives': [
+          {
+            'value': 3,
+            'recursive': {},
+            'recursives': [{}],
+            'recursiveMap': {'field_1': {}},
+          },
+        ],
+        'recursiveMap': {
+          'field_1': {
+            'value': 4,
+            'recursive': {},
+            'recursives': [{}],
+            'recursiveMap': {'field_1': {}},
+          },
+        },
       });
     });
 
