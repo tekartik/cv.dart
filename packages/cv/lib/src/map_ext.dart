@@ -150,3 +150,18 @@ extension ModelRawMapReadExt on Map {
     return null;
   }
 }
+
+/// Raw model map read extension
+extension CvModelRawMapReadExt<T extends CvModel> on Map<String, T> {
+  /// Deep CvField access
+  CvField<F>? fieldAtPath<F extends Object?>(List<Object> paths) {
+    var path = paths.first;
+    if (path is String) {
+      var child = this[path];
+      if (child != null) {
+        return rawGetFieldAtPath<F>(child, paths.sublist(1));
+      }
+    }
+    return null;
+  }
+}

@@ -59,10 +59,12 @@ export 'src/cv_tree_path.dart'
         CvTreePathModelListFieldExt,
         CvTreePathModelMapField;
 export 'src/list_ext.dart' show ModelRawListExt;
+
 export 'src/map_ext.dart'
     show
         ModelRawMapExt,
         ModelRawMapReadExt,
+        CvModelRawMapReadExt,
         keyPartsToString,
         keyPartsFromString;
 export 'src/map_list_ext.dart' show ModelListExt;

@@ -25,15 +25,15 @@ CvField<T>? fieldGetFieldAtPath<T extends Object?>(
     return field.v?.fieldAtPath<T>(parts);
   } else if (field is CvModelListField) {
     return field.v?.fieldAtPath<T>(parts);
-    /*
   } else if (field is CvModelMapField) {
+    return field.v?.fieldAtPath(parts);
+  } else {
     var child = field.valueOrNull;
     if (child == null) {
       return null;
     }
-    return rawGetFieldAtPath(child, parts);*/
+    return rawGetFieldAtPath(child, parts);
   }
-  return null;
 }
 
 /// Get raw value helper for map and list.
@@ -50,7 +50,7 @@ CvField<T>? rawGetFieldAtPath<T extends Object?>(
   if (rawValue is CvModel) {
     return rawValue.fieldAtPath<T>(parts);
   } else if (rawValue is List) {
-    return rawValue.fieldAtPath<T>(parts);
+    return rawValue.rawFieldAtPath<T>(parts);
   } else if (rawValue is Map) {
     return rawValue.rawFieldAtPath<T>(parts);
   }

@@ -184,40 +184,49 @@ void main() {
       var field = content.value;
       var list = [content];
       var rawList = <Object>[content];
-      expect(content.fieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
+      final map = {'map': content};
+      final rawMap = Model.from(map);
+      void check(String tag) {
+        expect(content.fieldAtPath(['value']), field);
+        expect(list.fieldAtPath([0, 'value']), field);
+        expect(rawList.rawFieldAtPath([0, 'value']), field);
+        expect(map.fieldAtPath(['map', 'value']), field, reason: tag);
+        expect(rawMap.rawFieldAtPath(['map', 'value']), field, reason: tag);
+      }
 
+      check('set');
       field.setNull();
-      expect(content.fieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
-
+      check('null');
       field.clear();
-      expect(content.fieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
+      check('unset');
     });
     test('MapModel fieldAtPath', () {
       var field = CvField<int>('value', 1);
       var content = CvMapModel()..['value'] = 1;
       var list = [content];
       var rawList = <Object>[content];
-      expect(content.fieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
+      final map = {'map': content};
+      final rawMap = Model.from(map);
+
+      void check(String tag) {
+        expect(content.fieldAtPath(['value']), field);
+        expect(list.fieldAtPath([0, 'value']), field);
+        expect(rawList.rawFieldAtPath([0, 'value']), field);
+        expect(map.fieldAtPath(['map', 'value']), field, reason: tag);
+        expect(rawMap.rawFieldAtPath(['map', 'value']), field, reason: tag);
+      }
+
+      check('set');
 
       field.v = null;
       content['value'] = null;
-      expect(content.fieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
+      check('null');
 
       field.clear();
       content.remove('value');
       expect(content.fieldAtPath(['value']), isNull);
       expect(list.fieldAtPath([0, 'value']), isNull);
-      expect(rawList.fieldAtPath([0, 'value']), isNull);
+      expect(rawList.rawFieldAtPath([0, 'value']), isNull);
     });
     test('Map fieldAtPath', () {
       var field = CvField<int>('value', 1);
@@ -226,20 +235,20 @@ void main() {
       var list = [map];
       var rawList = <Object>[map];
       expect(map.rawFieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
+      expect(list.rawFieldAtPath([0, 'value']), field);
+      expect(rawList.rawFieldAtPath([0, 'value']), field);
 
       field.v = null;
       map['value'] = null;
       expect(map.rawFieldAtPath(['value']), field);
-      expect(list.fieldAtPath([0, 'value']), field);
-      expect(rawList.fieldAtPath([0, 'value']), field);
+      expect(list.rawFieldAtPath([0, 'value']), field);
+      expect(rawList.rawFieldAtPath([0, 'value']), field);
 
       field.clear();
       map.remove('value');
       expect(map.rawFieldAtPath(['value']), isNull);
-      expect(list.fieldAtPath([0, 'value']), isNull);
-      expect(rawList.fieldAtPath([0, 'value']), isNull);
+      expect(list.rawFieldAtPath([0, 'value']), isNull);
+      expect(rawList.rawFieldAtPath([0, 'value']), isNull);
     });
     test('ModelMap fieldAtPath', () {
       var model = WithChildMapCvField();
@@ -267,7 +276,7 @@ void main() {
       expect(rawList.fieldAtPath([0, 'value']), isNull);
 
        */
-    }, skip: true);
+    });
     test('fromMap1', () async {
       var content = IntContent()..fromMap({});
       expect(content.value.hasValue, false);
