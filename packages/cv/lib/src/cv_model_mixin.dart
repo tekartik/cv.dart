@@ -25,12 +25,13 @@ CvField<T>? fieldGetFieldAtPath<T extends Object?>(
     return field.v?.fieldAtPath<T>(parts);
   } else if (field is CvModelListField) {
     return field.v?.fieldAtPath<T>(parts);
+    /*
   } else if (field is CvModelMapField) {
     var child = field.valueOrNull;
     if (child == null) {
       return null;
     }
-    return rawGetFieldAtPath(child, parts);
+    return rawGetFieldAtPath(child, parts);*/
   }
   return null;
 }
