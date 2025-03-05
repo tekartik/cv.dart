@@ -10,25 +10,48 @@ import 'field.dart';
 /// For dev only
 var debugContent = false; // devWarning(true);
 
+/// Get a field at a given path
+CvField<T>? fieldGetFieldAtPath<T extends Object?>(
+  CvField field,
+  List<Object> parts,
+) {
+  if (parts.isEmpty) {
+    if (field is CvField<T>) {
+      return field;
+    }
+    return null;
+  }
+  if (field is CvModelField) {
+    return field.v?.fieldAtPath<T>(parts);
+  } else if (field is CvModelListField) {
+    return field.v?.fieldAtPath<T>(parts);
+  } else if (field is CvModelMapField) {
+    var child = field.valueOrNull;
+    if (child == null) {
+      return null;
+    }
+    return rawGetFieldAtPath(child, parts);
+  }
+  return null;
+}
+
 /// Get raw value helper for map and list.
 CvField<T>? rawGetFieldAtPath<T extends Object?>(
   Object rawValue,
   List<Object> parts,
 ) {
+  if (rawValue is CvField) {
+    return fieldGetFieldAtPath<T>(rawValue, parts);
+  }
   if (parts.isEmpty) {
-    if (rawValue is CvField<T>) {
-      return rawValue;
-    }
     return null;
   }
-  if (rawValue is CvModelField) {
-    return rawValue.v?.fieldAtPath<T>(parts);
-  } else if (rawValue is CvModelListField) {
-    return rawValue.v?.fieldAtPath<T>(parts);
-  } else if (rawValue is CvModel) {
+  if (rawValue is CvModel) {
     return rawValue.fieldAtPath<T>(parts);
   } else if (rawValue is List) {
     return rawValue.fieldAtPath<T>(parts);
+  } else if (rawValue is Map) {
+    return rawValue.rawFieldAtPath<T>(parts);
   }
   return null;
 }
@@ -416,7 +439,7 @@ extension CvModelReadExt on CvModelRead {
     if (path is String) {
       var rawField = field<Object>(path);
       if (rawField != null) {
-        return rawGetFieldAtPath<T>(rawField, parts.sublist(1));
+        return fieldGetFieldAtPath<T>(rawField, parts.sublist(1));
       }
     }
     return null;

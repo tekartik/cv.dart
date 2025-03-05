@@ -1,5 +1,6 @@
 import 'package:cv/cv.dart';
 import 'package:cv/cv.dart' as cvimpl;
+import 'package:cv/src/cv_model_mixin.dart';
 import 'package:cv/src/typedefs.dart';
 
 String _keyPartToString(Object part) {
@@ -131,5 +132,21 @@ extension ModelRawMapExt on Map {
       }
     }
     return model;
+  }
+}
+
+/// Raw map access
+extension ModelRawMapReadExt on Map {
+  /// Deep CvField access
+  CvField<T>? rawFieldAtPath<T extends Object?>(List<Object> parts) {
+    var path = parts.first;
+    if (path is String) {
+      if (containsKey(path)) {
+        var child = this[path] as Object?;
+        var field = CvField.withValue(path, child);
+        return fieldGetFieldAtPath(field, parts.sublist(1));
+      }
+    }
+    return null;
   }
 }
