@@ -179,6 +179,14 @@ void main() {
       expect((IntContent()..field('value')!.v = 1).toMap(), {'value': 1});
       expect(IntContent().field('dummy'), isNull);
     });
+    test('basic fieldAtPath', () {
+      var content = IntContent()..value.v = 1;
+      expect(content.fieldAtPath(['value']), content.value);
+      content.value.setNull();
+      expect(content.fieldAtPath(['value']), content.value);
+      content.value.clear();
+      expect(content.fieldAtPath(['value']), content.value);
+    });
     test('fromMap1', () async {
       var content = IntContent()..fromMap({});
       expect(content.value.hasValue, false);
@@ -530,6 +538,7 @@ void main() {
           {'field_1': 14},
         ],
       });
+      expect(allTypes.fieldAtPath(['int'])?.v, 2);
       expect(
         allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v,
         'text_6',

@@ -415,8 +415,8 @@ extension CvModelReadExt on CvModelRead {
     var path = parts.first;
     if (path is String) {
       var rawField = field<Object>(path);
-      if (rawField?.isNotNull ?? false) {
-        return rawGetFieldAtPath<T>(rawField!, parts.sublist(1));
+      if (rawField != null) {
+        return rawGetFieldAtPath<T>(rawField, parts.sublist(1));
       }
     }
     return null;
