@@ -1,3 +1,7 @@
+## 1.1.5
+
+* Add field and parts getter helper in CvModel (`fieldAndPartsAtPath`)
+
 ## 1.1.4+5
 
 * Requires dart 3.7
