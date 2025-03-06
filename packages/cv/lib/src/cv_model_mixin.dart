@@ -465,6 +465,7 @@ extension CvModelCloneExt<T extends CvModel> on T {
 
 /// Public extension on CvModelCore
 extension CvModelReadExt on CvModelRead {
+  // @Deprecated('Invalid')
   /// Deep CvField access
   CvField<T>? fieldAtPath<T extends Object?>(List<Object> parts) {
     var path = parts.first;
@@ -475,6 +476,34 @@ extension CvModelReadExt on CvModelRead {
       }
     }
     return null;
+  }
+
+  /// Return an actual existing field
+  /// the incoming parts must not be empty
+  /// if returned parts is null, it means the field value itself is involved
+  (CvField<T>?, List<Object>? parts) fieldAndPartsAtPath<T extends Object?>(
+    List<Object> parts,
+  ) {
+    assert(parts.isNotEmpty);
+    var first = parts.first;
+    if (first is String) {
+      var field = this.field(first);
+      if (field != null) {
+        if (parts.length == 1) {
+          return (field.cast<T>(), null);
+        } else {
+          var childValue = field.valueOrNull;
+          if (childValue != null) {
+            return anyRawGetFieldAndPartsAtPath<T>(
+              (field, null),
+              childValue,
+              parts.sublist(1),
+            );
+          }
+        }
+      }
+    }
+    return (null, null);
   }
 
   /// Get a value at a given path
@@ -494,5 +523,34 @@ extension CvModelReadExt on CvModelRead {
   /// fields value is returned. `CvModel/List<CvModel>` are converted to map/mapList.
   T? valueAtFieldPath<T extends Object?>(CvFieldPath path) {
     return valueAtPath<T>(path.parts);
+  }
+}
+
+/// Public extension on CvModelCore
+extension CvModelReadExtPrv on CvModelRead {}
+
+/// CvField and parts record class
+typedef CvFieldAndParts<T extends Object?> =
+    (CvField<T>? field, List<Object>? parts);
+
+/// Private extension
+extension CvFieldAndPartsPrvExt on CvFieldAndParts {
+  CvFieldAndParts sub(Object part) {
+    var field = $1;
+    var parts = $2;
+    if (field != null) {
+      return (field, [if (parts != null) ...parts, part]);
+    }
+    return this;
+  }
+
+  CvFieldAndParts<T> cast<T extends Object?>() {
+    var self = this;
+    if (self is CvFieldAndParts<T>) {
+      return self;
+    }
+    var field = $1;
+    var parts = $2;
+    return (field?.cast<T>(), parts);
   }
 }

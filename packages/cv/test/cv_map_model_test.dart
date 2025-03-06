@@ -97,6 +97,9 @@ void main() {
       cv = CvMapModel();
       cv['test'] = 1;
       expect(cv.fields, [CvField('test', 1)]);
+      var field = cv.field('test')!;
+      field.v = 2;
+      expect(cv.toMap(), {'test': 2});
       cv.clear();
       expect(cv.fields, isEmpty);
     });
