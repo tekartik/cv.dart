@@ -1,6 +1,6 @@
-## 1.1.5
+## 1.1.5+1
 
-* Add field and parts getter helper in CvModel (`fieldAndPartsAtPath`)
+* Add field and parts getter helper in CvModel (`cvTreeValueAtPath`)
 
 ## 1.1.4+5
 
