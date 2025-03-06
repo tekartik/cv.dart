@@ -35,6 +35,7 @@ export 'src/cv_field.dart'
         CvListFieldUtilsExt,
         CvFillOptions,
         cvFillOptions1;
+export 'src/cv_field_path.dart' show CvFieldPath;
 export 'src/cv_model.dart'
     show
         CvModel,
@@ -46,7 +47,8 @@ export 'src/cv_model.dart'
         cvTypeNewModel,
         cvNewModel;
 export 'src/cv_model_list.dart'
-    show CvModelReadListExt, cvNewModelList, cvTypeNewModelList;
+    show CvModelListReadExt, cvNewModelList, cvTypeNewModelList;
+export 'src/cv_model_map.dart' show CvModelMapReadExt;
 export 'src/cv_model_mixin.dart'
     show CvModelWriteExt, CvModelReadExt, CvModelCloneExt;
 export 'src/cv_tree_path.dart'
@@ -59,12 +61,10 @@ export 'src/cv_tree_path.dart'
         CvTreePathModelListFieldExt,
         CvTreePathModelMapField;
 export 'src/list_ext.dart' show ModelRawListExt;
-
 export 'src/map_ext.dart'
     show
         ModelRawMapExt,
         ModelRawMapReadExt,
-        CvModelRawMapReadExt,
         keyPartsToString,
         keyPartsFromString;
 export 'src/map_list_ext.dart' show ModelListExt;

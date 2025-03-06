@@ -1,6 +1,7 @@
 import 'package:cv/cv.dart';
 import 'package:cv/cv.dart' as cvimpl;
 
+import 'content_helper.dart';
 import 'cv_model_mixin.dart';
 import 'map_ext.dart';
 
@@ -13,7 +14,7 @@ extension ModelRawListExt on List {
     if (path is int && path >= 0 && path < length) {
       rawValue = this[path] as Object?;
       if (rawValue != null) {
-        return rawGetKeyPathValue(rawValue, parts.sublist(1));
+        return anyRawGetKeyPathValue<T>(rawValue, parts.sublist(1));
       }
     }
 
@@ -39,5 +40,28 @@ extension ModelRawListExt on List {
   /// Deep clone a list.
   List<T> deepClone<T extends Object?>() {
     return map<T>((e) => (e as Object?)?.anyDeepClone<T>() as T).toList();
+  }
+}
+
+/// Convenient private extension on Model
+extension ModelRawListPrvExt on List {
+  /// parts cannot be empty
+  bool rawSetValueAtPath(List<Object> parts, Object? value) {
+    var first = parts.first;
+    if (first is int) {
+      var index = first;
+      if (index >= 0 && index < length) {
+        if (parts.length == 1) {
+          this[index] = value;
+          return true;
+        } else {
+          var entry = this[index];
+          if (entry is Object) {
+            return anyRawSetValueAtPath(entry, parts.sublist(1), value);
+          }
+        }
+      }
+    }
+    return false;
   }
 }

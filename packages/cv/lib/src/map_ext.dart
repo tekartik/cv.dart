@@ -1,5 +1,6 @@
 import 'package:cv/cv.dart';
 import 'package:cv/cv.dart' as cvimpl;
+import 'package:cv/src/content_helper.dart';
 import 'package:cv/src/cv_model_mixin.dart';
 import 'package:cv/src/typedefs.dart';
 
@@ -43,7 +44,10 @@ List<Object> keyPartsFromString(String key) {
 }
 
 /// Get raw value helper for map and list - internal
-T? rawGetKeyPathValue<T extends Object?>(Object rawValue, List<Object> parts) {
+T? anyRawGetKeyPathValue<T extends Object?>(
+  Object rawValue,
+  List<Object> parts,
+) {
   if (parts.isEmpty) {
     return rawValue.anyAs<T?>();
   } else if (rawValue is Map) {
@@ -52,6 +56,26 @@ T? rawGetKeyPathValue<T extends Object?>(Object rawValue, List<Object> parts) {
     return rawValue.getKeyPathValue<T>(parts);
   }
   return null;
+}
+
+/// Convenient private extension on Model
+extension ModelRawMapPrvExt on Map {
+  /// parts cannot be empty
+  bool rawSetValueAtPath(List<Object> parts, Object? value) {
+    var first = parts.first;
+    if (first is String) {
+      if (parts.length == 1) {
+        setValue(first, value);
+        return true;
+      } else {
+        var entry = getValue(first);
+        if (entry is Object) {
+          return anyRawSetValueAtPath(entry, parts.sublist(1), value);
+        }
+      }
+    }
+    return false;
+  }
 }
 
 /// Convenient extension on Model
@@ -91,7 +115,7 @@ extension ModelRawMapExt on Map {
     if (rawValue == null) {
       return null;
     }
-    return rawGetKeyPathValue(rawValue, parts.sublist(1));
+    return anyRawGetKeyPathValue(rawValue, parts.sublist(1));
   }
 
   /// Get a value expecting a given type
@@ -145,21 +169,6 @@ extension ModelRawMapReadExt on Map {
         var child = this[path] as Object?;
         var field = CvField.withValue(path, child);
         return fieldGetFieldAtPath(field, parts.sublist(1));
-      }
-    }
-    return null;
-  }
-}
-
-/// Raw model map read extension
-extension CvModelRawMapReadExt<T extends CvModel> on Map<String, T> {
-  /// Deep CvField access
-  CvField<F>? fieldAtPath<F extends Object?>(List<Object> paths) {
-    var path = paths.first;
-    if (path is String) {
-      var child = this[path];
-      if (child != null) {
-        return rawGetFieldAtPath<F>(child, paths.sublist(1));
       }
     }
     return null;

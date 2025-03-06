@@ -3,6 +3,7 @@ import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/cv_model.dart';
 
 import 'builder.dart';
+import 'content_helper.dart';
 import 'cv_field.dart';
 import 'env_utils.dart';
 import 'field.dart';
@@ -66,7 +67,7 @@ T? _rawListGetValueAtPath<T extends Object?>(
   if (path is int && path >= 0 && list.length > path) {
     var rawValue = list[path];
     if (rawValue != null) {
-      return rawGetValueAtPath(rawValue, parts.sublist(1));
+      return anyRawGetValueAtPath(rawValue, parts.sublist(1));
     }
   }
   return null;
@@ -80,14 +81,17 @@ T? _rawMapGetValueAtPath<T extends Object?>(
   var path = parts.first;
   var rawValue = map[path];
   if (rawValue != null) {
-    return rawGetValueAtPath(rawValue, parts.sublist(1));
+    return anyRawGetValueAtPath(rawValue, parts.sublist(1));
   }
   return null;
 }
 
 /// Get a value at a given path - internal, handle CvField, CvModel (toMap), `List<CvModel>` (toMapList)
 /// other types are returned as is for now (this might change in the future)
-T? rawGetValueAtPath<T extends Object?>(Object rawValue, List<Object> parts) {
+T? anyRawGetValueAtPath<T extends Object?>(
+  Object rawValue,
+  List<Object> parts,
+) {
   var value = (rawValue is CvField) ? rawValue.v : rawValue;
   if (value == null) {
     return null;
@@ -422,6 +426,33 @@ extension CvModelWriteExt on CvModelWrite {
     debugCheckCvFields();
     fromMap(model.toMap(columns: columns));
   }
+
+  /// Set a value at a given path
+  /// true if set
+  bool setValueAtFieldPath(CvFieldPath path, Object? value) {
+    return setValueAtPath(path.parts, value);
+  }
+
+  /// Set a value at a given path, [parts] must not be empty
+  /// true if set
+  bool setValueAtPath(List<Object> parts, Object? value) {
+    var first = parts.first;
+    if (first is String) {
+      var field = this.field(first);
+      if (field != null) {
+        if (parts.length == 1) {
+          field.v = value;
+          return true;
+        } else {
+          var childValue = field.valueOrNull;
+          if (childValue != null) {
+            return anyRawSetValueAtPath(childValue, parts.sublist(1), value);
+          }
+        }
+      }
+    }
+    return false;
+  }
 }
 
 /// Public extension on CvModelWrite
@@ -453,9 +484,15 @@ extension CvModelReadExt on CvModelRead {
     if (path is String) {
       var rawValue = field<Object>(path)?.value;
       if (rawValue != null) {
-        return rawGetValueAtPath(rawValue, parts.sublist(1));
+        return anyRawGetValueAtPath(rawValue, parts.sublist(1));
       }
     }
     return null;
+  }
+
+  /// Get a value at a given path
+  /// fields value is returned. `CvModel/List<CvModel>` are converted to map/mapList.
+  T? valueAtFieldPath<T extends Object?>(CvFieldPath path) {
+    return valueAtPath<T>(path.parts);
   }
 }
