@@ -504,9 +504,6 @@ void main() {
         allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v,
         'text_6',
       );
-      var result = allTypes.fieldAndPartsAtPath(['children', 0]);
-      expect(result.$1!.name, 'children');
-      expect(result.$2!, [0]);
       expect(
         allTypes.fieldAtPath(['children', 0, 'child', 'sub'])?.v,
         'text_6',
@@ -544,10 +541,6 @@ void main() {
         'text_6',
       );
       expect(
-        allTypes.fieldAndPartsAtPath(['children', 0, 'child', 'sub']).$1!.name,
-        'sub',
-      );
-      expect(
         allTypes.valueAtPath<String>(['children', 0, 'child', 'sub']),
         'text_6',
       );
@@ -568,13 +561,6 @@ void main() {
         allTypes.fieldAtPath<String>(['children', 'sub', 1, 'sub'])?.v,
         isNull,
       );
-      // model map
-      result = allTypes.fieldAndPartsAtPath(['modelMap', 'field_1']);
-      expect(result.$1!.name, 'modelMap');
-      expect(result.$2!, ['field_1']);
-      result = allTypes.fieldAndPartsAtPath(['modelMap', 'field_1', 'child']);
-      expect(result.$1!.name, 'child');
-      expect(result.$2, isNull);
       // set
       expect(
         allTypes.valueAtPath<String>(['modelMap', 'field_1', 'child', 'sub']),

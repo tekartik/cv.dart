@@ -1,6 +1,7 @@
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/cv_model.dart';
+import 'package:cv/src/log_utils.dart';
 
 import 'builder.dart';
 import 'content_helper.dart';
@@ -137,9 +138,9 @@ mixin CvModelMixin implements CvModel {
   @override
   String toString() {
     try {
-      return '${toMap()}';
+      return logTruncateAny(toMap());
     } catch (e) {
-      return '$fields $e';
+      return '${logTruncateAny(fields)} ${logTruncateAny(e)}';
     }
   }
 
@@ -478,34 +479,6 @@ extension CvModelReadExt on CvModelRead {
     return null;
   }
 
-  /// Return an actual existing field
-  /// the incoming parts must not be empty
-  /// if returned parts is null, it means the field value itself is involved
-  (CvField<T>?, List<Object>? parts) fieldAndPartsAtPath<T extends Object?>(
-    List<Object> parts,
-  ) {
-    assert(parts.isNotEmpty);
-    var first = parts.first;
-    if (first is String) {
-      var field = this.field(first);
-      if (field != null) {
-        if (parts.length == 1) {
-          return (field.cast<T>(), null);
-        } else {
-          var childValue = field.valueOrNull;
-          if (childValue != null) {
-            return anyRawGetFieldAndPartsAtPath<T>(
-              (field, null),
-              childValue,
-              parts.sublist(1),
-            );
-          }
-        }
-      }
-    }
-    return (null, null);
-  }
-
   /// Get a value at a given path
   /// fields value is returned. `CvModel/List<CvModel>` are converted to map/mapList.
   T? valueAtPath<T extends Object?>(List<Object> parts) {
@@ -529,28 +502,7 @@ extension CvModelReadExt on CvModelRead {
 /// Public extension on CvModelCore
 extension CvModelReadExtPrv on CvModelRead {}
 
+@Deprecated('CvFieldAndParts')
 /// CvField and parts record class
 typedef CvFieldAndParts<T extends Object?> =
     (CvField<T>? field, List<Object>? parts);
-
-/// Private extension
-extension CvFieldAndPartsPrvExt on CvFieldAndParts {
-  CvFieldAndParts sub(Object part) {
-    var field = $1;
-    var parts = $2;
-    if (field != null) {
-      return (field, [if (parts != null) ...parts, part]);
-    }
-    return this;
-  }
-
-  CvFieldAndParts<T> cast<T extends Object?>() {
-    var self = this;
-    if (self is CvFieldAndParts<T>) {
-      return self;
-    }
-    var field = $1;
-    var parts = $2;
-    return (field?.cast<T>(), parts);
-  }
-}

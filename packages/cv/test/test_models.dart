@@ -207,6 +207,8 @@ class ChildContent extends CvModelBase {
   CvFields get fields => [sub];
 }
 
+AllTypes newAllTypes1() => AllTypes()..fillModel(cvFillOptions1);
+
 class AllTypes extends CvModelBase {
   final boolCvField = CvField<bool>('bool');
   final intCvField = CvField<int>('int');

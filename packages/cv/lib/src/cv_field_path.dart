@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
+import 'package:cv/cv.dart';
 import 'package:meta/meta.dart';
 
 /// Backtick char code.
@@ -62,7 +63,7 @@ extension on Object {
 
 /// A [CvFieldPath] refers to a field in a document (either a map child, or a list item)
 @immutable
-class CvFieldPath {
+class CvFieldPath implements CvTreePath {
   /// Parent
   CvFieldPath get parent {
     if (!hasParent) {
@@ -79,6 +80,7 @@ class CvFieldPath {
 
   /// The [List] of components which make up this [CvFieldPath].
   /// never empty
+  @override
   final List<Object> parts;
 
   /// Creates a new [FieldPath].

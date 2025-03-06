@@ -64,31 +64,4 @@ extension ModelRawListPrvExt on List {
     }
     return false;
   }
-
-  /// Return an actual existing field
-  /// the incoming parts must not be empty
-  /// if returned parts is null, it means the field value itself is involved
-  (CvField<T>?, List<Object>? parts) rawGetFieldAndPartsAtPath<
-    T extends Object?
-  >(CvFieldAndParts parent, List<Object> parts) {
-    var first = parts.first;
-    if (first is int) {
-      var index = first;
-      if (index >= 0 && index < length) {
-        var rawValue = this[index];
-        if (rawValue is Object) {
-          if (parts.length == 1) {
-            return parent.sub(first).cast<T>();
-          } else {
-            return anyRawGetFieldAndPartsAtPath<T>(
-              parent,
-              rawValue,
-              parts.sublist(1),
-            );
-          }
-        }
-      }
-    }
-    return (null, null);
-  }
 }

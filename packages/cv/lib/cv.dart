@@ -51,6 +51,7 @@ export 'src/cv_model_list.dart'
 export 'src/cv_model_map.dart' show CvModelMapReadExt;
 export 'src/cv_model_mixin.dart'
     show CvModelWriteExt, CvModelReadExt, CvModelCloneExt;
+export 'src/cv_model_tree_value.dart' show CvModelTreeValue;
 export 'src/cv_tree_path.dart'
     show
         CvTreePath,

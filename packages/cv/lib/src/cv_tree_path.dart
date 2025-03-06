@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:cv/cv.dart';
+import 'package:cv/src/cv_model_tree_value.dart';
 
 /// Tree path
 ///
@@ -12,6 +14,14 @@ class CvTreePath {
 
   @override
   String toString() => parts.join('.');
+
+  @override
+  bool operator ==(Object other) =>
+      other is CvTreePath &&
+      const IterableEquality<Object>().equals(other.parts, parts);
+
+  @override
+  int get hashCode => Object.hashAll(parts);
 }
 
 class _TreePathState {
@@ -34,11 +44,16 @@ _TreePathState? _treePathState;
 
 /// Public extension on CvModelRead
 extension CvTreePathModelReadExt<T extends CvModel> on T {
-  /// Path sub computation.
+  /// Path sub computation, only valid during a `path<F>` block.
   T get cvPath {
     _treePathState ??= _TreePathState('', null);
     return this;
   }
+
+  /// Model tree value helpers
+  CvModelTreeValue<T, V> cvTreeValueAtPath<V extends Object?>(
+    CvTreePath treePath,
+  ) => prvCvTreeValueAtPath<V>(treePath);
 }
 
 /// Public extension on CvModelRead
