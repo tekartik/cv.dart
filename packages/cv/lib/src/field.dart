@@ -5,11 +5,13 @@ import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/utils.dart';
 
 import 'column.dart';
+import 'cv_value.dart';
 
 /// CvField access
 ///
 /// Use [v] for value access.
-abstract class CvFieldCore<T extends Object?> implements CvColumn<T> {
+abstract class CvFieldCore<T extends Object?>
+    implements CvColumn<T>, CvValueWriter<T> {
   /// The value or null if null or not set
   T? get valueOrNull;
 
@@ -20,6 +22,7 @@ abstract class CvFieldCore<T extends Object?> implements CvColumn<T> {
   T? get v;
 
   /// The value
+  @override
   T? get value;
 
   /// The key (abbr.)
@@ -50,9 +53,11 @@ abstract class CvFieldCore<T extends Object?> implements CvColumn<T> {
   void clear();
 
   /// [presentIfNull] true if null is marked as a value
+  @override
   void setValue(T? value, {bool presentIfNull = false});
 
   /// True if a value is set (even if the value is null)
+  @override
   bool get hasValue;
 
   /// Allow dynamic CvFields, copy if the value if set, otherwise delete it

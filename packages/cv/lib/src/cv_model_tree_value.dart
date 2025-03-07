@@ -1,35 +1,43 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/cv_typed.dart';
+import 'package:cv/src/cv_value.dart';
 
 /// A value wrapper for any element in the tree.
-abstract class CvModelTreeValue<T extends CvModel, V extends Object?> {
+abstract class CvModelTreeValue<T extends CvModel, V extends Object?>
+    implements CvValueWriter<V>, RawTyped {
   /// The model
   T get model;
 
-  /// Value predefined type if any
-  Type? get type;
+  /// The path
+  CvTreePath get treePath;
 
-  /// Read value if any
-  V? get value;
+  /// For list only, null otherwise
+  Type? get listItemType;
 
-  /// Could be found but null!
+  /// Could be found but null or unset
   bool get found;
 
   /// Set a value
-  void setValue(V? value, {bool? presentIfNull});
+  @override
+  void setValue(V? value, {bool presentIfNull = false});
 }
 
 class _CvModelTreeValue<T extends CvModel, V extends Object?>
     implements CvModelTreeValue<T, V> {
   @override
   final T model;
+  @override
   final CvTreePath treePath;
   Type? _type;
   @override
-  Type? get type => _type;
-  bool present = false;
+  Type get type => _type ?? Object;
+  bool _present = false;
   V? _value;
   @override
   V? get value => _value;
+  Type? _listItemType;
+  @override
+  Type? get listItemType => _listItemType;
 
   /// Parent value
   CvModelTreeValue<T, Object?>? parent;
@@ -43,13 +51,13 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
   bool get found => _nodes.length == parts.length;
   final _nodes = <_TreeNodeInfo>[];
   @override
-  void setValue(V? value, {bool? presentIfNull}) {
+  void setValue(V? value, {bool presentIfNull = false}) {
     if (found) {
       var lastNode = _nodes.last;
       var field = lastNode.field;
       if (field != null) {
-        field.setValue(value, presentIfNull: presentIfNull ?? false);
-        present = field.hasValue;
+        field.setValue(value, presentIfNull: presentIfNull);
+        _present = field.hasValue;
         _value = value;
       } else {
         var lastPart = parentPart;
@@ -59,7 +67,21 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
           var parentList = parentListNode.value;
           if (parentList is List) {
             parentList[lastPart] = value;
-            present = true;
+            _present = true;
+            _value = value;
+            return;
+          }
+        } else if (lastPart is String) {
+          var parentMapNode = _nodes[_nodes.length - 2];
+          var parentMap = parentMapNode.value;
+          if (parentMap is Map) {
+            parentMap.setValue<V?>(
+              lastPart,
+              value,
+              presentIfNull: presentIfNull,
+            );
+
+            _present = value != null || presentIfNull;
             _value = value;
             return;
           }
@@ -98,7 +120,7 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
           }).toList()),
         );
         // print('nodes: ${_nodes}');
-        present = childTmv.present;
+        _present = childTmv._present;
         _value = childTmv.value as V?;
         _type ??= childTmv.type;
         return;
@@ -109,9 +131,9 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
           _nodes.add(
             _TreeNodeInfo(treePath: CvTreePath([first]), value: child),
           );
-          if (treePath.parts.length == 1) {
+          if (parts.length == 1) {
             _value = child as V?;
-            present = true;
+            _present = true;
             return;
           } else {
             doNext();
@@ -129,9 +151,10 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
           );
           if (parts.length == 1) {
             _value = child as V?;
-            present = true;
+            _present = true;
             if (parentField is CvListField) {
               _type ??= parentField.itemType;
+              _listItemType = parentField.itemType;
             }
             return;
           } else {
@@ -150,10 +173,13 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
       var field = model.field(first);
       if (field != null) {
         _nodes.add(_TreeNodeInfo(treePath: CvTreePath([first]), field: field));
-        if (treePath.parts.length == 1) {
+        if (parts.length == 1) {
           _type ??= field.type;
           _value = field.v as V?;
-          present = field.hasValue;
+          _present = field.hasValue;
+          if (field is CvListField) {
+            _listItemType = field.itemType;
+          }
           return;
         } else {
           var nextParts = parts.skip(1).toList();
@@ -171,6 +197,9 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
 
   @override
   String toString() => 'CvModelTreeValue($treePath, $type, $model';
+
+  @override
+  bool get hasValue => _present;
 }
 
 class _TreeNodeInfo {

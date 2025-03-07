@@ -22,6 +22,9 @@ class CvTreePath {
 
   @override
   int get hashCode => Object.hashAll(parts);
+
+  /// Size
+  int get length => parts.length;
 }
 
 class _TreePathState {

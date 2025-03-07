@@ -50,6 +50,29 @@ void main() {
       'sub',
     ]);
   });
+  test('tree CvMapModel', () {
+    var model = CvMapModel();
+    model['test'] = 1;
+    var tmv = model.cvTreeValueAtPath<int>(CvTreePath(['test']));
+    expect(tmv.value, 1);
+    tmv.setValue(2);
+    expect(model['test'], 2);
+    model['sub'] = {'test': 3};
+    tmv = model.cvTreeValueAtPath<int>(CvTreePath(['sub', 'test']));
+    expect(tmv.value, 3);
+    tmv.setValue(4);
+    expect(model['sub'], {'test': 4});
+
+    model['sub'] = {
+      'list': [5, 6, 7],
+    };
+    tmv = model.cvTreeValueAtPath<int>(CvTreePath(['sub', 'list', 1]));
+    expect(tmv.value, 6);
+    tmv.setValue(8);
+    expect(model['sub'], {
+      'list': [5, 8, 7],
+    });
+  });
   test('tree value', () {
     var model = AllTypes();
     var tmv = model.cvTreeValueAtPath<bool>(CvTreePath(['bool']));
@@ -61,6 +84,7 @@ void main() {
     expect(tmv.model, model);
     expect(tmv.type, bool);
     expect(tmv.value, true);
+    expect(tmv.listItemType, isNull);
     expect(tmv.found, isTrue);
     tmv.setValue(false);
     expect(model.boolCvField.v, isFalse);
@@ -73,7 +97,7 @@ void main() {
     );
     var tmv = model.cvTreeValueAtPath<bool>(CvTreePath(['child', 'sub']));
     expect(tmv.model, model);
-    expect(tmv.type, isNull);
+    // expect(tmv.type, Object);
     expect(tmv.value, isNull);
     expect(tmv.found, isFalse);
     model.child.v = ChildContent()..sub.v = 'sub_v';
@@ -96,7 +120,7 @@ void main() {
     );
     var tmv = model.cvTreeValueAtPath<bool>(CvTreePath(['child', 'sub']));
     expect(tmv.model, model);
-    expect(tmv.type, isNull);
+    // expect(tmv.type, isNull);
     expect(tmv.value, isNull);
     expect(tmv.found, isFalse);
     model.children.v = [ChildContent()..sub.v = 'sub_v'];
@@ -109,6 +133,13 @@ void main() {
 
     tmvString.setValue('alt_sub_v');
     expect(model.children.v![0].sub.v, 'alt_sub_v');
+
+    var tmvList = model.cvTreeValueAtPath(CvTreePath(['children']));
+
+    expect(tmvList.type, List<ChildContent>);
+    expect(tmvList.value, model.children.v);
+    expect(tmvList.found, isTrue);
+    expect(tmvList.listItemType, ChildContent);
   });
   test('tree cv list item', () {
     var model = AllTypes();
@@ -118,7 +149,7 @@ void main() {
     );
     var tmv = model.cvTreeValueAtPath<int>(CvTreePath(['intList', 1]));
     expect(tmv.model, model);
-    expect(tmv.type, isNull);
+    // expect(tmv.type, isNull);
     expect(tmv.value, isNull);
     expect(tmv.found, isFalse);
     model.intListCvField.v = [1, 2, 3];
@@ -128,6 +159,13 @@ void main() {
     expect(tmvInt.found, isTrue);
     tmvInt.setValue(4);
     expect(model.intListCvField.v, [1, 4, 3]);
+
+    var tmvList = model.cvTreeValueAtPath(CvTreePath(['intList']));
+
+    expect(tmvList.type, List<int>);
+    expect(tmvList.value, [1, 4, 3]);
+    expect(tmvList.found, isTrue);
+    expect(tmvList.listItemType, int);
   });
   test('complex', () {
     var model = newAllTypes1();

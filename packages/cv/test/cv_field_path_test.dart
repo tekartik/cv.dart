@@ -14,7 +14,9 @@ Future<void> main() async {
         CvFieldPath(const ['a', 'b', '1', 2, '3']),
       );
       expect(CvFieldPath(const ['a.b', 'c']).parts, ['a.b', 'c']);
-      expect(CvFieldPath(const ['a.b', 'c']).text, 'a.b.c');
+      expect(CvFieldPath(const ['a.b', 'c']).text, '`a.b`.c');
+      expect(CvFieldPath(const ['a.b', 1, '2']).text, '`a.b`.1.`2`');
+      expect(CvFieldPath(const ['a.b', 1, '2']).text, '`a.b`.1.`2`');
     });
   });
 }

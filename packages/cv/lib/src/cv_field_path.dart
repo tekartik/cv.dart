@@ -53,9 +53,15 @@ extension on Object {
   String get _partText {
     var self = this;
     if (self is String) {
+      if (int.tryParse(self) != null) {
+        return self._escape();
+      }
+      if (self.contains('.')) {
+        return self._escape();
+      }
       return self;
     } else if (self is int) {
-      return self.toString()._escape();
+      return self.toString();
     }
     throw UnsupportedError('Invalid part $self');
   }
@@ -63,6 +69,7 @@ extension on Object {
 
 /// A [CvFieldPath] refers to a field in a document (either a map child, or a list item)
 @immutable
+//@Deprecated('Use CvTreePath')
 class CvFieldPath implements CvTreePath {
   /// Parent
   CvFieldPath get parent {
@@ -109,4 +116,7 @@ class CvFieldPath implements CvTreePath {
 
   @override
   String toString() => 'CvFieldPath($parts)';
+
+  @override
+  int get length => parts.length;
 }
