@@ -179,5 +179,19 @@ void main() {
     tmv.setValue('alt_text_12');
     expect(tmv.value, 'alt_text_12');
     expect(model.valueAtPath<String>(parts), 'alt_text_12');
+
+    var treePath = CvTreePath(['model', 'field_1']);
+    var tmvAny = model.cvTreeValueAtPath(treePath);
+    expect(tmvAny.value, 13);
+    tmvAny.setValue(asModel({'sub': 14}));
+    treePath = CvTreePath(['model', 'field_1', 'sub']);
+    tmvAny = model.cvTreeValueAtPath(treePath);
+    expect(tmvAny.value, 14);
+    tmvAny.setValue({
+      'list': [1, 2, 3],
+    });
+    treePath = CvTreePath(['model', 'field_1', 'sub', 'list']);
+    tmvAny = model.cvTreeValueAtPath(treePath);
+    expect(tmvAny.value, [1, 2, 3]);
   });
 }
