@@ -1,4 +1,4 @@
-## 1.1.5+2
+## 1.1.5+3
 
 * Add field and parts getter helper in CvModel (`cvTreeValueAtPath`)
 

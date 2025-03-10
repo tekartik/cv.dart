@@ -140,6 +140,9 @@ void main() {
     expect(tmvList.value, model.children.v);
     expect(tmvList.found, isTrue);
     expect(tmvList.listItemType, ChildContent);
+
+    var item = tmvList.listCreateItem<ChildContent>();
+    expect(item, isA<ChildContent>());
   });
   test('tree cv list item', () {
     var model = AllTypes();

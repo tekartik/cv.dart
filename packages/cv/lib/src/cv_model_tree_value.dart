@@ -22,6 +22,27 @@ abstract class CvModelTreeValue<T extends CvModel, V extends Object?>
   void setValue(V? value, {bool presentIfNull = false});
 }
 
+/// Private extension
+extension CvModelTreeValueExt<T extends CvModel, V extends Object?>
+    on CvModelTreeValue<T, V> {
+  _CvModelTreeValue<T, V> get _impl => this as _CvModelTreeValue<T, V>;
+
+  /// Only valid if [found] is true and [value] is a list
+  C listCreateItem<C>() {
+    if (found) {
+      var lastNode = _impl._nodes.last;
+      var field = lastNode.field;
+      if (field != null) {
+        if (field is CvModelListField) {
+          var value = field.create({}) as C;
+          return value;
+        }
+      }
+    }
+    throw UnsupportedError('Not found $this');
+  }
+}
+
 class _CvModelTreeValue<T extends CvModel, V extends Object?>
     implements CvModelTreeValue<T, V> {
   @override
