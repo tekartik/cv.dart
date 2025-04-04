@@ -5,6 +5,7 @@ import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/cv_model.dart';
 import 'package:matcher/matcher.dart';
+import 'package:matcher/matcher.dart' as matcher;
 import 'package:meta/meta.dart';
 
 class _ModelGenerator {
@@ -393,3 +394,77 @@ class _FillModelMatchesMapMatcher extends Matcher {
 @experimental
 Matcher fillModelMatchesMap(Map map, [CvFillOptions? options]) =>
     _FillModelMatchesMapMatcher(map, options);
+
+/// Returns a matches that matches if the value matches the expected
+/// Map or CvModel are expected and default to equals otherwise
+CvModelMatcher cvEquals(Object? expected) => _CvModelMatcher(expected);
+
+/// Diff report, null if the value matches the expected
+/// CvModel or Map are treated as equals
+String? cvEqualsDiffReport(Object? value, Object? expected) {
+  return _CvModelMatcher(expected).diffReport(value);
+}
+
+/// CvModelMatcher
+abstract class CvModelMatcher implements matcher.Matcher {}
+
+/// Returns a matches that matches if the value is the same instance
+/// as [expected], using [identical].
+Matcher same(Object? expected) => _IsSameAs(expected);
+
+class _IsSameAs extends Matcher {
+  final Object? _expected;
+  const _IsSameAs(this._expected);
+  @override
+  bool matches(Object? item, Map matchState) => identical(item, _expected);
+  // If all types were hashable we could show a hash here.
+  @override
+  Description describe(Description description) =>
+      description.add('same instance as ').addDescriptionOf(_expected);
+}
+
+class _CvModelMatcher implements CvModelMatcher {
+  final Object? expected;
+  final Matcher delegate;
+
+  static Object? fixDelegateValue(Object? value) {
+    if (value is CvModel) {
+      return value.toMap();
+    }
+    return value;
+  }
+
+  _CvModelMatcher(this.expected)
+    : delegate = matcher.equals(fixDelegateValue(expected));
+
+  @override
+  Description describe(Description description) =>
+      delegate.describe(description);
+
+  @override
+  bool matches(item, Map matchState) =>
+      delegate.matches(fixDelegateValue(item), matchState);
+  String? diffReport(Object? item, {Description? description}) {
+    description ??= StringDescription();
+    var matchState = <Object?, Object?>{};
+    var matches = this.matches(item, matchState);
+    if (matches) {
+      return null;
+    }
+    description = describeMismatch(item, description, matchState, true);
+    return description.toString();
+  }
+
+  @override
+  Description describeMismatch(
+    item,
+    Description mismatchDescription,
+    Map matchState,
+    bool verbose,
+  ) => delegate.describeMismatch(
+    fixDelegateValue(item),
+    mismatchDescription,
+    matchState,
+    verbose,
+  );
+}

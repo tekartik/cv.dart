@@ -160,4 +160,42 @@ void main() {
       }, cvFillOptions1),
     );
   });
+  test('cvEquals', () {
+    try {
+      expect({'a': 1}, cvEquals({'a': 2}));
+      throw StateError('no');
+    } catch (e) {
+      expect(e, isA<TestFailure>());
+      expect(
+        e.toString(),
+        contains("Which: at location ['a'] is <1> instead of <2>"),
+      );
+    }
+    expect(
+      MatcherSimple()..value1.setValue('test'),
+      cvEquals({'value1': 'test'}),
+    );
+    expect({
+      'value1': 'test',
+    }, cvEquals(MatcherSimple()..value1.setValue('test')));
+  });
+  test('matcher', () {
+    //expect({'a': 1}, {'b': 2});
+    var matcher = equals({'b': 2});
+    expect(matcher.matches({'b': 2}, {}), true);
+    matcher = equals({'b': 2});
+    //var matches = matcher.matches({'a': 1}, {});
+    //expect(matches, false);
+    // ignore: inference_failure_on_instance_creation
+    var matchState = <Object?, Object?>{};
+    var matches = matcher.matches({'a': 1}, matchState);
+    expect(matches, isFalse);
+    var description = matcher.describeMismatch(
+      {'a': 1},
+      StringDescription('diff: '),
+      matchState,
+      false,
+    );
+    expect(description.toString(), 'diff: is missing map key \'b\'');
+  });
 }
