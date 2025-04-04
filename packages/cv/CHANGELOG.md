@@ -1,3 +1,7 @@
+## 1.1.6
+
+* Add `CvModelMatcher`, `cvEquals` matcher and helpers (compare, report)
+
 ## 1.1.5+3
 
 * Add field and parts getter helper in CvModel (`cvTreeValueAtPath`)
