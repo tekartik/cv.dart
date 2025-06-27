@@ -118,8 +118,9 @@ void main() {
       );
       expect((CvField<List>('list')..fillField(cvFillOptions1)).v, [1]);
       expect(
-        (CvField<List>('list')
-          ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2))).v,
+        (CvField<List>(
+          'list',
+        )..fillField(CvFillOptions(valueStart: 0, collectionSize: 2))).v,
         [1, 2],
       );
       // Map
@@ -132,8 +133,9 @@ void main() {
         'field_1': 1,
       });
       expect(
-        (CvField<Map>('map')
-          ..fillField(CvFillOptions(valueStart: 0, collectionSize: 2))).v,
+        (CvField<Map>(
+          'map',
+        )..fillField(CvFillOptions(valueStart: 0, collectionSize: 2))).v,
         {'field_1': 1, 'field_2': 2},
       );
     });
@@ -160,8 +162,9 @@ void main() {
 
     test('fillList', () {
       expect(
-        (CvListField<int>('int')
-          ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        (CvListField<int>(
+          'int',
+        )..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
         [1],
       );
     });
@@ -169,8 +172,9 @@ void main() {
     test('fillModelMap', () {
       cvAddConstructor(IntContent.new);
       expect(
-        (CvModelMapField<IntContent>('modelMap')
-          ..fillMap(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        (CvModelMapField<IntContent>(
+          'modelMap',
+        )..fillMap(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
         {'field_1': IntContent()..value.v = 1},
       );
     });

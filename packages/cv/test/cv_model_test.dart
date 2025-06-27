@@ -206,10 +206,9 @@ void main() {
       cv = IntContent()..copyFrom(src);
       expect(cv.toMap(), isEmpty);
 
-      var twoFields =
-          TwoFieldsContent()
-            ..value1.v = 1
-            ..value2.v = 2;
+      var twoFields = TwoFieldsContent()
+        ..value1.v = 1
+        ..value2.v = 2;
       expect(TwoFieldsContent()..copyFrom(twoFields), twoFields);
       expect(
         TwoFieldsContent()..copyFrom(twoFields, columns: ['value1']),
@@ -244,11 +243,10 @@ void main() {
       });
     });
     test('Object.toMap', () async {
-      var note =
-          Note()
-            ..title.v = 'my_title'
-            ..content.v = 'my_content'
-            ..date.v = 1;
+      var note = Note()
+        ..title.v = 'my_title'
+        ..content.v = 'my_content'
+        ..date.v = 1;
       expect(note.toMap(), {
         'title': 'my_title',
         'content': 'my_content',
@@ -309,8 +307,8 @@ void main() {
           'child': {'sub': null},
         },
       );
-      var parent =
-          WithChildCvField()..child.v = (ChildContent()..sub.v = 'sub_value');
+      var parent = WithChildCvField()
+        ..child.v = (ChildContent()..sub.v = 'sub_value');
       var map = {
         'child': {'sub': 'sub_value'},
       };
@@ -324,9 +322,8 @@ void main() {
         'children': null,
       });
 
-      var parent =
-          WithChildListCvField()
-            ..children.v = [ChildContent()..sub.v = 'sub_value'];
+      var parent = WithChildListCvField()
+        ..children.v = [ChildContent()..sub.v = 'sub_value'];
       var map = {
         'children': [
           {'sub': 'sub_value'},
@@ -343,11 +340,10 @@ void main() {
         'children': null,
       });
 
-      var parent =
-          WithChildMapCvField()
-            ..children.v = <String, ChildContent>{
-              'key': ChildContent()..sub.v = 'sub_value',
-            };
+      var parent = WithChildMapCvField()
+        ..children.v = <String, ChildContent>{
+          'key': ChildContent()..sub.v = 'sub_value',
+        };
       var map = {
         'children': {
           'key': {'sub': 'sub_value'},
@@ -396,8 +392,10 @@ void main() {
 
     test('builderCompat', () {
       expect(
-        (CvModelField<IntContent>('int', (_) => IntContent())
-          ..fillModel(CvFillOptions(valueStart: 0))).v,
+        (CvModelField<IntContent>(
+          'int',
+          (_) => IntContent(),
+        )..fillModel(CvFillOptions(valueStart: 0))).v,
         IntContent()..value.v = 1,
       );
     });
@@ -432,16 +430,20 @@ void main() {
 
     test('basic fillModel', () {
       expect(
-        (CvModelField<IntContent>.builder('int', builder: (_) => IntContent())
-          ..fillModel(CvFillOptions(valueStart: 0))).v,
+        (CvModelField<IntContent>.builder(
+          'int',
+          builder: (_) => IntContent(),
+        )..fillModel(CvFillOptions(valueStart: 0))).v,
         IntContent()..value.v = 1,
       );
     });
 
     test('builderCompat', () {
       expect(
-        (CvModelListField<IntContent>('int', (_) => IntContent())
-          ..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
+        (CvModelListField<IntContent>(
+          'int',
+          (_) => IntContent(),
+        )..fillList(CvFillOptions(collectionSize: 1, valueStart: 0))).v,
         [IntContent()..value.v = 1],
       );
     });
@@ -634,10 +636,10 @@ void main() {
       });
       expect(WithCvFieldWithParent().toMap(), isEmpty);
 
-      object =
-          WithCvFieldWithParent()..fromMap({
-            'sub': {'value': 1},
-          });
+      object = WithCvFieldWithParent()
+        ..fromMap({
+          'sub': {'value': 1},
+        });
       expect(object.value.v, 1);
       expect(object.toMap(), {
         'sub': {'value': 1},
@@ -672,8 +674,8 @@ void main() {
           'value': {'value': 1},
         },
       };
-      var model =
-          WithCvModelFieldWithParent()..value.v = (IntContent()..value.v = 1);
+      var model = WithCvModelFieldWithParent()
+        ..value.v = (IntContent()..value.v = 1);
       expect(model.toMap(), map);
       model = WithCvModelFieldWithParent()..fromMap(map);
       expect(model.toMap(), map);
@@ -723,14 +725,12 @@ void main() {
       expect(model.toMap(), {'dep': 'pre', 'test': 'pre,2'});
     });
     test('cvModelAreEquals', () {
-      var content1 =
-          TwoFieldsContent()
-            ..value1.v = 1
-            ..value2.v = 2;
-      var content2 =
-          TwoFieldsContent()
-            ..value1.v = 1
-            ..value2.v = 2;
+      var content1 = TwoFieldsContent()
+        ..value1.v = 1
+        ..value2.v = 2;
+      var content2 = TwoFieldsContent()
+        ..value1.v = 1
+        ..value2.v = 2;
       expect(cvModelsAreEquals(content1, content2), true);
       content1.value1.v = 3;
       expect(cvModelsAreEquals(content1, content2), false);
@@ -790,10 +790,9 @@ void main() {
       base = NonAbstractSubClass2();
       var clone2 = base.clone();
       expect(clone2, isA<NonAbstractSubClass1>());
-      base =
-          NonAbstractSubClass2()
-            ..type.v = 2
-            ..other.v = 123;
+      base = NonAbstractSubClass2()
+        ..type.v = 2
+        ..other.v = 123;
       var clone3 = base.clone();
       expect(clone3, isA<NonAbstractSubClass2>());
       expect(clone3.other.v, 123);

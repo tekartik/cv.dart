@@ -195,11 +195,10 @@ class ContentValuesMap
   }
 
   @override
-  CvFields get fields =>
-      keys
-          .map((name) => field<Object?>(name)!)
-          //.where((field) => field != null)
-          .toList();
+  CvFields get fields => keys
+      .map((name) => field<Object?>(name)!)
+      //.where((field) => field != null)
+      .toList();
 
   @override
   CvField<T>? field<T extends Object?>(String name) {

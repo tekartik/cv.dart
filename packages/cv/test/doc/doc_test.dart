@@ -8,11 +8,10 @@ import 'note_model.dart';
 void main() {
   group('doc', () {
     test('toMap', () {
-      var note =
-          Note()
-            ..title.v = 'My note'
-            ..content.v = 'My note context'
-            ..date.v = DateTime(2021, 08, 16);
+      var note = Note()
+        ..title.v = 'My note'
+        ..content.v = 'My note context'
+        ..date.v = DateTime(2021, 08, 16);
       expect(note.toMap(), {
         'title': 'My note',
         'content': 'My note context',
@@ -45,11 +44,10 @@ void main() {
       cvAddConstructor(Size.new);
 
       // Any map can be converted to a rect object
-      var rect =
-          {
-            'point': {'x': 100, 'y': 50},
-            'size': {'width': 300, 'height': 200},
-          }.cv<Rect>();
+      var rect = {
+        'point': {'x': 100, 'y': 50},
+        'size': {'width': 300, 'height': 200},
+      }.cv<Rect>();
       var size = rect.size.v!;
       expect(size.width.v, 300);
 
@@ -63,13 +61,12 @@ void main() {
       cvAddConstructor(Item.new);
 
       // Any map can be converted to a cart object
-      var cart =
-          {
-            'items': [
-              {'name': 'Chair', 'price': 50},
-              {'name': 'Lamp', 'price': 12},
-            ],
-          }.cv<ShoppingCart>();
+      var cart = {
+        'items': [
+          {'name': 'Chair', 'price': 50},
+          {'name': 'Lamp', 'price': 12},
+        ],
+      }.cv<ShoppingCart>();
       var items = cart.items.v!;
       expect(items[0].name.v, 'Chair');
 

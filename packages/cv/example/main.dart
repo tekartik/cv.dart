@@ -12,19 +12,18 @@ class Note extends CvModelBase {
 }
 
 void main() {
-  var note =
-      Note()
-        ..title.v = 'My note'
-        ..content.v = 'My note context'
-        ..date.v = DateTime(2021, 08, 16);
+  var note = Note()
+    ..title.v = 'My note'
+    ..content.v = 'My note context'
+    ..date.v = DateTime(2021, 08, 16);
   print(note.toMap());
 
-  note =
-      Note()..fromMap({
-        'title': 'My other note',
-        'content': 'My other note context',
-        'date': DateTime(2021, 08, 18),
-      });
+  note = Note()
+    ..fromMap({
+      'title': 'My other note',
+      'content': 'My other note context',
+      'date': DateTime(2021, 08, 18),
+    });
   print(note.toMap());
 
   // Add the builder once
@@ -34,10 +33,9 @@ void main() {
   note = {'title': 'My note from a map'}.cv<Note>();
   print(note.toMap());
 
-  note =
-      {
-        'title': 'My other note from a map',
-        'content': 'With some content',
-      }.cv<Note>();
+  note = {
+    'title': 'My other note from a map',
+    'content': 'With some content',
+  }.cv<Note>();
   print(note.toMap());
 }

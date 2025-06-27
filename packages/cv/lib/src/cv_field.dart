@@ -188,11 +188,9 @@ class CvFillOptions {
   Set<Type>? usedTypes;
 
   /// Generate a value.
-  Object? generateValue(Type type) =>
-      (generate == null)
-          ? cvFillOptionsGenerateBasicType(type, this)
-          : (generate!(type, this) ??
-              cvFillOptionsGenerateBasicType(type, this));
+  Object? generateValue(Type type) => (generate == null)
+      ? cvFillOptionsGenerateBasicType(type, this)
+      : (generate!(type, this) ?? cvFillOptionsGenerateBasicType(type, this));
 
   /// Fill options.
   CvFillOptions({
@@ -224,8 +222,9 @@ extension _CvFillOptionsExt on CvFillOptions {
     var map = newModel();
     var size = collectionSize ?? 0;
     for (var i = 0; i < size; i++) {
-      map['field_${i + 1}'] =
-          generateMapValue != null ? generateMapValue() : generateValue(int);
+      map['field_${i + 1}'] = generateMapValue != null
+          ? generateMapValue()
+          : generateValue(int);
     }
     return map;
   }

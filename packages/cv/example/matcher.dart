@@ -8,11 +8,10 @@ import 'main.dart';
 void main() {
   var note = Note()..title.v = 'My note';
   var note2 = Note()..fromMap({'title': 'My other note'});
-  var note3 =
-      Note()
-        ..copyFrom(note)
-        ..content.v = 'Some content'
-        ..date.v = DateTime(2025, 04, 04);
+  var note3 = Note()
+    ..copyFrom(note)
+    ..content.v = 'Some content'
+    ..date.v = DateTime(2025, 04, 04);
 
   void report(Object? value, Object? expected) {
     print('value: $value');

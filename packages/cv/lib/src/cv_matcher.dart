@@ -76,8 +76,9 @@ class _ModelGenerator {
     var map = newModel();
     var size = options.collectionSize ?? 0;
     for (var i = 0; i < size; i++) {
-      map['field_${i + 1}'] =
-          generateMapValue != null ? generateMapValue() : generateValue(int);
+      map['field_${i + 1}'] = generateMapValue != null
+          ? generateMapValue()
+          : generateValue(int);
     }
     return map;
   }

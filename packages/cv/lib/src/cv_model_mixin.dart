@@ -187,10 +187,9 @@ mixin CvModelMixin implements CvModel {
     void modelToMap(Model model, CvField field) {
       dynamic value = field.v;
       if (value is List<CvModelRead>) {
-        value =
-            value
-                .map((e) => e.toMap(includeMissingValue: includeMissingValue))
-                .toList();
+        value = value
+            .map((e) => e.toMap(includeMissingValue: includeMissingValue))
+            .toList();
       } else if (value is CvModelRead) {
         value = value.toMap(includeMissingValue: includeMissingValue);
       }
@@ -504,5 +503,7 @@ extension CvModelReadExtPrv on CvModelRead {}
 
 @Deprecated('CvFieldAndParts')
 /// CvField and parts record class
-typedef CvFieldAndParts<T extends Object?> =
-    (CvField<T>? field, List<Object>? parts);
+typedef CvFieldAndParts<T extends Object?> = (
+  CvField<T>? field,
+  List<Object>? parts,
+);
