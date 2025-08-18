@@ -306,6 +306,23 @@ void main() {
       expect(field.v, isA<double>());
       expect(field.v, closeTo(1.5, 0.00001));
     });
+    test('string list', () {
+      var field = CvListField<String>('list');
+      field.fromBasicTypeValueList(['test']);
+      expect(field.v, ['test']);
+    });
+    test('object field', () {
+      var field = CvField<Object>('any');
+      expect(field.type, Object);
+      field.fromBasicTypeValue(['test', null, 1]);
+      expect(field.v, ['test', null, 1]);
+    });
+
+    test('object or null list', () {
+      var field = CvListField<Object?>('list');
+      field.fromBasicTypeValueList(['test', null, 1]);
+      expect(field.v, ['test', null, 1]);
+    });
   });
 }
 

@@ -31,7 +31,7 @@ abstract class ContentValues implements Map<K, V>, CvMapModel {
 }
 
 /// CvField in the map base implementation
-class CvMapField<T extends Object?>
+class _ContentValuesMapField<T extends Object?>
     with
         CvColumnMixin<T>,
         ColumnNameMixin,
@@ -42,18 +42,18 @@ class CvMapField<T extends Object?>
   final ContentValues cv;
 
   /// Only set value if not null
-  CvMapField(this.cv, String name, [T? value]) {
+  _ContentValuesMapField(this.cv, String name, [T? value]) {
     this.name = name;
     setValue(value);
   }
 
   /// Only set value if not null
-  CvMapField.noSet(this.cv, String name) {
+  _ContentValuesMapField.noSet(this.cv, String name) {
     this.name = name;
   }
 
   /// Force a null value
-  CvMapField.withNull(this.cv, String name) {
+  _ContentValuesMapField.withNull(this.cv, String name) {
     this.name = name;
     setNull();
   }
@@ -63,7 +63,7 @@ class CvMapField<T extends Object?>
 
   @override
   CvField<RT> cast<RT>() =>
-      T == RT ? this as CvField<RT> : CvMapField<RT>(cv, name);
+      T == RT ? this as CvField<RT> : _ContentValuesMapField<RT>(cv, name);
 
   @override
   void clear() => cv.remove(name);
@@ -168,10 +168,10 @@ extension ContentValuesPrv on ContentValues {
   CvField<T>? mapModelField<T extends Object?>(String name) {
     var value = getMapValue(name);
     if (value != null) {
-      return CvMapField.noSet(this, name);
+      return _ContentValuesMapField.noSet(this, name);
     } else {
       if (containsKey(name)) {
-        return CvMapField.noSet(this, name);
+        return _ContentValuesMapField.noSet(this, name);
       }
     }
     return null;
@@ -204,10 +204,10 @@ class ContentValuesMap
   CvField<T>? field<T extends Object?>(String name) {
     var value = this[name];
     if (value != null) {
-      return CvMapField(this, name, value as T);
+      return _ContentValuesMapField(this, name, value as T);
     } else {
       if (containsKey(name)) {
-        return CvMapField<T>.withNull(this, name);
+        return _ContentValuesMapField<T>.withNull(this, name);
       }
     }
     return null;

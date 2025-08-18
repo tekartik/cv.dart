@@ -102,6 +102,8 @@ Object? _nonNullBasicTypeCastType(Type type, Object value) {
     return basicTypeToDouble(value);
   } else if (type == bool) {
     return basicTypeToBool(value);
+  } else if (type == Object || type == dynamic) {
+    return value;
   } else {
     throw UnsupportedError('Unsupported type $type for value $value');
   }
