@@ -1,3 +1,7 @@
+## 1.1.7
+
+* Requires dart 3.9
+
 ## 1.1.6
 
 * Add `CvModelMatcher`, `cvEquals` matcher and helpers (compare, report)
