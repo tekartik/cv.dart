@@ -308,13 +308,18 @@ void main() {
     });
     test('string list', () {
       var field = CvListField<String>('list');
-      field.fromBasicTypeValueList(['test']);
+      field.fromBasicTypeValueList(<Object?>['test']);
       expect(field.v, ['test']);
+    });
+    test('object list', () {
+      var field = CvListField<Object>('list');
+      field.fromBasicTypeValueList(<Object?>['test', 1, true]);
+      expect(field.v, ['test', 1, true]);
     });
     test('object field', () {
       var field = CvField<Object>('any');
       expect(field.type, Object);
-      field.fromBasicTypeValue(['test', null, 1]);
+      field.fromBasicTypeValue(<Object?>['test', null, 1]);
       expect(field.v, ['test', null, 1]);
     });
 
