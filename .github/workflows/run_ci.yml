@@ -30,7 +30,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.dart }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: dart --version
       - run: dart pub get
       - run: dart run tool/run_ci.dart
