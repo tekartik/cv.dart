@@ -77,14 +77,29 @@ extension CvJsonStringExt on String {
     return jsonToMapList().cv<T>(builder: builder, lazy: lazy);
   }
 
-  /// Decode string as a map.
+  /// Decode string as a json map.
   Model jsonToMap() {
     return asModel(jsonDecode(this) as Map);
   }
 
+  /// Decode string as a json map.
+  Model? jsonToMapOrNull() {
+    return _parseJsonObjectOrNull(this);
+  }
+
+  /// Decode string as a json map.
+  List jsonToList() {
+    return jsonDecode(this) as List;
+  }
+
+  /// Decode string as a json map.
+  List? jsonToListOrNull() {
+    return _parseJsonListOrNull(this);
+  }
+
   /// Decode string as a list.
   ModelList jsonToMapList() {
-    return asModelList(jsonDecode(this) as List);
+    return asModelList(jsonToList());
   }
 
   /// to json helper using 2 spaces indent.

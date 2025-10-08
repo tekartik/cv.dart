@@ -89,6 +89,14 @@ void main() {
       } catch (_) {}
     });
 
+    test('jsonToMapOrNull', () {
+      expect('{}'.jsonToMapOrNull(), isEmpty);
+      expect('{"test": 1}'.jsonToMapOrNull(), {'test': 1});
+
+      expect('[]'.jsonToMapOrNull(), isNull);
+      expect(''.jsonToMapOrNull(), isNull);
+    });
+
     test('jsonToMapList', () {
       expect('[]'.jsonToMapList(), isEmpty);
       expect('[{"test": 1}]'.jsonToMapList(), [
@@ -97,11 +105,55 @@ void main() {
       try {
         expect('{}'.jsonToMapList(), isEmpty);
         fail('should fail');
-      } catch (_) {}
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+      }
       try {
         expect(''.jsonToMapList(), isEmpty);
         fail('should fail');
-      } catch (_) {}
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+      }
+
+      try {
+        expect('[1]'.jsonToMapList(), isEmpty);
+        fail('should fail');
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+      }
+    });
+
+    test('jsonToList', () {
+      expect('[]'.jsonToList(), isEmpty);
+      expect('[1]'.jsonToList(), [1]);
+      expect('[{"test": 1}]'.jsonToList(), [
+        {'test': 1},
+      ]);
+      try {
+        expect('{}'.jsonToList(), isEmpty);
+        fail('should fail');
+      } catch (e) {
+        // TypeError: Instance of '_JsonMap': type '_JsonMap' is not a subtype of type 'List<dynamic>'
+        // print(e);
+        expect(e, isNot(isA<TestFailure>()));
+      }
+      try {
+        expect(''.jsonToList(), isEmpty);
+        fail('should fail');
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+      }
+    });
+    test('jsonToListOrNull', () {
+      expect('[]'.jsonToListOrNull(), isEmpty);
+      expect('[1]'.jsonToListOrNull(), [1]);
+      expect('[{"test": 1}]'.jsonToList(), [
+        {'test': 1},
+      ]);
+
+      expect('{}'.jsonToListOrNull(), isNull);
+
+      expect(''.jsonToListOrNull(), isNull);
     });
     test('cvAnyToJsonObjectOrNull', () {
       expect(cvAnyToJsonObjectOrNull(null), isNull);

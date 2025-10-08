@@ -1,3 +1,8 @@
+## 1.1.8
+
+* Add `String.toMapOrNull()`, `String.toList()` and `String.toListOrNull()` 
+  helpers
+
 ## 1.1.7
 
 * Requires dart 3.9
