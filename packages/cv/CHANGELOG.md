@@ -1,3 +1,7 @@
+## 1.1.9
+
+* Add `CvField.encodedEnum` to encode/decode enum values during toMap/fromMap
+
 ## 1.1.8
 
 * Add `String.toMapOrNull()`, `String.toList()` and `String.toListOrNull()` 
