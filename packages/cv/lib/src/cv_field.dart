@@ -7,6 +7,7 @@ import 'package:cv/utils/value_utils.dart';
 
 import 'builder.dart';
 import 'column.dart';
+import 'enum.dart';
 import 'field.dart';
 
 /// Common fill options for unit tests.
@@ -26,6 +27,10 @@ bool cvValuesAreEqual(dynamic v1, dynamic v2) {
 abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Only set value if not null
   factory CvField(String name, [T? value]) => CvFieldImpl(name, value);
+
+  /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
+  static CvField<T> encodedEnum<T extends Enum>(String name, List<T> values) =>
+      encoded<T, String>(name, codec: EnumToStringCodec<T>(values));
 
   /// Force a null value
   factory CvField.withNull(String name) => CvFieldImpl.withNull(name);

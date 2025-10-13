@@ -12,6 +12,15 @@ class IntContent extends CvModelBase {
   CvFields get fields => [value];
 }
 
+enum ExampleEnum { one, two, three }
+
+class EnumContent extends CvModelBase {
+  final value = CvField.encodedEnum('value', ExampleEnum.values);
+
+  @override
+  CvFields get fields => [value];
+}
+
 class Note extends CvModelBase {
   final title = CvField<String>('title');
   final content = CvField<String>('content');

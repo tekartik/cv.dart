@@ -711,6 +711,19 @@ void main() {
       expect(model.toMap(), {'test': '2'});
       expect(model.test.v, 2);
     });
+    test('encoded Enum', () {
+      var model = EnumContent();
+      expect(model.toMap(), isEmpty);
+      model.value.v = ExampleEnum.one;
+      expect(model.value.v, ExampleEnum.one);
+      expect(model.toMap(), {'value': 'one'});
+      model.fromMap({'value': 'two'});
+      expect(model.toMap(), {'value': 'two'});
+      expect(model.value.v, ExampleEnum.two);
+      // not valid, ignored
+      model.fromMap({'value': 'dummy'});
+      expect(model.value.v, ExampleEnum.two);
+    });
     test('encoded with dependency', () {
       var model = WithDependentEncodedFields();
       expect(model.toMap(), isEmpty);

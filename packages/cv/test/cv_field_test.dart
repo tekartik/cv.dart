@@ -290,6 +290,15 @@ void main() {
       field.fromBasicTypeValue(2.9);
       expect(field.v, 3);
     });
+    test('enum', () {
+      final enumField = CvField<ExampleEnum>('enum');
+      enumField.v = ExampleEnum.one;
+      expect(enumField.v, ExampleEnum.one);
+
+      final enumField2 = CvField.encodedEnum('enum', ExampleEnum.values);
+      enumField2.v = ExampleEnum.one;
+      expect(enumField2.v, ExampleEnum.one);
+    });
     test('double', () {
       var field = CvField<double>('double');
       field.fromBasicTypeValue(1);
