@@ -1,6 +1,7 @@
-## 1.1.9
+## 1.1.9+1
 
 * Add `CvField.encodedEnum` to encode/decode enum values during toMap/fromMap
+* Add `CvField.encodedDateTime` to encode/decode enum values during toMap/fromMap
 
 ## 1.1.8
 
