@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:cv/cv.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
+import 'package:cv/src/date_time.dart';
 import 'package:cv/utils/value_utils.dart';
 
 import 'builder.dart';
@@ -31,6 +32,10 @@ abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
   static CvField<T> encodedEnum<T extends Enum>(String name, List<T> values) =>
       encoded<T, String>(name, codec: EnumToStringCodec<T>(values));
+
+  /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
+  static CvField<DateTime> encodedDateTime(String name) =>
+      encoded<DateTime, String>(name, codec: const DateTimeToStringCodec());
 
   /// Force a null value
   factory CvField.withNull(String name) => CvFieldImpl.withNull(name);

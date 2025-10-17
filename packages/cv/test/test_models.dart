@@ -21,6 +21,13 @@ class EnumContent extends CvModelBase {
   CvFields get fields => [value];
 }
 
+class DateTimeContent extends CvModelBase {
+  final timestamp = CvField.encodedDateTime('timestamp');
+
+  @override
+  CvFields get fields => [timestamp];
+}
+
 class Note extends CvModelBase {
   final title = CvField<String>('title');
   final content = CvField<String>('content');

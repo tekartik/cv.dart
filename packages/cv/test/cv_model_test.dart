@@ -724,6 +724,28 @@ void main() {
       model.fromMap({'value': 'dummy'});
       expect(model.value.v, ExampleEnum.two);
     });
+    test('encoded DateTime', () {
+      var date = DateTime(2025, 1, 2, 3, 4, 5);
+      var date2 = DateTime(2026, 1, 2, 3, 4, 5);
+      var dateUtc = DateTime.utc(2025, 1, 2, 3, 4, 5);
+      var date2Utc = DateTime.utc(2026, 1, 2, 3, 4, 5);
+      var model = DateTimeContent();
+      expect(model.toMap(), isEmpty);
+      model.timestamp.v = date;
+
+      expect(model.toMap(), {'timestamp': '2025-01-02T03:04:05.000'});
+      model = DateTimeContent();
+      model.timestamp.v = dateUtc;
+      expect(model.toMap(), {'timestamp': '2025-01-02T03:04:05.000Z'});
+
+      model.fromMap({'timestamp': '2026-01-02T03:04:05.000'});
+      expect(model.timestamp.v, date2);
+      model.fromMap({'timestamp': '2026-01-02T03:04:05.000Z'});
+      expect(model.timestamp.v, date2Utc);
+      // unchanged
+      model.fromMap({'timestamp': 'dummy'});
+      expect(model.timestamp.v, date2Utc);
+    });
     test('encoded with dependency', () {
       var model = WithDependentEncodedFields();
       expect(model.toMap(), isEmpty);
