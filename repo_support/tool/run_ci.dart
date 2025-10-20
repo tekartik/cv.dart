@@ -5,4 +5,5 @@ Future main() async {
   for (var dir in ['cv']) {
     await packageRunCi(join('..', 'packages', dir));
   }
+  await packageRunCi('.');
 }
