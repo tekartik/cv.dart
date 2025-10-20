@@ -12,8 +12,8 @@ dependencies:
 dev_dependencies:
   path:
   test: ">=1.26.3"
-  dev_build: '>=0.15.5-1'
-  lints: '>=2.1.1'
+  dev_build: '>=1.1.2+11'
+  lints: '>=6.0.0'
 dependency_overrides:
   cv:
     path: ../packages/cv
