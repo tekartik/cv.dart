@@ -1,3 +1,8 @@
+## 1.1.10
+
+* Add `CvColumnTypeExtension.isSupertypeOf<T>()` and `CvColumnTypeExtension.isSubtypeOf<T>()` to check
+  supertype/subtype in `package:cv/utils/type_utils.dart`
+
 ## 1.1.9+1
 
 * Add `CvField.encodedEnum` to encode/decode enum values during toMap/fromMap
