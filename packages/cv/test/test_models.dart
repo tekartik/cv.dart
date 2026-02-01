@@ -279,7 +279,7 @@ class WithUpdateFields extends CvModelBase {
   CvField<int>? test2;
 
   @override
-  CvFields get fields => [test1, if (test2 != null) test2!];
+  CvFields get fields => [test1, ?test2];
 }
 
 class WithEncodedFields extends CvModelBase {
