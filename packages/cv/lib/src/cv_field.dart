@@ -90,7 +90,7 @@ void _fillModel(CvModel model, CvFillOptions options) {
   var usedTypes = options.usedTypes;
   if (!(usedTypes?.contains(model.runtimeType) ?? false)) {
     var newOptions = options.copyWith(
-      usedTypes: {if (usedTypes != null) ...usedTypes, model.runtimeType},
+      usedTypes: {...?usedTypes, model.runtimeType},
     );
     model.fillModel(newOptions);
     options.valueStart = newOptions.valueStart;
