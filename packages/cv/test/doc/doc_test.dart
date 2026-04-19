@@ -30,7 +30,7 @@ void main() {
     });
     test('cv', () {
       // Add the builder once
-      cvAddBuilder<Note>((_) => Note());
+      cvAddConstructor(Note.new);
 
       // Any map can be converted to a note object
       var note = {'title': 'My note'}.cv<Note>();
@@ -38,10 +38,8 @@ void main() {
     });
 
     test('cv child', () {
-      // Add the builders once
-      cvAddConstructor(Rect.new);
-      cvAddConstructor(Point.new);
-      cvAddConstructor(Size.new);
+      // Add the builders (needed only once)
+      cvAddConstructors([Rect.new, Point.new, Size.new]);
 
       // Any map can be converted to a rect object
       var rect = {
@@ -56,9 +54,8 @@ void main() {
     });
 
     test('cv children', () {
-      // Add the builders once
-      cvAddConstructor(ShoppingCart.new);
-      cvAddConstructor(Item.new);
+      // Add the builders (once)
+      cvAddConstructors([ShoppingCart.new, Item.new]);
 
       // Any map can be converted to a cart object
       var cart = {
@@ -76,8 +73,7 @@ void main() {
 
     test('json', () {
       // Add the builders once
-      cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
-      cvAddBuilder<Item>((_) => Item());
+      cvAddConstructors([ShoppingCart.new, Item.new]);
 
       /// Any json
       var cartJson =
@@ -95,8 +91,7 @@ void main() {
 
     test('jsonList', () {
       // Add the builders once
-      cvAddBuilder<ShoppingCart>((_) => ShoppingCart());
-      cvAddBuilder<Item>((_) => Item());
+      cvAddConstructors([ShoppingCart.new, Item.new]);
 
       var itemsJson =
           '[{"name":"Chair","price":50},{"name":"Lamp","price":12}]';

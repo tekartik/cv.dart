@@ -101,10 +101,8 @@ class Size extends CvModelBase {
 ```
 
 ```dart
-// Add the builders once
-cvAddConstructor(Rect.new);
-cvAddConstructor(Point.new);
-cvAddConstructor(Size.new);
+// Add the builders (needed only once)
+cvAddConstructors([Rect.new, Point.new, Size.new]);
 ```
 
 ```dart
@@ -141,9 +139,8 @@ class Item extends CvModelBase {
 ```
 
 ```dart
-// Add the builders once
-cvAddConstructor(Cart.new);
-cvAddConstructor(Item.new);
+// Add the builders (once)
+cvAddConstructors([ShoppingCart.new, Item.new]);
 ```
 
 ```dart
@@ -204,18 +201,3 @@ print(items.toJson());
 - Having mutable values can lead to more mistakes though. But well, you know what your are doing and it is convenient
 - In Java, I used to like ContentValues in Android, having a little more control than a regular HashMap.
 - In Java, I also used to like Gson for its simplicity: just define a class.
-
-## Git setup
-
-## Usage
-
-In your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  cv:
-    git:
-      url: https://github.com/tekartik/cv.dart
-      path: packages/cv
-    version: '>=0.1.0'
-```
