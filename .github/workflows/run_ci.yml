@@ -1,4 +1,4 @@
-name: Run CI
+name: Run CI dart
 on:
   push:
   workflow_dispatch:
@@ -27,10 +27,7 @@ jobs:
           - os: ubuntu-latest
             dart: dev
     steps:
-      - uses: dart-lang/setup-dart@v1
+      - name: Run CI dart
+        uses: tekartik/ci.dart/.github/actions/run_ci_dart@v1
         with:
-          sdk: ${{ matrix.dart }}
-      - uses: actions/checkout@v6
-      - run: dart --version
-      - run: dart pub get
-      - run: dart run tool/run_ci.dart
+          dart-channel: ${{ matrix.dart }}
