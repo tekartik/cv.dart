@@ -1,4 +1,4 @@
-## 1.1.10+1
+## 1.1.10+2
 
 * Add `CvColumnTypeExtension.isSupertypeOf<T>()` and `CvColumnTypeExtension.isSubtypeOf<T>()` to check
   supertype/subtype in `package:cv/utils/type_utils.dart`
