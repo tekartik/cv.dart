@@ -53,6 +53,14 @@ export 'src/cv_model_mixin.dart'
     show CvModelWriteExt, CvModelReadExt, CvModelCloneExt;
 export 'src/cv_model_tree_value.dart'
     show CvModelTreeValue, CvModelTreeValueExt;
+export 'src/cv_multi_field.dart'
+    show
+        CvMultiField2,
+        CvMultiField,
+        CvMultiFieldUtilsExt,
+        CvMultiListFieldUtilsExt,
+        CvMultiListField,
+        CvMultiListField2;
 export 'src/cv_tree_path.dart'
     show
         CvTreePath,

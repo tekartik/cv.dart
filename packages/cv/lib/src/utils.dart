@@ -1,10 +1,17 @@
 import 'package:cv/src/cv_model.dart';
 
 /// True for null, num, String, bool
-bool isBasicTypeOrNull(dynamic value) {
+bool isBasicTypeOrNull(Object? value) {
   if (value == null) {
     return true;
-  } else if (value is num || value is String || value is bool) {
+  } else {
+    return isBasicType(value);
+  }
+}
+
+/// True for num, String, bool
+bool isBasicType(Object value) {
+  if (value is num || value is String || value is bool) {
     return true;
   }
   return false;

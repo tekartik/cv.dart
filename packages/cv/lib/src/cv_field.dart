@@ -101,18 +101,23 @@ void _fillModel(CvModel model, CvFillOptions options) {
 extension CvFieldUtilsExt<T extends Object?> on CvField<T> {
   /// For test
   void fillField([CvFillOptions? options]) {
+    var field = this;
     options ??= CvFillOptions();
-    if (this is CvListField) {
-      (this as CvListField).fillList(options);
-    } else if (this is CvModelMapField) {
-      (this as CvModelMapField).fillMap(options);
-    } else if (this is CvModelField) {
-      var modelValue = (this as CvModelField).create({});
+    if (field is CvListField) {
+      (field as CvListField).fillList(options);
+    } else if (field is CvModelMapField) {
+      (field as CvModelMapField).fillMap(options);
+    } else if (field is CvModelField) {
+      var modelValue = (field as CvModelField).create({});
       _fillModel(modelValue, options);
 
       v = modelValue as T;
-    } else if (this is CvFieldWithParent) {
-      (this as CvFieldWithParent).field.fillField(options);
+    } else if (field is CvFieldWithParent) {
+      (field as CvFieldWithParent).field.fillField(options);
+    } else if (field is CvMultiField) {
+      (field as CvMultiField).fillMulti(options);
+    } else if (field is CvMultiListField) {
+      (field as CvMultiListField).fillMulti(options);
     } else if (options.valueStart != null) {
       if (cvTypeGetBuilderOrNull(type) != null) {
         throw UnsupportedError(

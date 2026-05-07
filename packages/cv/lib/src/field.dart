@@ -49,9 +49,6 @@ abstract class CvFieldCore<T extends Object?>
   /// Set a non null value.
   set valueOrThrow(T value);
 
-  /// Clear value and flag
-  void clear();
-
   /// [presentIfNull] true if null is marked as a value
   @override
   void setValue(T? value, {bool presentIfNull = false});
@@ -256,6 +253,14 @@ mixin CvFieldHelperMixin<T> implements CvField<T> {
 
   @override
   bool get isNotNull => !isNull;
+
+  @override
+  Object? get rawValue => value;
+
+  @override
+  void setRawValue(Object? value, {bool presentIfNull = false}) {
+    setValue(value as T?, presentIfNull: presentIfNull);
+  }
 
   /// The key
   @override

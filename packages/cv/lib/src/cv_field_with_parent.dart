@@ -1,7 +1,9 @@
 import 'package:cv/cv.dart';
 import 'package:cv/src/field.dart';
 
-/// Class that has parent map
+/// Class that has parent map container
+/// to avoid declaring extra classes for singleton
+/// when mapping an existing schema, to avoid otherwise
 abstract class CvFieldWithParent<T extends Object?> implements CvField<T> {
   /// The actual field.
   CvField<T> get field;

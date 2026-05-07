@@ -16,7 +16,7 @@ Model _fill<T extends CvModel>() =>
     (cvNewModel<T>()..fillModel(cvFillOptions1)).toMap();
 
 void main() {
-  group('cv', () {
+  group('cv_model', () {
     test('CvModel', () {
       var model = CvMapModel();
       model['test'] = 1;

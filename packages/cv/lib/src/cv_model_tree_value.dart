@@ -63,6 +63,18 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
   /// Parent value
   CvModelTreeValue<T, Object?>? parent;
 
+  @override
+  Object? get rawValue => value;
+  @override
+  void setRawValue(Object? value, {bool presentIfNull = false}) =>
+      setValue(value as V?, presentIfNull: presentIfNull);
+
+  @override
+  void clear() {
+    _present = false;
+    _value = null;
+  }
+
   /// Parent key/index if any
   Object get parentPart => parts.last;
   Object get topPart => parts.first;

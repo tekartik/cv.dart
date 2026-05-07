@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/cv_field_mixin.dart';
 import 'package:cv/src/cv_field_with_parent.dart';
 import 'package:cv/src/cv_model.dart';
 import 'package:cv/src/log_utils.dart';
@@ -184,8 +185,30 @@ mixin CvModelMixin implements CvModel {
   }) {
     debugCheckCvFields();
 
-    void modelToMap(Model model, CvField field) {
+    void modelFieldToMap(Model model, CvField field) {
       dynamic value = field.v;
+
+      void setNullIfIncludeMissing() {
+        if (includeMissingValue) {
+          model.setValue(field.name, null, presentIfNull: true);
+        }
+      }
+
+      Object cvModelToMap(CvModelRead cvModel) {
+        return cvModel.toMap(includeMissingValue: includeMissingValue);
+      }
+
+      // Convert if needed
+      List<Object?> rawListToList(List<Object?> list) {
+        return list.map((e) {
+          if (e is CvModelRead) {
+            return cvModelToMap(e);
+          } else {
+            return e;
+          }
+        }).toList();
+      }
+
       if (value is List<CvModelRead>) {
         value = value
             .map((e) => e.toMap(includeMissingValue: includeMissingValue))
@@ -202,7 +225,7 @@ mixin CvModelMixin implements CvModel {
             model.setValue(field.parent, subModel);
           }
           // Try existing if any
-          modelToMap(subModel, field.field);
+          modelFieldToMap(subModel, field.field);
         }
       } else if (field is CvModelMapField && field.isNotNull) {
         // The submodel will be a mode too, replace existing if any
@@ -228,6 +251,21 @@ mixin CvModelMixin implements CvModel {
           encodedValue,
           presentIfNull: field.hasValue || includeMissingValue,
         );
+      } else if (field is CvMultiField) {
+        var setField = field.multiField;
+        if (setField != null) {
+          modelFieldToMap(model, setField);
+        } else {
+          setNullIfIncludeMissing();
+        }
+      } else if (field is CvMultiListField) {
+        var multiList = field.multiList;
+        if (multiList != null) {
+          var list = rawListToList(multiList);
+          model.setValue(field.name, list);
+        } else {
+          setNullIfIncludeMissing();
+        }
       } else {
         model.setValue(
           field.name,
@@ -241,16 +279,17 @@ mixin CvModelMixin implements CvModel {
 
     if (columns == null) {
       for (var field in fields) {
-        modelToMap(model, field);
+        modelFieldToMap(model, field);
       }
     } else {
       for (var column in columns) {
         var field = dynamicField(column);
         if (field != null) {
-          modelToMap(model, field);
+          modelFieldToMap(model, field);
         }
       }
     }
+
     return model;
   }
 
@@ -304,7 +343,6 @@ extension CvModelMixinExtPrv on CvModelMixin {
                 }
 
                 break;
-                //subField.create(modelEntry)..fromMap(modelEntry)
               } else {
                 entry = parentModel.getMapEntry(subField.name);
                 break;
@@ -317,60 +355,10 @@ extension CvModelMixinExtPrv on CvModelMixin {
         } else {
           entry = model.getMapEntry(field.name);
         }
+
         if (entry != null) {
-          if (field is CvFieldContentList) {
-            var list = field.v = field.createList();
-            for (var rawItem in entry.value as List) {
-              var item = field.create(rawItem as Map)..fromMap(rawItem);
-              list.add(item);
-            }
-            field.v = list;
-          } else if (field is CvFieldContent) {
-            var entryValue = entry.value as Map;
-            var cvModel = field.create(entryValue);
-            field.v = cvModel;
-            cvModel.fromMap(entryValue);
-          } else if (field is CvListField) {
-            if (field.isBasicItemType) {
-              field.fromBasicTypeValueList(entry.value);
-            } else {
-              var list = field.v = field.createList();
-              for (var rawItem in entry.value as List) {
-                list.add(rawItem);
-              }
-            }
-          } else if (field is CvModelMapField) {
-            var map = field.v = field.createMap();
-            var entryValue = entry.value as Map;
-            entryValue.forEach((key, value) {
-              var item = field.create(value as Map)..fromMap(value);
-              map[key as String] = item;
-            });
-          } else if (field is CvFieldEncodedImpl) {
-            // Decode
-            Object? decodedValue;
-            var encodedValue = entry.value;
-            if (field.codec != null) {
-              decodedValue = field.codec!.decode(encodedValue);
-            } else {
-              decodedValue = encodedValue;
-            }
-            field.v = decodedValue;
-          } else if (field is CvFieldImpl && field.isBasicType) {
-            /// Only replace
-            field.fromBasicTypeValue(entry.value, presentIfNull: true);
-          } else {
-            try {
-              field.v = entry.value;
-            } catch (_) {
-              // Special string handling
-              if (field.type == String) {
-                field.v = entry.value?.toString();
-              } else {
-                rethrow;
-              }
-            }
-          }
+          var value = entry.value;
+          field.fromAnyValue(value);
         }
       } catch (e) {
         if (debugContent) {
