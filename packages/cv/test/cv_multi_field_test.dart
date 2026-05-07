@@ -33,8 +33,11 @@ void main() {
       expect(field.hasValue, isTrue);
       expect(field.field2.hasValue, isFalse);
       expect(field.field1.v, '1');
-
+      expect(() => field.value, throwsStateError);
+      field.setNull();
+      expect(field.isNull, isTrue);
       field.clear();
+      expect(field.isNull, isTrue);
 
       expect((field..fillField(cvFillOptions1)).multiValue, 'text_1');
     });
@@ -75,6 +78,10 @@ void main() {
       expect(field.multiList, ['test']);
       expect(() => field.value, throwsStateError);
 
+      field.setNull();
+      expect(field.isNull, isTrue);
+      field.clear();
+      expect(field.isNull, isTrue);
       expect(
         (field..fillField(cvFillOptions1.copyWith(collectionSize: 2)))
             .multiList,
