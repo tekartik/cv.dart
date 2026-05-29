@@ -173,11 +173,11 @@ abstract class CvBuilderException implements Exception {}
 
 /// Internal exception
 class CvBuilderExceptionImpl implements CvBuilderException {
-  /// Internal message
-  final String message;
-
   /// Internal exception.
   CvBuilderExceptionImpl(this.message);
+
+  /// Internal message
+  final String message;
 
   @override
   String toString() => message;

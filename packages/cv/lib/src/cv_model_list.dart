@@ -45,6 +45,11 @@ extension CvModelListReadExt<T extends CvModelRead> on List<T> {
 ///
 /// The list is modifiable too.
 class LazyModelList<T extends CvModel> extends ListBase<T> {
+  /// Constructor.
+  LazyModelList({required this.mapList, this.builder}) {
+    lazyList = List<T?>.filled(mapList.length, null, growable: true);
+  }
+
   /// The base model list.
   final List<Model> mapList;
 
@@ -53,11 +58,6 @@ class LazyModelList<T extends CvModel> extends ListBase<T> {
 
   /// Optional builder functions.
   final CvBuilderFunction<T>? builder;
-
-  /// Constructor.
-  LazyModelList({required this.mapList, this.builder}) {
-    lazyList = List<T?>.filled(mapList.length, null, growable: true);
-  }
 
   @override
   T operator [](int index) {

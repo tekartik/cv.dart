@@ -45,6 +45,9 @@ extension CvModelTreeValueExt<T extends CvModel, V extends Object?>
 
 class _CvModelTreeValue<T extends CvModel, V extends Object?>
     implements CvModelTreeValue<T, V> {
+  _CvModelTreeValue(this.model, this.treePath, {this.parent, this._type}) {
+    _init();
+  }
   @override
   final T model;
   @override
@@ -223,11 +226,6 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
     }
   }
 
-  _CvModelTreeValue(this.model, this.treePath, {this.parent, Type? type})
-    : _type = type {
-    _init();
-  }
-
   @override
   String toString() => 'CvModelTreeValue($treePath, $type, $model';
 
@@ -236,13 +234,12 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
 }
 
 class _TreeNodeInfo {
-  final CvField? field;
-  late final Object? value;
-  final CvTreePath treePath;
-
   _TreeNodeInfo({required this.treePath, this.field, Object? value}) {
     this.value = value ?? field?.v;
   }
+  final CvField? field;
+  late final Object? value;
+  final CvTreePath treePath;
 
   @override
   String toString() => 'TreeNodeInfo($treePath, $field, $value)';

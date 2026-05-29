@@ -7,19 +7,19 @@ class _EnumToStringConverter<T extends Enum> with Converter<T, String> {
 }
 
 class _StringToEnumConverter<T extends Enum> with Converter<String, T> {
-  final List<T> values;
   const _StringToEnumConverter(this.values);
+  final List<T> values;
   @override
   T convert(String input) => values.byName(input);
 }
 
 /// Codec to convert enum to/from string using the enum name.
 class EnumToStringCodec<T extends Enum> with Codec<T, String> {
-  /// List of enum values.
-  final List<T> values;
-
   /// Create a codec for the given enum values.
   const EnumToStringCodec(this.values);
+
+  /// List of enum values.
+  final List<T> values;
   @override
   Converter<String, T> get decoder => _StringToEnumConverter<T>(values);
 

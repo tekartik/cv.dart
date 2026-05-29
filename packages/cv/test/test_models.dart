@@ -75,9 +75,8 @@ NoBuilderIntContent noBuilderIntContentBuilder(Map map) =>
     NoBuilderIntContent();
 
 class Custom {
-  final String value;
-
   Custom(this.value);
+  final String value;
 
   @override
   String toString() => value;
@@ -118,12 +117,6 @@ class CloneBaseClass1 extends CloneBaseClass {}
 class CloneBaseClass2 extends CloneBaseClass {}
 
 abstract class AbstractCloneBaseClass extends CvModelBase {
-  // 1 for SubClass1, 2 for SubClass 2
-  final type = CvField<int>('type');
-  final other = CvField<int>('other');
-  @override
-  CvFields get fields => [type, other];
-
   AbstractCloneBaseClass();
 
   /// Constructor tear off for builder
@@ -134,6 +127,11 @@ abstract class AbstractCloneBaseClass extends CvModelBase {
       return NonAbstractSubClass1();
     }
   }
+  // 1 for SubClass1, 2 for SubClass 2
+  final type = CvField<int>('type');
+  final other = CvField<int>('other');
+  @override
+  CvFields get fields => [type, other];
 }
 
 class NonAbstractSubClass1 extends AbstractCloneBaseClass {}
@@ -298,9 +296,8 @@ class IntToStringCodec with Codec<int, String> {
 }
 
 abstract class _CommonConverter with Converter<String, String> {
-  final WithDependentEncodedFields model;
-
   const _CommonConverter(this.model);
+  final WithDependentEncodedFields model;
 }
 
 class _ToStringConverter extends _CommonConverter {
@@ -325,12 +322,11 @@ class _FromStringConverter extends _CommonConverter {
 
 /// Encrypt codec.
 class _CheckDependendentCodec with Codec<String, String> {
-  final WithDependentEncodedFields model;
-
   _CheckDependendentCodec(this.model) {
     encoder = _ToStringConverter(model);
     decoder = _FromStringConverter(model);
   }
+  final WithDependentEncodedFields model;
 
   @override
   late final Converter<String, String> decoder;

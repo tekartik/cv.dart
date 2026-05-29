@@ -29,6 +29,13 @@ abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Only set value if not null
   factory CvField(String name, [T? value]) => CvFieldImpl(name, value);
 
+  /// Force a null value
+  factory CvField.withNull(String name) => CvFieldImpl.withNull(name);
+
+  /// Force a value even if null
+  factory CvField.withValue(String name, T? value) =>
+      CvFieldImpl.withValue(name, value);
+
   /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
   static CvField<T> encodedEnum<T extends Enum>(String name, List<T> values) =>
       encoded<T, String>(name, codec: EnumToStringCodec<T>(values));
@@ -36,13 +43,6 @@ abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
   static CvField<DateTime> encodedDateTime(String name) =>
       encoded<DateTime, String>(name, codec: const DateTimeToStringCodec());
-
-  /// Force a null value
-  factory CvField.withNull(String name) => CvFieldImpl.withNull(name);
-
-  /// Force a value even if null
-  factory CvField.withValue(String name, T? value) =>
-      CvFieldImpl.withValue(name, value);
 
   /// Encode a [S] source exposed value to an encoded [T] saved value
   static CvField<S> encoded<S extends Object?, T extends Object?>(
@@ -62,28 +62,28 @@ class CvFieldEncodedImpl<S extends Object?, T extends Object?>
         CvFieldHelperMixin<S>,
         CvFieldMixin<S>
     implements CvField<S> {
+  /// Transform helper.
+  CvFieldEncodedImpl(String name, this.encodedField, this.codec) {
+    this.name = name;
+  }
+
   /// Source field.
   final CvField<T> encodedField;
 
   /// Codec.
   final Codec<S, T>? codec;
-
-  /// Transform helper.
-  CvFieldEncodedImpl(String name, this.encodedField, this.codec) {
-    this.name = name;
-  }
 }
 
 /// Nested list of raw values
 abstract class CvListField<T extends Object?> implements CvField<List<T>> {
+  /// Only set value if not null
+  factory CvListField(String name) => ListCvFieldImpl<T>(name);
+
   /// List create helper
   List<T> createList();
 
   /// List item type
   Type get itemType;
-
-  /// Only set value if not null
-  factory CvListField(String name) => ListCvFieldImpl<T>(name);
 }
 
 void _fillModel(CvModel model, CvFillOptions options) {
@@ -190,6 +190,14 @@ typedef CvFillOptionsGenerateFunction =
 
 /// Fill options for unit tests must be created each time as it handles recursion.
 class CvFillOptions {
+  /// Fill options.
+  CvFillOptions({
+    this.collectionSize,
+    this.valueStart,
+    this.generate,
+    this.usedTypes,
+  });
+
   /// Default collection size. If nul no collections
   final int? collectionSize;
 
@@ -206,14 +214,6 @@ class CvFillOptions {
   Object? generateValue(Type type) => (generate == null)
       ? cvFillOptionsGenerateBasicType(type, this)
       : (generate!(type, this) ?? cvFillOptionsGenerateBasicType(type, this));
-
-  /// Fill options.
-  CvFillOptions({
-    this.collectionSize,
-    this.valueStart,
-    this.generate,
-    this.usedTypes,
-  });
 
   /// Copy fill options.
   CvFillOptions copyWith({
@@ -354,9 +354,6 @@ extension CvModelFieldUtilsExt<T extends CvModel> on CvModelField<T> {
 
 /// Nested model
 abstract class CvModelField<T extends CvModel> implements CvField<T> {
-  /// contentValue should be ignored
-  T create(Map contentValue);
-
   /// Only set value if not null
   factory CvModelField(
     String name, [
@@ -370,6 +367,9 @@ abstract class CvModelField<T extends CvModel> implements CvField<T> {
     String name, {
     CvModelBuilderFunction<T>? builder,
   }) => CvFieldContentImpl<T>(name, builder);
+
+  /// contentValue should be ignored
+  T create(Map contentValue);
 }
 
 /// Utilities
@@ -401,13 +401,6 @@ extension CvFieldListExt on CvFields {
 
 /// Nested list, where each value is of type T
 abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
-  /// contentValue should be ignored or could be used to create the proper object
-  /// but its content should not be populated.
-  T create(Map contentValue);
-
-  @override
-  List<T> createList();
-
   /// Only set value if not null
   factory CvModelListField(
     String name, [
@@ -421,18 +414,18 @@ abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
     String name, {
     CvModelBuilderFunction<T>? builder,
   }) => CvFieldContentListImpl<T>(name, builder);
+
+  /// contentValue should be ignored or could be used to create the proper object
+  /// but its content should not be populated.
+  T create(Map contentValue);
+
+  @override
+  List<T> createList();
 }
 
 /// Nested map where each value is of type T, (key is a string)
 abstract class CvModelMapField<T extends CvModel>
     extends CvField<Map<String, T>> {
-  /// contentValue should be ignored or could be used to create the proper object
-  /// but its content should not be populated.
-  T create(Map contentValue);
-
-  /// Create the proper map
-  Map<String, T> createMap();
-
   /// Only set value if not null
   factory CvModelMapField(String name) => CvFieldContentMapImpl<T>(name, null);
 
@@ -441,6 +434,13 @@ abstract class CvModelMapField<T extends CvModel>
     String name, {
     CvModelBuilderFunction<T>? builder,
   }) => CvFieldContentMapImpl<T>(name, builder);
+
+  /// contentValue should be ignored or could be used to create the proper object
+  /// but its content should not be populated.
+  T create(Map contentValue);
+
+  /// Create the proper map
+  Map<String, T> createMap();
 }
 
 /// Generic fields type helper for model fields value.

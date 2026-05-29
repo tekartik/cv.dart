@@ -16,13 +16,12 @@ abstract class CvFieldWithParent<T extends Object?> implements CvField<T> {
 class CvFieldWithParentImpl<T extends Object?>
     with CvFieldHelperMixin<T>
     implements CvFieldWithParent<T> {
+  /// Field with parent.
+  CvFieldWithParentImpl(this.field, this.parent);
   @override
   final CvField<T> field;
   @override
   final String parent;
-
-  /// Field with parent.
-  CvFieldWithParentImpl(this.field, this.parent);
 
   @override
   T? get valueOrNull => field.value;

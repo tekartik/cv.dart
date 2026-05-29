@@ -6,11 +6,11 @@ import 'package:cv/src/cv_model_tree_value.dart';
 ///
 /// Being all string or int index
 class CvTreePath {
-  /// Tree path parts
-  final Iterable<Object> parts;
-
   /// Tree path.
   CvTreePath(this.parts);
+
+  /// Tree path parts
+  final Iterable<Object> parts;
 
   @override
   String toString() => parts.join('.');
@@ -28,10 +28,9 @@ class CvTreePath {
 }
 
 class _TreePathState {
+  _TreePathState(this.part, this.parent);
   final Object part;
   final _TreePathState? parent;
-
-  _TreePathState(this.part, this.parent);
 
   Iterable<Object> get parts sync* {
     if (parent != null) {

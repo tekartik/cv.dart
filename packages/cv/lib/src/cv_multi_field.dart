@@ -91,15 +91,15 @@ abstract class CvMultiListField2<T1 extends Object?, T2 extends Object?>
 /// A field that holds two values as a record.
 abstract class CvMultiField2<T1 extends Object?, T2 extends Object?>
     implements CvMultiField<(T1, T2)> {
+  /// Create a multi field.
+  factory CvMultiField2(CvField<T1> field1, CvField<T2> field2) =>
+      _CvMultiField2<T1, T2>(field1, field2);
+
   /// Get field 1
   CvField<T1> get field1;
 
   /// Get field 2
   CvField<T2> get field2;
-
-  /// Create a multi field.
-  factory CvMultiField2(CvField<T1> field1, CvField<T2> field2) =>
-      _CvMultiField2<T1, T2>(field1, field2);
 }
 
 /// Top overrider
@@ -141,10 +141,10 @@ mixin _CvMultiFieldOverriderMixin
 abstract class _CvMultiListFieldBase extends _CvMultiFieldCoreBase
     with ColumnNameMixin
     implements CvValueReaderCore {
-  late final listFields = fields.cast<CvListField>();
   _CvMultiListFieldBase(super.fields) {
     name = fields.first.name;
   }
+  late final listFields = fields.cast<CvListField>();
 
   var _hasValue = false;
   List<Object?>? _list;
@@ -182,18 +182,13 @@ abstract class _CvMultiListFieldBase extends _CvMultiFieldCoreBase
 }
 
 abstract class _CvMultiFieldCoreBase {
-  final List<CvField> fields;
-
   _CvMultiFieldCoreBase(this.fields);
+  final List<CvField> fields;
 }
 
 abstract class _CvMultiFieldBase extends _CvMultiFieldCoreBase
     with ColumnNameMixin
     implements CvValueReaderCore {
-  CvField<T> field<T extends Object?>(int index) {
-    return fields[index] as CvField<T>;
-  }
-
   _CvMultiFieldBase(super.fields) {
     name = fields.first.name;
     if (isDebug) {
@@ -204,6 +199,10 @@ abstract class _CvMultiFieldBase extends _CvMultiFieldCoreBase
       }
     }
   }
+  CvField<T> field<T extends Object?>(int index) {
+    return fields[index] as CvField<T>;
+  }
+
   void multiFromAnyValue(Object? value) {
     // set the first if null
     if (value != null) {

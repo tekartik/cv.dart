@@ -7,7 +7,7 @@ import 'package:cv/cv.dart';
 import 'package:meta/meta.dart';
 
 /// Backtick char code.
-final _backtickChr = '`';
+const _backtickChr = '`';
 
 extension on String {
   bool get _isBacktickEnclosed {
@@ -71,6 +71,20 @@ extension on Object {
 @immutable
 //@Deprecated('Use CvTreePath')
 class CvFieldPath implements CvTreePath {
+  /// Creates a new [FieldPath].
+  CvFieldPath(this.parts)
+    : assert(parts.isNotEmpty),
+      assert(
+        parts.where((component) => !(component._isPathPart)).isEmpty,
+        'Expected all CvFieldPath parts to be integer or non-empty strings.',
+      );
+
+  /// Creates a new [CvFieldPath] from a string path.
+  ///
+  /// The [FieldPath] will created by splitting the given path by the
+  /// '.' character
+  CvFieldPath.fromString(String path) : this(path._parseFieldParts());
+
   /// Parent
   CvFieldPath get parent {
     if (!hasParent) {
@@ -89,20 +103,6 @@ class CvFieldPath implements CvTreePath {
   /// never empty
   @override
   final List<Object> parts;
-
-  /// Creates a new [FieldPath].
-  CvFieldPath(this.parts)
-    : assert(parts.isNotEmpty),
-      assert(
-        parts.where((component) => !(component._isPathPart)).isEmpty,
-        'Expected all CvFieldPath parts to be integer or non-empty strings.',
-      );
-
-  /// Creates a new [CvFieldPath] from a string path.
-  ///
-  /// The [FieldPath] will created by splitting the given path by the
-  /// '.' character
-  CvFieldPath.fromString(String path) : this(path._parseFieldParts());
 
   /// Text representation of the path.
   String get text => parts.map((part) => part._partText).join('.');

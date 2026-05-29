@@ -90,14 +90,14 @@ abstract class CvFieldContent<T extends CvModel>
 /// Nested list
 abstract class CvFieldContentList<T extends CvModel>
     implements CvField<List<T>>, CvModelFieldCreator<T> {
-  /// Create a nested list.
-  List<T> createList();
-
   /// Only set value if not null
   factory CvFieldContentList(
     String name,
     T Function(dynamic contentValue) create,
   ) => CvFieldContentListImpl(name, create);
+
+  /// Create a nested list.
+  List<T> createList();
 }
 
 class _List<T> extends ListBase<T> {
@@ -129,11 +129,10 @@ class _List<T> extends ListBase<T> {
 class ListCvFieldImpl<T> extends CvFieldImpl<List<T>>
     with CvFieldHelperMixin<List<T>>
     implements CvField<List<T>>, CvListField<T> {
-  @override
-  List<T> createList() => _List<T>();
-
   /// Nested list.
   ListCvFieldImpl(super.name);
+  @override
+  List<T> createList() => _List<T>();
 
   @override
   Type get itemType => T;
@@ -153,9 +152,6 @@ mixin CvFieldContentCreatorMixin<T extends CvModel>
 class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
     with CvFieldContentCreatorMixin<T>
     implements CvFieldContentList<T>, CvModelListField<T> {
-  @override
-  List<T> createList() => _List<T>();
-
   /// Nexted field content creator.
   CvFieldContentListImpl(
     super.name,
@@ -163,6 +159,8 @@ class CvFieldContentListImpl<T extends CvModel> extends CvFieldImpl<List<T>>
   ) {
     _create = createObjectFn;
   }
+  @override
+  List<T> createList() => _List<T>();
 
   @override
   Type get itemType => T;

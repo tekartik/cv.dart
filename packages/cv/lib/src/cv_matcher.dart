@@ -9,9 +9,8 @@ import 'package:matcher/matcher.dart' as matcher;
 import 'package:meta/meta.dart';
 
 class _ModelGenerator {
-  final CvFillOptions options;
-
   _ModelGenerator(this.options);
+  final CvFillOptions options;
 
   CvModel typeGenerateModel(Type type) {
     var model = cvTypeNewModel(type);
@@ -158,6 +157,12 @@ abstract class _SubfieldGenerator {
 }
 
 class _SubfieldGeneratorImpl implements _SubfieldGenerator {
+  _SubfieldGeneratorImpl({
+    this.field,
+    required this.parent,
+    required this.generator,
+    this.index,
+  });
   bool get abort => generator.abort;
 
   @override
@@ -201,13 +206,6 @@ class _SubfieldGeneratorImpl implements _SubfieldGenerator {
       return generator.filledMapModel;
     }
   }
-
-  _SubfieldGeneratorImpl({
-    this.field,
-    required this.parent,
-    required this.generator,
-    this.index,
-  });
 
   _SubfieldGenerator get currentSubfieldGenerator =>
       generator.currentSubfieldGenerator;
@@ -279,6 +277,12 @@ class _SubfieldGeneratorRootImpl extends _SubfieldGeneratorImpl {
 }
 
 class _ModelMapMatcherGenerator extends _ModelGenerator {
+  _ModelMapMatcherGenerator(this.matcher) : super(matcher.options) {
+    filledMapModel = CvMapModel();
+    if (matcher.map != null) {
+      filledMapModel.fromMap(matcher.map!);
+    }
+  }
   final _FillModelMatchesMapMatcher matcher;
   CvMapModel filledMapModel = CvMapModel();
   CvMapModel? currentFilledMapModelOrNull;
@@ -292,13 +296,6 @@ class _ModelMapMatcherGenerator extends _ModelGenerator {
 
   /// Once following matching is cancelled.
   var abort = false;
-
-  _ModelMapMatcherGenerator(this.matcher) : super(matcher.options) {
-    filledMapModel = CvMapModel();
-    if (matcher.map != null) {
-      filledMapModel.fromMap(matcher.map!);
-    }
-  }
 
   /// Fill a list.
   @override
@@ -347,11 +344,10 @@ class _ModelMapMatcherGenerator extends _ModelGenerator {
 }
 
 class _FillModelMatchesMapMatcher extends Matcher {
-  final CvFillOptions options;
-  final Map? map;
-
   _FillModelMatchesMapMatcher(this.map, CvFillOptions? options)
     : options = options?.copyWith() ?? CvFillOptions();
+  final CvFillOptions options;
+  final Map? map;
 
   CvModel? lastModel;
 
@@ -414,8 +410,8 @@ abstract class CvModelMatcher implements matcher.Matcher {}
 Matcher same(Object? expected) => _IsSameAs(expected);
 
 class _IsSameAs extends Matcher {
-  final Object? _expected;
   const _IsSameAs(this._expected);
+  final Object? _expected;
   @override
   bool matches(Object? item, Map matchState) => identical(item, _expected);
   // If all types were hashable we could show a hash here.
@@ -425,6 +421,8 @@ class _IsSameAs extends Matcher {
 }
 
 class _CvModelMatcher implements CvModelMatcher {
+  _CvModelMatcher(this.expected)
+    : delegate = matcher.equals(fixDelegateValue(expected));
   final Object? expected;
   final Matcher delegate;
 
@@ -434,9 +432,6 @@ class _CvModelMatcher implements CvModelMatcher {
     }
     return value;
   }
-
-  _CvModelMatcher(this.expected)
-    : delegate = matcher.equals(fixDelegateValue(expected));
 
   @override
   Description describe(Description description) =>

@@ -33,11 +33,6 @@ class ParentWithList extends CvModelBase {
 }
 
 abstract class BaseClass extends CvModelBase {
-  // 1 for SubClass1, 2 for SubClass 2
-  final type = CvField<int>('type');
-  @override
-  CvFields get fields => [type];
-
   BaseClass();
 
   /// Constructor tear off for builder
@@ -48,6 +43,10 @@ abstract class BaseClass extends CvModelBase {
       return SubClass1();
     }
   }
+  // 1 for SubClass1, 2 for SubClass 2
+  final type = CvField<int>('type');
+  @override
+  CvFields get fields => [type];
 }
 
 class SubClass1 extends BaseClass {}

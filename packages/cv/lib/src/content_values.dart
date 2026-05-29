@@ -38,9 +38,6 @@ class _ContentValuesMapField<T extends Object?>
         CvFieldHelperMixin<T>,
         CvFieldMixin<T>
     implements CvField<T> {
-  /// Content values (this holder)
-  final ContentValues cv;
-
   /// Only set value if not null
   _ContentValuesMapField(this.cv, String name, [T? value]) {
     this.name = name;
@@ -57,6 +54,9 @@ class _ContentValuesMapField<T extends Object?>
     this.name = name;
     setNull();
   }
+
+  /// Content values (this holder)
+  final ContentValues cv;
 
   @override
   T? get valueOrNull => cv.getMapValue(name) as T?;
@@ -267,8 +267,7 @@ mixin ContentValuesMapMixin implements ContentValues {
 }
 
 class _ContentValuesWithCvFields extends CvBase {
+  _ContentValuesWithCvFields(this.fields);
   @override
   final CvFields fields;
-
-  _ContentValuesWithCvFields(this.fields);
 }
