@@ -68,7 +68,6 @@ bool cvModelsAreEquals(
 ///
 /// num are rounded to int if needed
 /// 1 (or non 0) or 0 are handle in bool
-///
 T? _nonNullBasicTypeCast<T extends Object?>(Object value) {
   if (T == String) {
     if (value is String) {
@@ -93,7 +92,6 @@ T? _nonNullBasicTypeCast<T extends Object?>(Object value) {
 ///
 /// num are truncated to int if needed
 /// 1 (or non 0) or 0 are handle in bool
-///
 Object? _nonNullBasicTypeCastType(Type type, Object value) {
   if (type == String) {
     if (value is String) {

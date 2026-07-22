@@ -70,6 +70,7 @@ extension on Object {
 /// A [CvFieldPath] refers to a field in a document (either a map child, or a list item)
 @immutable
 //@Deprecated('Use CvTreePath')
+/// Class representing [CvFieldPath].
 class CvFieldPath implements CvTreePath {
   /// Creates a new [FieldPath].
   CvFieldPath(this.parts)

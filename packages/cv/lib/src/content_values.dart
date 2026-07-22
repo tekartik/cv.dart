@@ -143,7 +143,7 @@ extension MapModelBaseMixinExtPrv on MapModelBaseMixin {
     _map.clear();
   }
 
-  ///
+  /// Remove a map value
   Object? mapRemove(String key) {
     return _map.remove(key);
   }
