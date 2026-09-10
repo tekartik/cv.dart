@@ -1,3 +1,7 @@
+## 1.1.12
+
+* Add `cv-models` agent skill in `skills/`, installable with `dart run skills@ get`
+
 ## 1.1.11
 
 * Add `CvColumnTypeExtension.isSupertypeOf<T>()` and `CvColumnTypeExtension.isSubtypeOf<T>()` to check
