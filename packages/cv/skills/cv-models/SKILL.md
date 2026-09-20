@@ -194,6 +194,8 @@ note.toMap(); // {}
 note.toMap(includeMissingValue: true); // {title: null, content: null, date: null}
 
 // Only export or import some columns
+var map = <String, Object?>{'title': 'Other', 'content': 'Body'};
+var otherNote = Note();
 note.toMap(columns: ['title']);
 note.fromMap(map, columns: ['title', 'content']);
 note.copyFrom(otherNote, columns: ['title']);
