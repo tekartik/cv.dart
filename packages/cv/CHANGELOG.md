@@ -1,3 +1,7 @@
+## 1.1.13
+
+* Fix `cv-models` agent skill: make the null/partial map example self-contained
+
 ## 1.1.12
 
 * Add `cv-models` agent skill in `skills/`, installable with `dart run skills@ get`
