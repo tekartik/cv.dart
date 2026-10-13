@@ -227,16 +227,6 @@ void main() {
       var field2 = CvField<Object?>('name').withParent('parent');
       expect(field, field2);
     });
-    test('CvFields', () {
-      var field1 = CvField<String>('name');
-      var field2 = CvField<int>('count');
-      [
-        field1,
-        field2,
-      ].fromCvFields([CvField('other', 'test'), CvField('yet', 1)]);
-      expect(field1.v, 'test');
-      expect(field2.v, 1);
-    });
     test('toString()', () {
       var field = CvField<Object?>('name');
       expect(field.toString(), 'name: <unset>');

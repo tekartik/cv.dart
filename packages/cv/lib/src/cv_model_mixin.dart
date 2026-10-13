@@ -163,7 +163,11 @@ mixin CvModelMixin implements CvModel {
   }
 
   @override
-  int get hashCode => fields.first.hashCode;
+  int get hashCode {
+    var fields = this.fields;
+    // A model without fields (CvModelEmpty, empty CvMapModel)
+    return fields.isEmpty ? 0 : fields.first.hashCode;
+  }
 
   @override
   bool operator ==(other) {

@@ -9,6 +9,7 @@ void main() {
     test('CvModel', () {
       var model = CvMapModel();
       model['test'] = 1;
+      expect(model.toMap(), {'test': 1});
     });
 
     test('toMapList', () async {
@@ -24,13 +25,6 @@ void main() {
         [(IntContent()..value.v = 1)].toMapList(columns: ['other']),
         listWithOneEmptyModel,
       );
-    });
-    test('toMapList', () async {
-      expect([IntContent()].toMapList(), listWithOneEmptyModel);
-
-      expect([(IntContent()..value.v = 1)].toMapList(), [
-        {'value': 1},
-      ]);
     });
     test('cvNewModelList', () async {
       cvAddConstructor(IntContent.new);
@@ -67,7 +61,7 @@ void main() {
         [IntContent()..value.v = 1],
       );
     });
-    test('CvModelList.cv', () async {
+    test('CvModelList.cv builder', () async {
       expect(listWithOneEmptyModel.cv<IntContent>(builder: intContentBuilder), [
         IntContent(),
       ]);
@@ -93,9 +87,11 @@ void main() {
         [IntContent()..value.v = 1],
       );
       try {
+        // The list is lazy, the builder is needed when reading an item.
         [
           {'value': 1},
-        ].cv<NoBuilderIntContent>();
+        ].cv<NoBuilderIntContent>().first;
+        fail('should fail');
       } on CvBuilderException catch (_) {}
 
       try {

@@ -32,7 +32,7 @@ extension CvModelListReadExt<T extends CvModelRead> on List<T> {
   /// Deep CvField access
   CvField<F>? fieldAtPath<F extends Object?>(List<Object> paths) {
     var path = paths.first;
-    if (path is int && length > path) {
+    if (path is int && path >= 0 && length > path) {
       var rawField = this[path];
 
       return rawGetFieldAtPath<F>(rawField, paths.sublist(1));

@@ -174,7 +174,7 @@ void main() {
       base = newModel().cv<SubClass2>();
       expect(base, const TypeMatcher<SubClass2>());
     });
-    test('Constructor tear-off class', () {
+    test('Constructor tear-off class in a loop', () {
       cvRemoveBuilder(SubClass1);
       cvRemoveBuilder(SubClass2);
 

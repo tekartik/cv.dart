@@ -29,6 +29,22 @@ class _ModelGenerator {
     }
   }
 
+  /// Fill a model value (of a model, list or map field), skipped for a type
+  /// already being filled, like the fill helpers (CvFieldUtilsExt.fillField)
+  /// to stop on recursive models.
+  void fillChildModel(CvModel model) {
+    var usedTypes = options.usedTypes;
+    if (usedTypes?.contains(model.runtimeType) ?? false) {
+      return;
+    }
+    options.usedTypes = {...?usedTypes, model.runtimeType};
+    try {
+      fillModel(model);
+    } finally {
+      options.usedTypes = usedTypes;
+    }
+  }
+
   /// Fill a list.
   void fillListField<T extends Object?>(CvListField<T> field) {
     var collectionSize = options.collectionSize;
@@ -51,7 +67,7 @@ class _ModelGenerator {
   ) {
     if (field is CvModelListField) {
       var item = (field as CvModelListField).create({}) as T;
-      fillModel(item as CvModel);
+      fillChildModel(item as CvModel);
       list.add(item);
     } else if (field is CvListField<Map>) {
       if (options.valueStart != null) {
@@ -105,7 +121,7 @@ class _ModelGenerator {
       var rawMap = generateMap(
         generateMapValue: () {
           var item = field.create({});
-          fillModel(item);
+          fillChildModel(item);
           return item;
         },
       );
@@ -120,7 +136,7 @@ class _ModelGenerator {
 
   void fillModelField<T extends CvModel>(CvModelField<T> field) {
     var modelValue = field.create({});
-    fillModel(modelValue);
+    fillChildModel(modelValue);
     field.value = modelValue;
   }
 
@@ -137,11 +153,9 @@ class _ModelGenerator {
       fillModelField(field);
     } else if (field is CvFieldWithParent) {
       fillField(field.field);
-    } else if (options.valueStart != null) {
-      field.value = options.generateValue(field.type) as T;
     } else {
-      // Default to null
-      field.value = null;
+      // Multi fields and values, same as the fill helpers.
+      field.fillField(options);
     }
   }
 }

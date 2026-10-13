@@ -109,8 +109,9 @@ class CvFieldPath implements CvTreePath {
   String get text => parts.map((part) => part._partText).join('.');
   @override
   bool operator ==(Object other) =>
-      other is CvFieldPath &&
-      const ListEquality<Object>().equals(other.parts, parts);
+      // Same as CvTreePath, so that equality is symmetric.
+      other is CvTreePath &&
+      const IterableEquality<Object>().equals(other.parts, parts);
 
   @override
   int get hashCode => Object.hashAll(parts);

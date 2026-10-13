@@ -82,11 +82,15 @@ void main() {
       try {
         expect('[]'.jsonToMap(), isEmpty);
         fail('should fail');
-      } catch (_) {}
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+      }
       try {
         expect(''.jsonToMap(), isEmpty);
         fail('should fail');
-      } catch (_) {}
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+      }
     });
 
     test('jsonToMapOrNull', () {
@@ -147,7 +151,7 @@ void main() {
     test('jsonToListOrNull', () {
       expect('[]'.jsonToListOrNull(), isEmpty);
       expect('[1]'.jsonToListOrNull(), [1]);
-      expect('[{"test": 1}]'.jsonToList(), [
+      expect('[{"test": 1}]'.jsonToListOrNull(), [
         {'test': 1},
       ]);
 
@@ -162,7 +166,7 @@ void main() {
       expect(cvAnyToJsonObjectOrNull(map), map);
       expect(cvAnyToJsonObjectOrNull(jsonEncode(map)), map);
     });
-    test('cvAnyToJsonObjectOrNull', () {
+    test('cvAnyToJsonArrayOrNull', () {
       expect(cvAnyToJsonArrayOrNull(null), isNull);
       expect(cvAnyToJsonArrayOrNull(1), null);
       var list = [

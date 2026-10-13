@@ -24,7 +24,7 @@ extension ModelRawListExt on List {
   /// Handle [0, 'key2', 4, 'key4] first must be an int
   CvField<F>? rawFieldAtPath<F extends Object?>(List<Object> parts) {
     var path = parts.first;
-    if (path is int && length > path) {
+    if (path is int && path >= 0 && length > path) {
       var rawValue = this[path];
       // i.e. not null.
       if (rawValue is Object) {

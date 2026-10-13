@@ -87,12 +87,12 @@ extension CvJsonStringExt on String {
     return _parseJsonObjectOrNull(this);
   }
 
-  /// Decode string as a json map.
+  /// Decode string as a json list.
   List jsonToList() {
     return jsonDecode(this) as List;
   }
 
-  /// Decode string as a json map.
+  /// Decode string as a json list, null if not a list.
   List? jsonToListOrNull() {
     return _parseJsonListOrNull(this);
   }

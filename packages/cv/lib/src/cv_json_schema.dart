@@ -90,7 +90,7 @@ class CvJsonSchema extends CvModelBase {
   /// then
   final thenField = CvModelField<CvJsonSchema>('then');
 
-  /// then
+  /// else
   final elseField = CvModelField<CvJsonSchema>('else');
 
   /// enum, each value is a list of values (null supported too)
@@ -139,7 +139,7 @@ class CvJsonSchemaIfProperty extends CvModelBase {
 
 /// If definition
 class CvJsonSchemaIf extends CvModelBase {
-  /// const value
+  /// properties to match
   final properties = CvModelMapField<CvJsonSchemaIfProperty>('properties');
 
   @override
@@ -148,7 +148,7 @@ class CvJsonSchemaIf extends CvModelBase {
 
 /// Then definition
 class CvJsonSchemaThen extends CvModelBase {
-  /// const value
+  /// properties
   final properties = CvModelMapField<CvJsonSchema>('properties');
 
   @override

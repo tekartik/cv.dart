@@ -1,4 +1,5 @@
 import 'package:cv/cv.dart';
+import 'package:cv/src/cv_field.dart' show cvFieldHashCode;
 import 'package:cv/src/field.dart';
 
 /// Class that has parent map container
@@ -81,7 +82,7 @@ class CvFieldWithParentImpl<T extends Object?>
   }
 
   @override
-  int get hashCode => key.hashCode + (v?.hashCode ?? 0);
+  int get hashCode => cvFieldHashCode(key, v);
 
   @override
   bool operator ==(other) {

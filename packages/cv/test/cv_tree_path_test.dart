@@ -118,7 +118,7 @@ void main() {
       model.cvPath.children.pathSubAt(0).sub.treePath,
       CvTreePath(['children', 0, 'sub']),
     );
-    var tmv = model.cvTreeValueAtPath<bool>(CvTreePath(['child', 'sub']));
+    var tmv = model.cvTreeValueAtPath<bool>(CvTreePath(['children', 0, 'sub']));
     expect(tmv.model, model);
     // expect(tmv.type, isNull);
     expect(tmv.value, isNull);

@@ -151,7 +151,7 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
                 ...node.treePath.parts,
               ]),
               field: node.field,
-              value: value,
+              value: node.value,
             );
           }).toList()),
         );
@@ -178,7 +178,8 @@ class _CvModelTreeValue<T extends CvModel, V extends Object?>
         }
       }
     } else if (first is int) {
-      if (parentValue is List) {
+      // Out of range is not found (like fieldAtPath).
+      if (parentValue is List && first >= 0 && first < parentValue.length) {
         var child = parentValue[first];
 
         if (child != null) {

@@ -1,3 +1,13 @@
+## 1.1.14
+
+* Fix `CvModelTreeValue.setValue` through a nested model into raw map/list levels (the value was not set)
+* An out of range or negative list index in a tree or field path returns not found / null instead of
+  throwing a `RangeError`
+* `CvField`/`CvModel` `hashCode` is now consistent with `==` for list and map values (equal models now
+  dedupe in sets), a model without fields (`CvModelEmpty`, empty `CvMapModel`) no longer throws
+* `CvFieldPath ==` is now symmetric with `CvTreePath`
+* `fillModelMatchesMap` (experimental) handles multi fields and recursive models like `fillModel`
+
 ## 1.1.13
 
 * Fix `cv-models` agent skill: make the null/partial map example self-contained

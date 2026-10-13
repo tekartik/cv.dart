@@ -24,6 +24,18 @@ bool cvValuesAreEqual(dynamic v1, dynamic v2) {
   }
 }
 
+/// Hash code of a field, consistent with [cvValuesAreEqual] for its value
+/// (deep for lists and maps). Not exported.
+int cvFieldHashCode(String key, Object? value) {
+  int valueHashCode;
+  try {
+    valueHashCode = const DeepCollectionEquality().hash(value);
+  } catch (_) {
+    valueHashCode = value.hashCode;
+  }
+  return key.hashCode + valueHashCode;
+}
+
 /// Basic CvField
 abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Only set value if not null
