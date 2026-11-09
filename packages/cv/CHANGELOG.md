@@ -1,5 +1,7 @@
 ## 1.1.15
 
+* Documentation: getting started, which field to use, common mistakes, fuller example, dartdoc fixes
+  (`CvMapModelBase`, `encodedDateTime`, multi fields), cv-models skill update
 * Fix `fromMap` of fields made with `withParent` dropping the values that need a conversion (int to double, string
   to int, models)
 * `CvMultiField.multiFromAnyValue` (and `fromMap`) replaces the previous value whatever its sub field: a value left

@@ -7,7 +7,7 @@ import 'map_ext.dart';
 
 /// Convenient extension on Model
 extension ModelRawListExt on List {
-  /// ['key1', 'key2', index3, 'key4]
+  /// Value at a path of keys and indexes, `['key1', 'key2', index3, 'key4']`.
   T? getKeyPathValue<T extends Object?>(List<Object> parts) {
     Object? rawValue;
     var path = parts.first;
@@ -21,7 +21,7 @@ extension ModelRawListExt on List {
     return null;
   }
 
-  /// Handle [0, 'key2', 4, 'key4] first must be an int
+  /// Handle `[0, 'key2', 4, 'key4']`, first must be an int
   CvField<F>? rawFieldAtPath<F extends Object?>(List<Object> parts) {
     var path = parts.first;
     if (path is int && path >= 0 && length > path) {

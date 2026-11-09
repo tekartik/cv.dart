@@ -31,14 +31,14 @@ Object _keyPartFromString(String partText) {
   return partText;
 }
 
-/// Convert ['key1', 'key2', index3, 'key4] to 'key1.key2.index3.key4'
+/// Convert `['key1', 'key2', index3, 'key4']` to `'key1.key2.index3.key4'`
 /// string representing are double quoted (i.e. "1")
 /// part with a dot are not supported yet...
 String keyPartsToString(List<Object> parts) {
   return parts.map(_keyPartToString).join('.');
 }
 
-/// Convert 'key1.key2.index3.key4' to ['key1', 'key2', index3, 'key4]
+/// Convert `'key1.key2.index3.key4'` to `['key1', 'key2', index3, 'key4']`
 List<Object> keyPartsFromString(String key) {
   return key.split('.').map(_keyPartFromString).toList();
 }
@@ -108,7 +108,7 @@ extension ModelRawMapExt on Map {
     }
   }
 
-  /// ['key1', 'key2', index3, 'key4]
+  /// Value at a path of keys and indexes, `['key1', 'key2', index3, 'key4']`.
   T? getKeyPathValue<T extends Object?>(List<Object> parts) {
     var path = parts.first;
     var rawValue = this[path] as Object?;

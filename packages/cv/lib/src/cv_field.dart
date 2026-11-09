@@ -36,7 +36,22 @@ int cvFieldHashCode(String key, Object? value) {
   return key.hashCode + valueHashCode;
 }
 
-/// Basic CvField
+/// Basic CvField: a map key and a mutable value of type [T].
+///
+/// [T] is a basic type (`String`, `int`, `double`, `num`, `bool`), a `Map`
+/// or a `List`. Use [CvListField] for a typed list, [CvModelField],
+/// [CvModelListField] or [CvModelMapField] for nested models, and
+/// [CvField.encodedDateTime] or [CvField.encodedEnum] for values stored as
+/// strings (JSON).
+///
+/// ```dart
+/// final title = CvField<String>('title');
+/// ```
+///
+/// Read and write the value with `v` (or `value`). `v` is null both when the
+/// value is not set and when it is set to null: `hasValue` tells them apart.
+/// A field that is not set is absent from `toMap()`, a field set to null is
+/// written with a null value. `clear()` unsets it.
 abstract class CvField<T extends Object?> implements CvFieldCore<T> {
   /// Only set value if not null
   factory CvField(String name, [T? value]) => CvFieldImpl(name, value);
@@ -49,10 +64,14 @@ abstract class CvField<T extends Object?> implements CvFieldCore<T> {
       CvFieldImpl.withValue(name, value);
 
   /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
+  ///
+  /// The value is stored in the map as the enum name. A name that is not in
+  /// [values] is ignored by `fromMap()`.
   static CvField<T> encodedEnum<T extends Enum>(String name, List<T> values) =>
       encoded<T, String>(name, codec: EnumToStringCodec<T>(values));
 
-  /// Enum field, give a name and a list of possible values (such as `MyEnum.values`)
+  /// DateTime field, stored in the map as its ISO 8601 string
+  /// ([DateTime.toIso8601String]), so that the model can be encoded to JSON.
   static CvField<DateTime> encodedDateTime(String name) =>
       encoded<DateTime, String>(name, codec: const DateTimeToStringCodec());
 
@@ -87,6 +106,12 @@ class CvFieldEncodedImpl<S extends Object?, T extends Object?>
 }
 
 /// Nested list of raw values
+///
+/// ```dart
+/// final tags = CvListField<String>('tags');
+/// ```
+///
+/// Use [CvModelListField] for a list of models.
 abstract class CvListField<T extends Object?> implements CvField<List<T>> {
   /// Only set value if not null
   factory CvListField(String name) => ListCvFieldImpl<T>(name);
@@ -365,6 +390,14 @@ extension CvModelFieldUtilsExt<T extends CvModel> on CvModelField<T> {
 }
 
 /// Nested model
+///
+/// ```dart
+/// final point = CvModelField<Point>('point');
+/// ```
+///
+/// The nested map is converted to a [T] built with the builder registered
+/// with `cvAddConstructor(Point.new)` (or the [CvModelField.builder] one): a
+/// missing builder throws a [CvBuilderException], also in `fromMap()`.
 abstract class CvModelField<T extends CvModel> implements CvField<T> {
   /// Only set value if not null
   factory CvModelField(
@@ -412,6 +445,14 @@ extension CvFieldListExt on CvFields {
 }
 
 /// Nested list, where each value is of type T
+///
+/// ```dart
+/// final items = CvModelListField<Item>('items');
+/// ```
+///
+/// As for [CvModelField], [T] must be registered (`cvAddConstructor(Item.new)`)
+/// or given with [CvModelListField.builder]. The value is a plain modifiable
+/// `List<T>`.
 abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
   /// Only set value if not null
   factory CvModelListField(
@@ -436,6 +477,9 @@ abstract class CvModelListField<T extends CvModel> implements CvListField<T> {
 }
 
 /// Nested map where each value is of type T, (key is a string)
+///
+/// As for [CvModelField], [T] must be registered (`cvAddConstructor`) or
+/// given with [CvModelMapField.builder].
 abstract class CvModelMapField<T extends CvModel>
     extends CvField<Map<String, T>> {
   /// Only set value if not null

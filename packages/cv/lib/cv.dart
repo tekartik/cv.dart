@@ -1,4 +1,30 @@
-/// ContentValue helpers.
+/// ContentValue helpers: models converted to `Map<String, Object?>` and back,
+/// without code generation.
+///
+/// A model extends [CvModelBase] and lists its [CvField]s in `fields`:
+///
+/// ```dart
+/// class Note extends CvModelBase {
+///   final title = CvField<String>('title');
+///   final done = CvField<bool>('done');
+///
+///   @override
+///   CvFields get fields => [title, done];
+/// }
+///
+/// void main() {
+///   // Register the model once, before map.cv<Note>() or clone().
+///   cvAddConstructor(Note.new);
+///
+///   var note = Note()..title.v = 'Buy milk';
+///   print(note.toMap()); // {title: Buy milk}
+///   note = {'title': 'Call Bob', 'done': true}.cv<Note>();
+/// }
+/// ```
+///
+/// Nested models use [CvModelField], [CvModelListField] or [CvModelMapField];
+/// their types must be registered too. Import `package:cv/cv_json.dart` for
+/// the JSON helpers.
 library;
 
 export 'src/builder.dart'

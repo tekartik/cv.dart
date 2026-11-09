@@ -11,6 +11,18 @@ import 'cv_value.dart';
 /// A field that holds one value of any of several types, one sub field per
 /// type (the record type parameter lists them). Setting a value clears the
 /// other sub fields.
+///
+/// ```dart
+/// final id = CvMultiField2(CvField<String>('id'), CvField<int>('id'));
+/// ```
+///
+/// Set the value with `multiFromAnyValue(value)` (`fromMap()` does the same),
+/// it goes to the first sub field of the matching type, and read it with
+/// `multiValue` (`multiField` is the sub field holding it). `value` throws a
+/// [StateError] and `v` is always null. Setting a sub field directly
+/// (`id.field2.v = 1`) does not clear the others: the first sub field with a
+/// value wins.
+///
 /// Limitations:
 /// - only one model
 /// - only one list
@@ -80,7 +92,11 @@ abstract class CvMultiListFieldCore {
   void setMultiList(List<Object?>? list, {bool? presentIfNull});
 }
 
-/// A field that holds two values as a record.
+/// A list whose items are of one of two types (each sub field is a list of
+/// one type, both with the same name).
+///
+/// Set it with `multiFromAnyList(list)` (`fromMap()` does the same) or
+/// `multiList = list`, read it with `multiList`.
 abstract class CvMultiListField2<T1 extends Object?, T2 extends Object?>
     implements CvMultiListField<(T1, T2)> {
   /// Create a multi field.
@@ -90,7 +106,9 @@ abstract class CvMultiListField2<T1 extends Object?, T2 extends Object?>
   ) => _CvMultiListField2<T1, T2>(field1, field2);
 }
 
-/// A field that holds two values as a record.
+/// A field that holds one value of one of two types, see [CvMultiField].
+///
+/// Both sub fields must have the same name.
 abstract class CvMultiField2<T1 extends Object?, T2 extends Object?>
     implements CvMultiField<(T1, T2)> {
   /// Create a multi field.

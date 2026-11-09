@@ -63,8 +63,11 @@ while staying a scalar field on the model. Its `name` is `pos.x`.
 
 ## Lists of models
 
-* `mapList.cv<T>()` on a `List<Map>` returns a lazy list by default. Each
-  element is converted on first access. Pass `lazy: false` for an eager list.
+* `mapList.cv<T>()` on a `List<Model>` (`List<Map<String, Object?>>`, what
+  `jsonToMapList()` and `cvList<T>()` use) returns a lazy list by default.
+  Each element is converted on first access, so a missing builder throws
+  there. Pass `lazy: false` for an eager list. On a list typed `List<Map>`
+  the conversion is eager.
 * `models.toMapList()` on a `List<CvModel>` mirrors `toMap()`.
 * `cvNewModelList<T>()` creates an empty typed list.
 * `CvModelListField<T>` values are plain `List<T>`, mutate them in place.
@@ -104,6 +107,30 @@ the matching field, `multiField` and `multiValue` expose the active one.
 `CvMultiField` and `CvMultiListField` are the base interfaces. Both must use
 the same key name.
 
+```dart
+class Item extends CvModelBase {
+  final id = CvMultiField2(CvField<String>('id'), CvField<int>('id'));
+
+  @override
+  CvFields get fields => [id];
+}
+
+var item = Item()..fromMap({'id': 12});
+item.id.multiValue; // 12
+item.id.multiFromAnyValue('a12'); // replaces 12 (since 1.1.15)
+item.id.multiField; // the CvField<String>
+item.toMap(); // {id: a12}
+```
+
+* `multiFromAnyValue` (and `fromMap`) clears the other sub fields: the last
+  value wins.
+* `value` throws a `StateError` and `v` is always null on the multi field
+  itself: read `multiValue`.
+* Setting a sub field directly (`item.id.field2.v = 1`) does not clear the
+  others; the first sub field holding a value wins.
+* `CvMultiListField2` is read with `multiList` and set with
+  `multiFromAnyList(list)` or `multiList = list`.
+
 ## Raw map and list helpers
 
 `Model` is `Map<String, Object?>`, `ModelList` is `List<Model>`.
@@ -136,7 +163,11 @@ or a sort key. `fields.columns` returns the key names of a field list and
 
 ## Test helpers (package:cv/cv_matcher.dart)
 
+The library is marked `@experimental`: importing it from another package
+gives an `experimental_member_use` warning, silence it on the import.
+
 ```dart
+// ignore: experimental_member_use
 import 'package:cv/cv_matcher.dart';
 
 expect(actualModel, cvEquals(expectedModel));

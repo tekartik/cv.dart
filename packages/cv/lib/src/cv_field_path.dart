@@ -100,7 +100,7 @@ extension on Object {
 //@Deprecated('Use CvTreePath')
 /// Class representing [CvFieldPath].
 class CvFieldPath implements CvTreePath {
-  /// Creates a new [FieldPath].
+  /// Creates a new [CvFieldPath].
   CvFieldPath(this.parts)
     : assert(parts.isNotEmpty),
       assert(
@@ -110,7 +110,7 @@ class CvFieldPath implements CvTreePath {
 
   /// Creates a new [CvFieldPath] from a string path.
   ///
-  /// The [FieldPath] will created by splitting the given path by the
+  /// The [CvFieldPath] will created by splitting the given path by the
   /// '.' character
   CvFieldPath.fromString(String path) : this(path._parseFieldParts());
 

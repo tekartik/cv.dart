@@ -3,9 +3,12 @@ name: cv-models
 description: >-
   Use when defining, reading, writing or serializing data models with
   package:cv (CvModelBase, CvField, CvModelField, CvModelListField,
-  cvAddConstructor, toMap/fromMap, toJson/cv<T>()). Covers field declaration,
-  null vs unset semantics, builder registration, nested models, lists, enums,
-  DateTime encoding and JSON helpers, without code generation.
+  CvModelMapField, CvListField, CvMultiField2, cvAddConstructor,
+  toMap/fromMap, toJson/cv<T>()), or when converting maps or JSON to Dart
+  objects without code generation. Covers field declaration, null vs unset
+  semantics (hasValue), builder registration and the "Missing builder"
+  CvBuilderException, nested models, lists, enums, DateTime encoding and JSON
+  helpers.
 ---
 
 # cv models
@@ -14,6 +17,20 @@ description: >-
 generation. A model is a class whose fields are `CvField` objects. The field
 holds the serialized key and a mutable value. The model lists its fields once
 and gets `toMap()`, `fromMap()`, `==`, `clone()`, `copyFrom()` and JSON for free.
+Add it with `dart pub add cv`.
+
+## Which field
+
+| Value                                                   | Field                                       |
+|---------------------------------------------------------|---------------------------------------------|
+| `String`, `int`, `double`, `num`, `bool`, `Map`, `List` | `CvField<T>('key')`                         |
+| a list of basic values                                  | `CvListField<T>('key')`                     |
+| a nested model                                          | `CvModelField<T>('key')`                    |
+| a list of models                                        | `CvModelListField<T>('key')`                |
+| a `Map<String, T>` of models                            | `CvModelMapField<T>('key')`                 |
+| a `DateTime` stored as an ISO 8601 string               | `CvField.encodedDateTime('key')`            |
+| an enum stored as its name                              | `CvField.encodedEnum('key', MyEnum.values)` |
+| one value of one of two types                           | `CvMultiField2(CvField<String>('key'), CvField<int>('key'))` |
 
 ## Guidelines
 
@@ -34,17 +51,28 @@ and gets `toMap()`, `fromMap()`, `==`, `clone()`, `copyFrom()` and JSON for free
   `json.cv<T>()`, `cvNewModel<T>()` or `clone()`. A missing registration throws
   `CvBuilderException` with "Missing builder for 'T'". Group registrations in
   an idempotent `initXxxBuilders()` function per package.
-* Field types must be `String`, `int`, `double`, `num`, `bool`, `DateTime`,
-  `List`, `Map`, an enum or another `CvModel`. Use `CvListField<T>` for lists
-  of basic types, `CvModelField<T>` for one nested model, `CvModelListField<T>`
-  for a list of models and `CvModelMapField<T>` for a `Map<String, T>` of
-  models. Nested model types need a registered constructor too.
-* Numbers read from a map are coerced to the field type (`1.7` into
-  `CvField<int>` gives `2`, `1` into `CvField<double>` gives `1.0`).
+* The model types nested in a `CvModelField`, `CvModelListField` or
+  `CvModelMapField` need a registered constructor too, even for `fromMap()` on
+  an object created with its constructor (`Rect()..fromMap(map)` needs `Point`
+  registered). `copyFrom()` of a flat model needs none.
+* Field types must be `String`, `int`, `double`, `num`, `bool`, `List`, `Map`
+  or another `CvModel` (through the model fields above). Store an enum with
+  `CvField.encodedEnum` and a `DateTime` with `CvField.encodedDateTime` when
+  the map goes to JSON.
+* Basic values read from a map are converted to the field type when possible
+  (`1.7` into `CvField<int>` gives `2`, `1` into `CvField<double>` gives `1.0`,
+  `'12'` into `CvField<int>` gives `12`, `12` into `CvField<String>` gives
+  `'12'`).
+* `fromMap()` never throws on bad data, only on a missing builder: a value
+  that cannot be converted (`'abc'` for an `int`, a string for a model field,
+  an unknown enum name) is skipped and the field stays unset. Check
+  `hasValue` or `valueOrThrow` when a key is required.
 * Use `CvField.encodedEnum('key', MyEnum.values)` to store an enum as its
   name string, and `CvField.encodedDateTime('key')` to store a `DateTime` as
   an ISO 8601 string. A plain `CvField<DateTime>` keeps the `DateTime` object
-  in the map, which is fine for sembast or Firestore but not for JSON.
+  in the map: `toJson()` throws `JsonUnsupportedObjectError` on it, sembast
+  does not accept it, and a store that gives back another type (a Firestore
+  `Timestamp`) is skipped by `fromMap()`.
 * Import `package:cv/cv_json.dart` (re-exports `cv.dart`) to get `toJson()`,
   `toJsonPretty()`, `String.cv<T>()` and `String.cvList<T>()`.
 * Equality (`==`) and `cvModelsAreEquals` compare `toMap()` content deeply, so
@@ -223,13 +251,22 @@ class Post extends CvModelBase with TimestampsMixin {
 
 * Forgetting to add a new field to `fields`. It silently stays out of the map.
 * Calling `map.cv<T>()` before `cvAddConstructor(T.new)`.
+* Registering the parent model but not the nested model types.
 * Mixing base classes in one `cvAddConstructors` call. Register `CvModelBase`
   models and `CvMapModelBase` models in separate calls.
 * Expecting `fromMap()` to reset fields absent from the map.
+* Expecting `fromMap()` to fail on a value of the wrong type: it is skipped.
 * Using `CvField<DateTime>` in a model that is sent as JSON. Use
   `CvField.encodedDateTime` instead.
 * Declaring a field as `CvField<MyModel>`. Use `CvModelField<MyModel>` so the
   nested map is converted.
+* Testing `field.v == null` to know whether a key was present: use
+  `hasValue`.
+* Two fields with the same key in one model (throws in debug mode).
+* Reading a `CvMultiField2` with `v` (always null) or `value` (throws): use
+  `multiValue`, and set it with `multiFromAnyValue(value)`.
+* Expecting `listOfMaps.cv<T>()` to fail at once on a missing builder: on a
+  `List<Model>` the list is lazy and fails when an item is read.
 
 ## More
 

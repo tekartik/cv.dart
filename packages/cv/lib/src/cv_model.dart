@@ -39,7 +39,8 @@ abstract class CvModelWrite implements CvModelRead {
 
 /// Core model
 abstract class CvModelCore {
-  /// to override something like [name, description]
+  /// The fields of the model, to override: `[title, content]`. A field
+  /// missing here is ignored by `toMap()`, `fromMap()` and `==`.
   CvFields get fields;
 
   /// CvField access
@@ -77,16 +78,22 @@ class CvModelEmpty extends CvModelBase {
 ///  CvFields get fields => [engine];
 /// }
 /// ```
+///
+/// Every field must be listed in `fields`: the others are ignored by
+/// `toMap()`, `fromMap()` and `==`. Register the class once with
+/// `cvAddConstructor(Car.new)` before `map.cv<Car>()`, `cvNewModel<Car>()`,
+/// `clone()` or using it in a [CvModelField] or a [CvModelListField].
 abstract class CvModelBase with CvModelMixin {}
 
 /// Base content class that holds unknown fields in a map.
 ///
-/// Just defined the extra fields.
+/// Just defined the known fields, in `modelFields` (not `fields`). The other
+/// keys read by `fromMap()` are kept, and the object is also a map.
 /// ```
-/// class Car extends CvModelBase {
+/// class Car extends CvMapModelBase {
 ///  final engine = CvField<String>('engine');
 ///  @override
-///  CvFields get fields => [engine];
+///  CvFields get modelFields => [engine];
 /// }
 /// ```
 abstract class CvMapModelBase

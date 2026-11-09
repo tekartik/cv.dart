@@ -21,6 +21,14 @@ final _builders = () {
 }();
 
 /// Add builder that uses builder function
+///
+/// The builder receives the source map, to pick a subclass, and only creates
+/// the object (cv fills it). `cvAddConstructor(T.new)` is simpler when the
+/// class does not depend on the data.
+///
+/// ```dart
+/// cvAddBuilder<Animal>((map) => map['type'] == 'cat' ? Cat() : Dog());
+/// ```
 void cvAddBuilder<T extends CvModel>(CvModelBuilderFunction<T> builder) {
   _builders[T] = builder;
 }
@@ -75,6 +83,19 @@ CvModelBuilderFunction<T>? cvTypeGetBuilderOrNull<T extends CvModel>(
 }
 
 /// Add convenient constructor tear-off
+///
+/// Registers how to create a [T], once (before use, calling it again is
+/// harmless):
+///
+/// ```dart
+/// cvAddConstructor(Note.new);
+/// var note = {'title': 'My note'}.cv<Note>();
+/// ```
+///
+/// Needed by `map.cv<T>()`, `json.cv<T>()`, `cvNewModel<T>()`, `clone()`
+/// and by the fields holding nested [T] models ([CvModelField],
+/// [CvModelListField], [CvModelMapField]), even in `fromMap()`. Otherwise
+/// a [CvBuilderException] (`Missing builder for 'T'`) is thrown.
 void cvAddConstructor<T extends CvModel>(
   CvModelDefaultBuilderFunction<T> builder,
 ) {
@@ -82,6 +103,12 @@ void cvAddConstructor<T extends CvModel>(
 }
 
 /// Add convenient constructors tear-off
+///
+/// ```dart
+/// cvAddConstructors([Rect.new, Point.new, Size.new]);
+/// ```
+///
+/// See [cvAddConstructor].
 ///
 /// Warning each builder must be of the same base type
 /// i.e. use a different construction for CvMapModel and CvModelBase models and
@@ -140,6 +167,10 @@ CvModelListField<T> cvModelListField<T extends CvModel>(String name) =>
 /// Easy extension
 extension CvMapExt on Map {
   /// Create an entry from a map
+  ///
+  /// Creates a [T] with the builder registered with `cvAddConstructor` (or
+  /// [builder]) and fills it with `fromMap`. Throws a [CvBuilderException]
+  /// when [T], or a model type nested in it, has no builder.
   T cv<T extends CvModel>({T Function(Map contextData)? builder}) {
     return cvBuildModel<T>(this, builder: builder)..fromMap(this);
   }
@@ -167,6 +198,10 @@ extension CvMapListExt on List<Map> {
 }
 
 /// CvBuilder exception.
+///
+/// Thrown when a model type has no builder: register it with
+/// [cvAddConstructor] before converting a map to it. Also thrown, in debug
+/// mode, when two fields of a model have the same name.
 abstract class CvBuilderException implements Exception {}
 
 /// Internal exception
