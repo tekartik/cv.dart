@@ -19,9 +19,37 @@ extension on String {
   }
 
   List<Object> _parseFieldParts() {
-    /// Look for backtick enclosed path
-    var parts = split('.').map((part) => _parseFieldPart(part)).toList();
-    return parts;
+    var parts = <Object>[];
+    var start = 0;
+    while (true) {
+      /// Backtick enclosed part (it can hold dots): up to the closing
+      /// backtick followed by a dot or the end.
+      if (start < length && this[start] == _backtickChr) {
+        var close = start + 1;
+        while ((close = indexOf(_backtickChr, close)) != -1) {
+          var end = close + 1;
+          if (end == length || this[end] == '.') {
+            parts.add(substring(start + 1, close));
+            if (end == length) {
+              return parts;
+            }
+            start = end + 1;
+            break;
+          }
+          close = end;
+        }
+        if (close != -1) {
+          continue;
+        }
+      }
+      var dot = indexOf('.', start);
+      var part = dot == -1 ? substring(start) : substring(start, dot);
+      parts.add(_parseFieldPart(part));
+      if (dot == -1) {
+        return parts;
+      }
+      start = dot + 1;
+    }
   }
 
   Object _parseFieldPart(String text) {

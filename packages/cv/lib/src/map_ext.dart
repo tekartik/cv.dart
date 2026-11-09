@@ -146,7 +146,7 @@ extension ModelRawMapExt on Map {
     var model = newModel();
     for (var anyKey in keys) {
       var key = anyKey.toString();
-      var value = this[key];
+      var value = this[anyKey];
       if (value is Map) {
         model[key] = value.deepClone();
       } else if (value is List) {

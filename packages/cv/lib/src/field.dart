@@ -114,7 +114,7 @@ class _List<T> extends ListBase<T> {
 
   @override
   T operator [](int index) {
-    return _list[index]!;
+    return _list[index] as T;
   }
 
   @override

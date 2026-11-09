@@ -149,11 +149,13 @@ Object? basicTypeCastType(Type type, Object? value) {
 int? basicTypeToInt(Object? value) {
   /// But most likely to happen first
   if (value is int) {
-    return value;
+    // Infinity is an int on the web.
+    return value.isFinite ? value : null;
   } else if (value == null) {
     return null;
   } else if (value is num) {
-    return value.round();
+    // NaN and infinity cannot be rounded.
+    return value.isFinite ? value.round() : null;
   } else if (value is bool) {
     return value ? 1 : 0;
   } else if (value is String) {
@@ -221,7 +223,12 @@ int? _parseInt(String value) {
   if (intValue != null) {
     return intValue;
   }
-  return num.tryParse(value)?.round();
+  var numValue = num.tryParse(value);
+  // NaN and infinity ('1e400') cannot be rounded.
+  if (numValue == null || !numValue.isFinite) {
+    return null;
+  }
+  return numValue.round();
 }
 
 num? _parseNum(String value) {

@@ -1,6 +1,7 @@
 import 'package:cv/cv.dart';
 import 'package:cv/utils/value_utils.dart';
 import 'cv_field.dart';
+import 'cv_field_with_parent.dart';
 import 'cv_multi_field.dart';
 import 'field.dart';
 
@@ -97,6 +98,11 @@ extension CvFieldMixinExtPrv on CvField {
   bool _fromAny(Object? value) {
     var field = this;
 
+    // The inner field converts the value (int to double, string to int,
+    // map to model...), the wrapper only accepts its exact type.
+    if (field is CvFieldWithParent) {
+      return field.field.fromAnyValue(value);
+    }
     if (value != null) {
       if (field is CvFieldContentList) {
         if (value is List) {
@@ -135,8 +141,11 @@ extension CvFieldMixinExtPrv on CvField {
           var map = field.v = field.createMap();
           var entryValue = value;
           entryValue.forEach((key, value) {
-            var item = field.create(value as Map)..fromMap(value);
-            map[key as String] = item;
+            // Skip what is not a model map (null...), like a list of models.
+            if (key is String && value is Map) {
+              var item = field.create(value)..fromMap(value);
+              map[key] = item;
+            }
           });
           return true;
         }
@@ -156,6 +165,7 @@ extension CvFieldMixinExtPrv on CvField {
         field.fromBasicTypeValue(value, presentIfNull: true);
         return true;
       } else if (field is CvMultiField) {
+        // The value read replaces the previous one, whatever its sub field.
         field.multiFromAnyValue(value);
 
         return true;
@@ -177,6 +187,10 @@ extension CvFieldMixinExtPrv on CvField {
         }
       }
     } else {
+      if (field is CvMultiField) {
+        // Forget the previous value of its sub fields.
+        field.clear();
+      }
       field.setNull();
       return true;
     }

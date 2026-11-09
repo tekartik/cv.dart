@@ -1,3 +1,19 @@
+## 1.1.15
+
+* Fix `fromMap` of fields made with `withParent` dropping the values that need a conversion (int to double, string
+  to int, models)
+* `CvMultiField.multiFromAnyValue` (and `fromMap`) replaces the previous value whatever its sub field: a value left
+  in another sub field no longer wins depending on the declaration order
+* `CvFieldPath.fromString` reads back the parts holding a dot that `text` encloses in backticks
+* Model `hashCode` no longer depends on the field order (equal `CvMapModel` with keys in another order)
+* `cvTypeBuildModel`, `cvTypeNewModel`, `Map.cvType` and `List.cvType` work for the types registered with
+  `cvAddConstructors`
+* A `CvListField` of a nullable type can hold null items
+* `CvMapModelBase.fromMap` honors `columns`
+* `basicTypeToInt` (and int fields) return null for NaN and infinity (`'1e400'`) instead of throwing
+* `Map.deepClone` keeps the values of non string keys
+* `CvModelMapField` skips the entries that are not maps instead of dropping the following ones
+
 ## 1.1.14
 
 * Fix `CvModelTreeValue.setValue` through a nested model into raw map/list levels (the value was not set)

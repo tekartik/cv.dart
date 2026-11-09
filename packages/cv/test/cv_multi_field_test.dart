@@ -24,8 +24,15 @@ void main() {
       expect(field.multiValue, 2);
 
       field.multiFromAnyValue('1');
-      expect(field.field2.v, 2);
+      expect(field.field2.hasValue, isFalse);
       expect(field.field1.v, '1');
+      expect(field.multiValue, '1');
+
+      // The latest value wins whatever the order of the sub fields.
+      field.multiFromAnyValue(3);
+      expect(field.field1.hasValue, isFalse);
+      expect(field.multiField, isA<CvField<int>>());
+      expect(field.multiValue, 3);
 
       field.clear();
       expect(field.hasValue, isFalse);

@@ -8,7 +8,9 @@ import 'package:cv/src/field.dart';
 
 import 'cv_value.dart';
 
-/// A field that holds multiple values as a record.
+/// A field that holds one value of any of several types, one sub field per
+/// type (the record type parameter lists them). Setting a value clears the
+/// other sub fields.
 /// Limitations:
 /// - only one model
 /// - only one list
@@ -204,6 +206,12 @@ abstract class _CvMultiFieldBase extends _CvMultiFieldCoreBase
   }
 
   void multiFromAnyValue(Object? value) {
+    // The value replaces the previous one, whatever its sub field: a value
+    // left in another sub field would win in `multiField` when declared
+    // before.
+    for (var field in fields) {
+      field.clear();
+    }
     // set the first if null
     if (value != null) {
       for (var field in fields) {

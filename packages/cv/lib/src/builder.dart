@@ -33,14 +33,7 @@ void cvTypeAddBuilder(Type type, CvModelBuilderFunction<Object> builder) {
 /// Get a builder.
 CvModelBuilderFunction<T>? _cvGetBuilderOrNull<T extends CvModel>({
   CvModelBuilderFunction<T>? builder,
-}) {
-  var foundBuilder = builder ?? _builders[T];
-  if (foundBuilder is CvModelBuilderFunction<T>?) {
-    return foundBuilder;
-  } else {
-    return (Map contextData) => foundBuilder(contextData) as T;
-  }
-}
+}) => cvTypeGetBuilderOrNull<T>(T, builder: builder);
 
 /// Get a builder.
 CvModelBuilderFunction<T> cvGetBuilder<T extends CvModel>({
@@ -73,7 +66,12 @@ CvModelBuilderFunction<T>? cvTypeGetBuilderOrNull<T extends CvModel>(
   CvModelBuilderFunction<T>? builder,
 }) {
   var foundBuilder = builder ?? _builders[type];
-  return foundBuilder as CvModelBuilderFunction<T>?;
+  if (foundBuilder is CvModelBuilderFunction<T>?) {
+    return foundBuilder;
+  } else {
+    // Registered for a super type (cvAddConstructors).
+    return (Map contextData) => foundBuilder(contextData) as T;
+  }
 }
 
 /// Add convenient constructor tear-off

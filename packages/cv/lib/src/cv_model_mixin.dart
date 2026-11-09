@@ -165,8 +165,9 @@ mixin CvModelMixin implements CvModel {
   @override
   int get hashCode {
     var fields = this.fields;
-    // A model without fields (CvModelEmpty, empty CvMapModel)
-    return fields.isEmpty ? 0 : fields.first.hashCode;
+    // A model without fields (CvModelEmpty, empty CvMapModel). == compares
+    // the fields by name whatever their order (map model keys).
+    return fields.isEmpty ? 0 : Object.hashAllUnordered(fields);
   }
 
   @override
@@ -338,12 +339,9 @@ extension CvModelMixinExtPrv on CvModelMixin {
                 parentField = subField;
               } else if (subField is CvFieldContent) {
                 var modelEntry = parentModel.getMapEntry(subField.name);
-                var modelEntryValue = modelEntry?.value;
-                if (modelEntryValue is Map) {
-                  entry = ModelEntry(
-                    modelEntry!.key.toString(),
-                    subField.create(modelEntryValue)..fromMap(modelEntryValue),
-                  );
+                // Only a map fills the sub model (built by the field).
+                if (modelEntry?.value is Map) {
+                  entry = modelEntry;
                 }
 
                 break;

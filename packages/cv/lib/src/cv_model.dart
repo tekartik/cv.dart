@@ -153,12 +153,21 @@ abstract class CvMapModelBase
     }
     var modelFields = this.modelFields.columns;
     var modelFieldsSet = modelFields.toSet();
-    fromModelMap(map, columns: modelFields);
+    fromModelMap(
+      map,
+      columns: columns == null
+          ? modelFields
+          : modelFields.where(columns.contains).toList(),
+    );
     map.forEach((key, value) {
       if (modelFieldsSet.contains(key)) {
         return;
       }
-      setMapValue(key!.toString(), value);
+      var column = key!.toString();
+      if (columns != null && !columns.contains(column)) {
+        return;
+      }
+      setMapValue(column, value);
     });
   }
 
